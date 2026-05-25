@@ -56,10 +56,13 @@
 .link {
   font-size: 14px;
   color: var(--color-ink-soft);
+  transition: color 0.2s ease, transform 0.2s var(--ease-emphasized);
+  display: inline-block;
 }
 
 .link:hover {
   color: var(--color-accent);
+  transform: translateX(4px);
 }
 
 .social {
@@ -76,11 +79,14 @@
   border: 1px solid var(--color-line);
   border-radius: var(--radius-sm);
   color: var(--color-ink-soft);
+  transition: border-color 0.3s var(--ease-emphasized), color 0.3s ease, transform 0.3s var(--ease-spring), box-shadow 0.3s var(--ease-emphasized);
 }
 
 .social a:hover {
-  border-color: var(--color-line-strong);
-  color: var(--color-accent);
+  border-color: rgba(109, 94, 245, 0.3);
+  color: var(--grad-violet);
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 4px 12px rgba(109, 94, 245, 0.2);
 }
 
 .bottom {

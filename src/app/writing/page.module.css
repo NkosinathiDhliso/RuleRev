@@ -11,10 +11,17 @@
   border-bottom: 1px solid var(--color-line);
   text-decoration: none;
   color: inherit;
+  transition: padding-left 0.4s var(--ease-emphasized), background 0.3s ease;
+  border-radius: var(--radius-sm);
+}
+
+.row:hover {
+  padding-left: 16px;
+  background: rgba(109, 94, 245, 0.02);
 }
 
 .row:hover .title {
-  color: var(--color-accent);
+  color: var(--grad-violet);
 }
 
 .meta {

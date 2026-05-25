@@ -61,17 +61,38 @@
 }
 
 .cred {
+  position: relative;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-md);
   padding: 16px 18px;
   background: #fff;
-  transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  transition: border-color 0.4s var(--ease-emphasized), transform 0.4s var(--ease-emphasized), box-shadow 0.4s var(--ease-emphasized);
+  overflow: hidden;
+}
+
+.cred::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: var(--grad-border);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-emphasized);
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1px;
 }
 
 .cred:hover {
-  border-color: var(--color-line-strong);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-color: transparent;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: var(--glow-soft);
+}
+
+.cred:hover::after {
+  opacity: 1;
 }
 
 .cred_title {
@@ -125,19 +146,40 @@
 }
 
 .building_card {
+  position: relative;
   display: block;
   padding: 20px;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-md);
   background: #fff;
   color: inherit;
-  transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  transition: border-color 0.4s var(--ease-emphasized), transform 0.4s var(--ease-emphasized), box-shadow 0.4s var(--ease-emphasized);
+  overflow: hidden;
+}
+
+.building_card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: var(--grad-border);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-emphasized);
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1px;
 }
 
 .building_card:hover {
-  border-color: var(--color-line-strong);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-color: transparent;
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--glow-elev);
+}
+
+.building_card:hover::after {
+  opacity: 1;
 }
 
 .building_name {

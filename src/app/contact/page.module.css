@@ -38,6 +38,7 @@
 }
 
 .cta_card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -47,22 +48,50 @@
   background: #fff;
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.18s ease;
+  transition: border-color 0.4s var(--ease-emphasized), transform 0.4s var(--ease-emphasized), box-shadow 0.4s var(--ease-emphasized);
+  overflow: hidden;
+}
+
+.cta_card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: var(--grad-border);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-emphasized);
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1px;
 }
 
 .cta_card:hover {
-  border-color: var(--color-line-strong);
+  border-color: transparent;
+  transform: translateY(-4px);
+  box-shadow: var(--glow-elev);
+}
+
+.cta_card:hover::after {
+  opacity: 1;
+}
+
+.cta_card:hover .cta_icon {
+  transform: scale(1.15) rotate(-5deg);
+  box-shadow: 0 4px 12px rgba(109, 94, 245, 0.25);
 }
 
 .cta_icon {
   width: 36px;
   height: 36px;
   border-radius: var(--radius-sm);
-  background: var(--color-accent-soft);
-  color: var(--color-accent-ink);
+  background: rgba(109, 94, 245, 0.08);
+  color: var(--grad-violet);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.4s var(--ease-spring), box-shadow 0.4s var(--ease-emphasized);
 }
 
 .cta_title {

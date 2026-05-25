@@ -38,7 +38,7 @@ export default function ServicesPage() {
       {SERVICES.map((s) => (
         <section key={s.slug} id={s.slug} className={styles.offer} aria-labelledby={`${s.slug}-title`}>
           <div className="container-page">
-            <div className={styles.offer_grid}>
+            <div className={styles.offer_grid} data-animate="fade-up">
               <div className={styles.offer_left}>
                 <span className={styles.offer_eyebrow}>{s.duration}</span>
                 <h2 id={`${s.slug}-title`} className={styles.offer_title}>
