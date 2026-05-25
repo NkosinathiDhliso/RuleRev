@@ -16,6 +16,10 @@ const nextConfig = {
   pageExtensions: ['ts', 'tsx', 'mdx'],
   experimental: {
     mdxRs: false,
+    staleTimes: {
+      dynamic: 30,
+      static: 180,
+    },
   },
   async redirects() {
     return [];

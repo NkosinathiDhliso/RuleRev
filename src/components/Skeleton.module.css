@@ -1,0 +1,78 @@
+/* ─── Skeleton loading primitives ─────────────────────────────────── */
+.pulse {
+  animation: skeleton-pulse 1.8s ease-in-out infinite;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.04) 0%,
+    rgba(0, 0, 0, 0.08) 50%,
+    rgba(0, 0, 0, 0.04) 100%
+  );
+  background-size: 200% 100%;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes skeleton-pulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.line {
+  height: 14px;
+  margin-bottom: 12px;
+}
+
+.line_lg {
+  height: 32px;
+  margin-bottom: 16px;
+  max-width: 60%;
+}
+
+.line_xl {
+  height: 40px;
+  margin-bottom: 20px;
+  max-width: 50%;
+}
+
+.line_sm {
+  height: 12px;
+  max-width: 30%;
+  margin-bottom: 8px;
+}
+
+.block {
+  height: 200px;
+  margin-bottom: 24px;
+  border-radius: var(--radius-md);
+}
+
+.card {
+  height: 280px;
+  border-radius: var(--radius-md);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.wrap {
+  padding-top: 96px;
+  padding-bottom: 48px;
+}
+
+@media (max-width: 767px) {
+  .wrap {
+    padding-top: 56px;
+    padding-bottom: 32px;
+  }
+
+  .line_xl {
+    max-width: 80%;
+  }
+
+  .line_lg {
+    max-width: 90%;
+  }
+}
