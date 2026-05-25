@@ -1,31 +1,41 @@
 /* ─── Floating pill navigation ─────────────────────────────────────── */
 .header {
   position: fixed;
-  top: 20px;
+  top: 16px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 50;
   pointer-events: none;
+  width: max-content;
+  max-width: calc(100% - 32px);
 }
 
 .pill {
   pointer-events: auto;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 10px;
+  gap: 4px;
+  padding: 6px;
   border-radius: var(--radius-pill);
-  background: rgba(10, 10, 10, 0.75);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  background: rgba(15, 17, 22, 0.82);
+  backdrop-filter: saturate(180%) blur(24px);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 8px 28px -6px rgba(0, 0, 0, 0.5),
+    0 2px 8px -2px rgba(0, 0, 0, 0.3);
   transition: box-shadow 0.4s var(--ease-emphasized), background 0.4s var(--ease-emphasized);
 }
 
 .pill:hover {
-  background: rgba(10, 10, 10, 0.88);
-  box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  background: rgba(15, 17, 22, 0.92);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    0 1px 0 rgba(255, 255, 255, 0.12) inset,
+    0 12px 36px -6px rgba(0, 0, 0, 0.6),
+    0 4px 12px -2px rgba(0, 0, 0, 0.4);
 }
 
 .brand {
@@ -34,13 +44,14 @@
   font-size: 14px;
   letter-spacing: -0.02em;
   color: #fff;
-  padding: 6px 12px;
+  padding: 8px 14px;
   border-radius: var(--radius-pill);
   transition: background 0.2s ease;
+  white-space: nowrap;
 }
 
 .brand:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .nav_desktop {
@@ -52,22 +63,26 @@
 @media (min-width: 880px) {
   .nav_desktop {
     display: flex;
+    margin-left: 4px;
+    padding-left: 4px;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
   }
 }
 
 .nav_link {
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.65);
-  padding: 6px 12px;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 8px 14px;
   border-radius: var(--radius-pill);
   transition: color 0.2s ease, background 0.2s ease;
   position: relative;
+  white-space: nowrap;
 }
 
 .nav_link:hover {
   color: #fff;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .nav_link_active {
@@ -83,15 +98,15 @@
 @media (min-width: 880px) {
   .cta_desktop {
     display: inline-flex;
-    margin-left: 4px;
+    margin-left: 6px;
   }
 }
 
 .cta_btn {
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 500;
   color: #fff;
-  padding: 6px 14px;
+  padding: 8px 16px;
   border-radius: var(--radius-pill);
   background: linear-gradient(135deg, var(--grad-violet), var(--grad-azure));
   border: none;
@@ -100,11 +115,13 @@
   text-decoration: none;
   display: inline-flex;
   align-items: center;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px -2px rgba(109, 94, 245, 0.4);
 }
 
 .cta_btn:hover {
   filter: brightness(1.15);
-  box-shadow: 0 4px 16px -4px rgba(109, 94, 245, 0.5);
+  box-shadow: 0 4px 16px -2px rgba(109, 94, 245, 0.6);
 }
 
 /* ─── Mobile menu button ──────────────────────────────────────────── */
@@ -112,8 +129,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-pill);
   border: none;
   background: rgba(255, 255, 255, 0.08);

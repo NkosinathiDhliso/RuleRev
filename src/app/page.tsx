@@ -67,21 +67,23 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* ─── Selected work — dark showcase ────────────────────────────── */}
-      <section className={styles.showcase}>
-        <GradientMesh variant="dark" parallax parallaxStrength={50} grain />
-        <div className="container-page" style={{ position: 'relative', zIndex: 2 }}>
-          <div data-animate="fade-up">
-            <SectionHeading
-              title="Selected work"
-              lede="Three projects where the headline number does the talking."
-            />
+      {/* ─── Selected work — dark spotlight panel ─────────────────────── */}
+      <div className={styles.showcase_wrap}>
+        <section className={styles.showcase}>
+          <GradientMesh variant="dark" parallax parallaxStrength={50} grain />
+          <div className="container-page" style={{ position: 'relative', zIndex: 2 }}>
+            <div data-animate="fade-up">
+              <SectionHeading
+                title="Selected work"
+                lede="Three projects where the headline number does the talking."
+              />
+            </div>
+            <div>
+              <CaseStudyCardGrid items={featured} />
+            </div>
           </div>
-          <div>
-            <CaseStudyCardGrid items={featured} />
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* ─── Services ─────────────────────────────────────────────────── */}
       <Section>

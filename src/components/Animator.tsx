@@ -132,11 +132,8 @@ function bindMagnetic(el: HTMLElement, cleanups: (() => void)[]) {
 
 let registered = false;
 
-console.log('[Animator] Module loaded — GSAP version:', gsap.version);
-
 export function Animator() {
   useEffect(() => {
-    console.log('[Animator] useEffect fired');
     const html = document.documentElement;
     const reducedQuery =
       typeof window.matchMedia === 'function'
@@ -144,19 +141,16 @@ export function Animator() {
         : null;
 
     if (reducedQuery?.matches) {
-      console.log('[Animator] prefers-reduced-motion detected — skipping animations');
       html.classList.add('motion-reduced');
       html.classList.remove('motion');
       return;
     }
 
     html.classList.add('motion');
-    console.log('[Animator] html.motion class added');
 
     if (!registered) {
       gsap.registerPlugin(ScrollTrigger);
       registered = true;
-      console.log('[Animator] GSAP ScrollTrigger registered');
     }
 
     // Set GSAP defaults for premium feel
@@ -178,12 +172,10 @@ export function Animator() {
     const animTargets = Array.from(
       document.querySelectorAll<HTMLElement>('[data-animate]'),
     );
-    console.log(`[Animator] Found ${animTargets.length} [data-animate] elements`);
-    animTargets.forEach((el, idx) => {
+    animTargets.forEach((el) => {
       const type = (el.dataset.animate || 'fade-up') as AnimType;
       const from = FROM_BY_TYPE[type] ?? FROM_BY_TYPE['fade-up'];
       const delayMs = readDelayMs(el);
-      if (idx < 5) console.log(`[Animator] data-animate[${idx}]: type="${type}", delay=${delayMs}ms, el=`, el.tagName, el.className?.slice(0, 40));
       gsap.set(el, { ...from, willChange: 'transform, opacity, filter' });
 
       const t = ScrollTrigger.create({
@@ -191,7 +183,6 @@ export function Animator() {
         start: 'top 92%',
         once: true,
         onEnter: () => {
-          if (idx < 5) console.log(`[Animator] ScrollTrigger fired for data-animate[${idx}]`, el.tagName);
           el.classList.add('in-view');
           gsap.to(el, {
             ...TO_DEFAULTS,
@@ -204,7 +195,6 @@ export function Animator() {
       // Already on-screen at mount
       const rect = el.getBoundingClientRect();
       if (rect.top < window.innerHeight && rect.bottom > 0) {
-        if (idx < 5) console.log(`[Animator] data-animate[${idx}] already on-screen, animating immediately`);
         el.classList.add('in-view');
         gsap.to(el, { ...TO_DEFAULTS, delay: delayMs / 1000 });
       }
@@ -214,10 +204,8 @@ export function Animator() {
     const wordTargets = Array.from(
       document.querySelectorAll<HTMLElement>('[data-split-words]'),
     );
-    console.log(`[Animator] Found ${wordTargets.length} [data-split-words] elements`);
     wordTargets.forEach((el) => {
       const words = el.querySelectorAll<HTMLElement>('.rr-word');
-      console.log(`[Animator] split-words element has ${words.length} .rr-word children`);
       if (!words.length) return;
       gsap.set(words, {
         opacity: 0,
@@ -268,10 +256,8 @@ export function Animator() {
     const charTargets = Array.from(
       document.querySelectorAll<HTMLElement>('[data-split-chars]'),
     );
-    console.log(`[Animator] Found ${charTargets.length} [data-split-chars] elements`);
     charTargets.forEach((el) => {
       const chars = el.querySelectorAll<HTMLElement>('.rr-char');
-      console.log(`[Animator] split-chars element has ${chars.length} .rr-char children`);
       if (!chars.length) return;
       gsap.set(chars, {
         opacity: 0,
@@ -325,7 +311,6 @@ export function Animator() {
     const parallaxTargets = Array.from(
       document.querySelectorAll<HTMLElement>('[data-parallax]'),
     );
-    console.log(`[Animator] Found ${parallaxTargets.length} [data-parallax] elements`);
     parallaxTargets.forEach((el) => {
       const strength = parseFloat(el.dataset.parallaxY ?? '80');
       const t = gsap.to(el, {
@@ -345,7 +330,6 @@ export function Animator() {
     const counterTargets = Array.from(
       document.querySelectorAll<HTMLElement>('[data-counter]'),
     );
-    console.log(`[Animator] Found ${counterTargets.length} [data-counter] elements`);
     counterTargets.forEach((el) => {
       const t = ScrollTrigger.create({
         trigger: el,
@@ -357,9 +341,9 @@ export function Animator() {
     });
 
     // ---- Magnetic CTAs ----------------------------------------------------
-    const magneticTargets = document.querySelectorAll<HTMLElement>('[data-magnetic]');
-    console.log(`[Animator] Found ${magneticTargets.length} [data-magnetic] elements`);
-    magneticTargets.forEach((el) => bindMagnetic(el, cleanups));
+    document
+      .querySelectorAll<HTMLElement>('[data-magnetic]')
+      .forEach((el) => bindMagnetic(el, cleanups));
 
     // ---- Smooth scroll-linked header opacity (Apple-style) ----------------
     const header = document.querySelector('header');
