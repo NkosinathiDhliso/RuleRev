@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardBody, Button } from '../ui';
-import { X, ExternalLink, CheckCircle } from 'lucide-react';
+import { X, ExternalLink, CheckCircle, Lock } from 'lucide-react';
 import styles from './ProjectModal.module.css';
 
 export interface Project {
@@ -9,11 +9,10 @@ export interface Project {
   image: string;
   technologies: string[];
   outcomes: string[];
+  private?: boolean;
   links: {
     live?: string;
     github?: string;
-    reelcv?: string;
-    reelhunter?: string;
   };
 }
 
@@ -88,6 +87,13 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
           </div>
           
           <div className={styles.modalActions}>
+            {project.private && (
+              <span className={styles.privateBadge}>
+                <Lock size={16} />
+                Private Project
+              </span>
+            )}
+            
             {project.links.live && (
               <Button
                 variant="accent"
@@ -95,26 +101,6 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
                 rightIcon={<ExternalLink size={20} />}
               >
                 View Live Site
-              </Button>
-            )}
-            
-            {project.links.reelcv && (
-              <Button
-                variant="glass"
-                onClick={() => window.open(project.links.reelcv, '_blank')}
-                rightIcon={<ExternalLink size={20} />}
-              >
-                ReelCV
-              </Button>
-            )}
-            
-            {project.links.reelhunter && (
-              <Button
-                variant="glass"
-                onClick={() => window.open(project.links.reelhunter, '_blank')}
-                rightIcon={<ExternalLink size={20} />}
-              >
-                ReelHunter
               </Button>
             )}
             

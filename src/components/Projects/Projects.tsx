@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardBody, Button } from '../ui';
-import { ExternalLink, Github, Eye } from 'lucide-react';
+import { ExternalLink, Github, Eye, Lock } from 'lucide-react';
 import { ProjectModal, Project } from './ProjectModal';
 import styles from './Projects.module.css';
 import gsap from 'gsap';
@@ -8,34 +8,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // Array of project data with all projects included
 const projects: Project[] = [
-  {
-    title: 'Africa Tennis Platform',
-    description: 'Engineered for Peak Performance & Uptime. For this high-traffic sports platform, I implemented a robust DevOps strategy using AWS Lambda, Docker, and Kubernetes. My focus was on creating a resilient, auto-scaling cloud architecture that could handle unpredictable traffic spikes with zero downtime. By refining the database and automating the deployment pipeline with GitHub Actions, we achieved 99.95% system uptime and reduced infrastructure costs by 25%—transforming it into a truly perpetual platform.',
-    image: 'https://images.unsplash.com/photo-1528410390886-e62811f41bed?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    technologies: ['AWS Lambda', 'Docker', 'Kubernetes', 'GitHub Actions', 'PostgreSQL'],
-    outcomes: [
-      'Reduced deployment cycle time by 93%',
-      'Achieved 99.95% system uptime',
-      'Decreased infrastructure costs by 25%'
-    ],
-    links: {
-      live: 'https://africatennis.com'
-    }
-  },
-  {
-    title: 'Charted Art Platform',
-    description: 'Architected for Scalable Analytics. Designed a cloud-native architecture on GCP with Docker and Kubernetes, enabling rapid iteration and reliable data pipelines. Automated CI/CD with Terraform and Azure DevOps to ensure consistent, versioned infrastructure changes and resilient deployments with 99.9% uptime.',
-    image: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=2400',
-    technologies: ['GCP Compute Resources', 'Docker', 'Kubernetes', 'Terraform', 'Azure DevOps', 'API Gateway'],
-    outcomes: [
-      'Improved data processing speeds by 20%',
-      'Achieved 99.9% service uptime',
-      'Reduced environment setup time by 60%'
-    ],
-    links: {
-      live: 'https://chartedart.com'
-    }
-  },
   {
     title: 'Adv. Motsusi Professional Website',
     description: 'Built for Trust and Maintainability. Implemented a performant, SEO-friendly site with a clean component architecture to simplify updates and ensure long-term reliability for the firm’s digital presence.',
@@ -65,47 +37,9 @@ const projects: Project[] = [
     }
   },
   {
-    title: "ReelApps: The Future of Talent Acquisition",
-    description: 'Engineered as a Modular, Perpetual Platform. An AI-powered suite with secure SSO, role-based access, and CI/CD across micro-frontends. Automated testing and GitHub Actions keep releases reliable; infrastructure and state patterns ensure maintainability at scale.',
-    image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070",
-    technologies: [
-      "React",
-      "TypeScript",
-      "AI/ML (Google Gemini API, Python FastAPI)",
-      "PostgreSQL (Supabase)",
-      "AWS Amplify (Deployment)",
-      "Zustand (State Management)",
-      "GitHub Actions (CI/CD)"
-    ],
-    outcomes: [
-      "Transformed talent acquisition with an AI-driven ecosystem emphasizing verified skills and real-world projects",
-      "Implemented secure, modal-based authentication with Single Sign-On (SSO) and role-based access across all micro-frontends, enhancing user experience and security",
-      "Developed an adaptive learning and matching system powered by advanced AI analysis for job descriptions, candidate profiles, and project evidence"
-    ],
-    links: {
-      live: "https://www.reelapps.co.za",
-      reelcv: "https://reelcv.reelapps.co.za",
-      reelhunter: "https://reelhunter.reelapps.co.za"
-    }
-  },
-  {
-    title: 'Sensalearn',
-    description: 'Built for Adaptive Scale. Leveraged AI services with a cloud-native stack and event-driven patterns for resilient workloads, enabling personalized learning while maintaining performance and observability.',
-    image: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2124&q=80',
-    technologies: ['React', 'TypeScript', 'AI/ML', 'Google Cloud', 'Firebase'],
-    outcomes: [
-      'Created an adaptive learning system powered by AI',
-      'Implemented personalized learning paths for each user',
-      'Enhanced language acquisition through interactive modules'
-    ],
-    links: {
-      live: 'https://sensa-ai-922211711157.europe-west1.run.app/'
-    }
-  },
-  {
     title: 'IP Navigator',
     description: 'Architected for Data Integrity and Insight. Implemented secure APIs and robust data models with PostgreSQL, pairing AI inference with traceability and monitoring to deliver reliable, explainable scoring for innovators.',
-    image: 'https://images.unsplash.com/photo-1626908013943-df94de54984c?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: 'https://images.unsplash.com/photo-1626908013943-df94de54984c?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8d2FyZWhvdXNlfGVufDB8fDB8fHww',
     technologies: ['React', 'Python (Flask/FastAPI)', 'AI/ML (for patentability scoring)', 'PostgreSQL'],
     outcomes: [
       'Provided users with actionable patentability scores for their ideas',
@@ -126,9 +60,8 @@ const projects: Project[] = [
       'Improved inventory accuracy and real-time tracking',
       'Enhanced operational transparency across the supply chain'
     ],
-    links: {
-      live: 'https://www.thfcscan.co.za'
-    }
+    private: true,
+    links: {}
   },
   {
     title: 'Landulani Physiotherapy Website',
@@ -142,6 +75,76 @@ const projects: Project[] = [
     ],
     links: {
       live: 'https://www.landulaniphysio.com'
+    }
+  },
+  {
+    title: 'SensaAI',
+    description: 'Engineered for Verifiable Work Experience. Built an AI-powered simulated workplace platform with adaptive learning pipelines and real-time feedback loops. Leveraged cloud-native services with event-driven patterns to deliver a resilient, scalable environment where users gain their first verifiable work experience through realistic simulations.',
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=2832',
+    technologies: ['React', 'TypeScript', 'AI/ML', 'Google Cloud', 'Vite'],
+    outcomes: [
+      'Created an immersive simulated workplace for real-world skill validation',
+      'Implemented adaptive AI-driven feedback for personalized learning paths',
+      'Delivered verifiable work experience credentials to accelerate career readiness'
+    ],
+    links: {
+      live: 'https://app.sensaai.co.za'
+    }
+  },
+  {
+    title: 'ProProfile',
+    description: 'Architected for Professional Identity. Designed a sleek, modern professional profile platform with secure authentication via AWS, theme-aware rendering, and a maintainable component architecture. Focused on performance optimization and progressive enhancement to ensure a polished experience across all devices.',
+    image: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?q=80&w=2874',
+    technologies: ['React', 'TypeScript', 'AWS Amplify', 'Vite', 'Inter UI'],
+    outcomes: [
+      'Empowered professionals with a customizable and polished online identity',
+      'Implemented secure, theme-aware user experience with light and dark modes',
+      'Streamlined portfolio presentation with an intuitive, modern interface'
+    ],
+    links: {
+      live: 'https://proprofile.co.za'
+    }
+  },
+  {
+    title: 'Area Code',
+    description: 'Built for Real-Time Discovery. Engineered a location-based venue discovery and rewards platform for South Africa with live status updates, interactive Mapbox maps, and Google OAuth integration. Designed a responsive, mobile-first architecture with structured data and SEO to deliver a seamless experience across Johannesburg, Cape Town, and Durban.',
+    image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2940',
+    technologies: ['React', 'TypeScript', 'Mapbox GL', 'Google OAuth', 'Vite', 'Google Cloud'],
+    outcomes: [
+      'Delivered real-time venue status tracking across major South African cities',
+      'Implemented a gamified check-in and rewards system to drive user engagement',
+      'Built a mobile-first, map-centric experience for intuitive venue discovery'
+    ],
+    links: {
+      live: 'https://areacode.co.za'
+    }
+  },
+  {
+    title: 'Malumz Movement',
+    description: 'Built for Community and Impact. Developed a digital platform for the Malumz Movement centered around "The Dog Trainer" memoir and the Six Trainers framework—a purpose-driven initiative for men rebuilding themselves after apartheid. Delivered a fast, SEO-optimized site with structured data, theme-aware design, and a clean component architecture to amplify the movement\'s reach.',
+    image: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=2873',
+    technologies: ['React', 'TypeScript', 'SEO', 'Structured Data', 'Responsive Design'],
+    outcomes: [
+      'Established a compelling digital presence for the Malumz Movement and Brotherhood Circles',
+      'Implemented SEO and structured data strategies to maximize discoverability',
+      'Delivered a theme-aware, accessible experience across all devices'
+    ],
+    links: {
+      live: 'https://malumz.co.za'
+    }
+  },
+  {
+    title: 'KafenFarm',
+    description: 'Architected for Agricultural Excellence. Designed and delivered a modern, visually rich web presence for KafenFarm, showcasing the farm\'s produce, story, and values. Focused on performance, accessibility, and a clean UI to connect the farm directly with its community and customers.',
+    image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2832',
+    technologies: ['React', 'Vite', 'Tailwind CSS', 'SEO', 'Responsive Design'],
+    outcomes: [
+      'Created a professional online identity for KafenFarm',
+      'Improved customer engagement and visibility for the farm\'s offerings',
+      'Delivered a fast, mobile-optimized experience for rural and urban audiences'
+    ],
+    links: {
+      live: 'https://kafenfarm.co.za'
     }
   }
 ];
@@ -217,6 +220,12 @@ export const Projects: React.FC = () => {
                 <div className={styles.projectTitle}>
                   <h3>{project.title}</h3>
                 </div>
+                {project.private && (
+                  <span className={styles.privateBadge}>
+                    <Lock size={12} />
+                    Private
+                  </span>
+                )}
               </div>
               
               <CardBody className={styles.projectBody}>
@@ -250,7 +259,7 @@ export const Projects: React.FC = () => {
                     View Details
                   </Button>
                   
-                  {project.links.live && (
+                  {project.links.live && !project.private && (
                     <Button
                       variant="ghost"
                       size="small"

@@ -189,6 +189,22 @@
   justify-content: center;
 }
 
+.privateBadge {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  color: var(--color-accent-electric);
+  padding: var(--spacing-2) var(--spacing-5);
+  border-radius: var(--radius-full);
+  font: var(--typography-body-small);
+  font-weight: var(--font-weight-semibold);
+  border: 1px solid rgba(30, 144, 255, 0.35);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
 /* ==========================================================================
    ANIMATIONS
    ========================================================================== */
