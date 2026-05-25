@@ -145,6 +145,13 @@ export function Animator() {
     const cleanups: (() => void)[] = [];
     const triggers: ScrollTrigger[] = [];
 
+    // Wait a frame for React to finish committing the new page DOM
+    const frameId = requestAnimationFrame(() => {
+      setup();
+    });
+
+    function setup() {
+
     // ═══════════════════════════════════════════════════════════════════
     // DATA-ANIMATE ELEMENTS
     // ═══════════════════════════════════════════════════════════════════
@@ -450,11 +457,16 @@ export function Animator() {
     };
     reducedQuery?.addEventListener?.('change', onReducedChange);
 
+    cleanups.push(() => {
+      reducedQuery?.removeEventListener?.('change', onReducedChange);
+    });
+    } // end setup()
+
     return () => {
+      cancelAnimationFrame(frameId);
       log('Cleanup — killing', triggers.length, 'triggers');
       triggers.forEach((t) => t.kill());
       cleanups.forEach((fn) => fn());
-      reducedQuery?.removeEventListener?.('change', onReducedChange);
       // Clear GSAP inline styles so new page starts fresh
       gsap.set('[data-animate], [data-split-words] .rr-word, [data-split-chars] .rr-char, [data-stagger-children] > *', {
         clearProps: 'all',
