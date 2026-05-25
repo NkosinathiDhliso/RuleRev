@@ -61,8 +61,15 @@
   font-size: clamp(36px, 4.5vw, 52px);
   font-weight: 500;
   letter-spacing: -0.02em;
-  color: var(--color-ink);
   line-height: 1;
+}
+
+.value_inner {
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
 .label {

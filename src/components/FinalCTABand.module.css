@@ -1,11 +1,30 @@
 .band {
-  background: var(--color-ink);
+  position: relative;
+  isolation: isolate;
+  background: var(--color-ink-deep);
   color: #fff;
   border-radius: var(--radius-lg);
   padding: 48px 28px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  overflow: hidden;
+  box-shadow: var(--glow-azure);
+}
+
+.band::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--mesh-dark-1), var(--mesh-dark-2), var(--mesh-dark-3);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.band > * {
+  position: relative;
+  z-index: 1;
 }
 
 @media (min-width: 768px) {

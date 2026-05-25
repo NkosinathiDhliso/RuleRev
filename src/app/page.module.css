@@ -1,16 +1,21 @@
 .hero {
+  position: relative;
+  isolation: isolate;
   padding-top: 56px;
   padding-bottom: 64px;
+  overflow: hidden;
 }
 
 @media (min-width: 768px) {
   .hero {
-    padding-top: 96px;
-    padding-bottom: 96px;
+    padding-top: 112px;
+    padding-bottom: 112px;
   }
 }
 
 .hero_inner {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -18,17 +23,25 @@
 }
 
 .h1 {
-  font-size: clamp(32px, 5vw, 44px);
+  font-size: clamp(36px, 5.6vw, 56px);
   font-weight: 500;
-  letter-spacing: -0.015em;
-  line-height: 1.1;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.h1_accent {
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
 .subhead {
-  font-size: clamp(16px, 2vw, 18px);
+  font-size: clamp(16px, 2vw, 19px);
   color: var(--color-muted);
   line-height: 1.7;
-  max-width: 540px;
+  max-width: 560px;
 }
 
 .hero_actions {
@@ -103,23 +116,48 @@
 }
 
 .step {
+  position: relative;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-lg);
-  padding: 24px;
+  padding: 28px 24px;
   background: #fff;
-  transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  transition: border-color 0.3s var(--ease-emphasized), transform 0.3s var(--ease-emphasized), box-shadow 0.3s var(--ease-emphasized);
+  overflow: hidden;
+}
+
+.step::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: var(--grad-border);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-emphasized);
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1px;
 }
 
 .step:hover {
-  border-color: var(--color-line-strong);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-color: transparent;
+  transform: translateY(-3px);
+  box-shadow: var(--glow-elev);
+}
+
+.step:hover::after {
+  opacity: 1;
 }
 
 .step_num {
   font-family: var(--font-serif);
-  font-size: 28px;
-  color: var(--color-accent);
+  font-size: 32px;
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
   margin-bottom: 8px;
   display: block;
 }
@@ -134,4 +172,28 @@
   font-size: 14px;
   color: var(--color-muted);
   line-height: 1.6;
+}
+
+/* ─── Dark showcase section ─────────────────────────────────────────── */
+.showcase {
+  position: relative;
+  isolation: isolate;
+  background: var(--color-ink-deep);
+  color: #fff;
+  padding-block: 72px;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .showcase {
+    padding-block: 112px;
+  }
+}
+
+.showcase h2 {
+  color: #fff;
+}
+
+.showcase p {
+  color: rgba(255, 255, 255, 0.7);
 }

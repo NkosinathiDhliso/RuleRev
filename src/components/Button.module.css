@@ -38,13 +38,16 @@
 }
 
 .variant_primary {
-  background: var(--color-ink);
+  background: linear-gradient(135deg, var(--color-ink) 0%, #1a1f2e 100%);
   color: #fff;
   border-color: var(--color-ink);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 4px 12px -4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s var(--ease-emphasized);
 }
 
 .variant_primary:hover {
-  background: var(--color-ink-soft);
+  background: linear-gradient(135deg, var(--color-ink-soft) 0%, #252a3a 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 8px 24px -6px rgba(109, 94, 245, 0.35);
 }
 
 .variant_secondary {
@@ -59,14 +62,16 @@
 }
 
 .variant_accent {
-  background: var(--color-accent);
+  background: linear-gradient(135deg, var(--grad-violet) 0%, var(--grad-azure) 50%, var(--grad-cyan) 100%);
   color: #fff;
-  border-color: var(--color-accent);
+  border-color: transparent;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 6px 20px -6px rgba(109, 94, 245, 0.45);
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s var(--ease-emphasized), filter 0.3s ease;
 }
 
 .variant_accent:hover {
-  background: var(--color-accent-ink);
-  border-color: var(--color-accent-ink);
+  filter: brightness(1.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 12px 32px -8px rgba(109, 94, 245, 0.6);
 }
 
 .variant_ghost {

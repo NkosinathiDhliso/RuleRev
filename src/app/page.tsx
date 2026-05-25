@@ -5,7 +5,8 @@ import { Button } from '@/components/Button';
 import { ProofStrip } from '@/components/ProofStrip';
 import { CaseStudyCardGrid, ServiceCardGrid } from '@/components/Cards';
 import { FinalCTABand } from '@/components/FinalCTABand';
-import { SplitWords } from '@/components/SplitWords';
+import { SplitChars } from '@/components/SplitChars';
+import { GradientMesh } from '@/components/GradientMesh';
 import { FEATURED_CASE_STUDIES } from '@/content/case-studies';
 import { SERVICES } from '@/content/services';
 import { SITE, bookCallHref } from '@/lib/site';
@@ -14,7 +15,7 @@ import styles from './page.module.css';
 export const metadata: Metadata = {
   title: `${SITE.name} - ${SITE.positioning}`,
   description:
-    'I help South African founders and SMEs ship investor-ready products - POPIA compliance, cloud architecture, and shipped code that doesn’t become the reason your next round slips a quarter.',
+    'I help South African founders and SMEs ship investor-ready products - POPIA compliance, cloud architecture, and shipped code that doesn\'t become the reason your next round slips a quarter.',
   alternates: { canonical: '/' },
 };
 
@@ -22,24 +23,25 @@ export default function HomePage() {
   const featured = FEATURED_CASE_STUDIES.slice(0, 3);
   return (
     <>
+      {/* ─── Hero ─────────────────────────────────────────────────────── */}
       <section className={styles.hero}>
+        <GradientMesh parallax parallaxStrength={40} grain />
         <div className="container-page">
           <div className={styles.hero_inner}>
             <div data-animate="fade-up-sm" style={{ ['--d' as string]: '0ms' }}>
               <Eyebrow>{SITE.scarcity.pillText}</Eyebrow>
             </div>
-            <SplitWords
+            <SplitChars
               as="h1"
               className={styles.h1}
               text="Technical product partner for South African founders."
-              baseDelay={2}
             />
             <p
               className={styles.subhead}
               data-animate="fade-up-sm"
               style={{ ['--d' as string]: '650ms' }}
             >
-              I help founders and SMEs ship investor-ready products - compliance, infrastructure, and code that won&rsquo;t
+              I help founders and SMEs ship investor-ready products — compliance, infrastructure, and code that won&rsquo;t
               be the reason your next round slips a quarter.
             </p>
             <div
@@ -47,7 +49,7 @@ export default function HomePage() {
               data-animate="fade-up-sm"
               style={{ ['--d' as string]: '800ms' }}
             >
-              <Button href={bookCallHref()} variant="primary" size="lg" external>
+              <Button href={bookCallHref()} variant="primary" size="lg" external data-magnetic="">
                 Book a 30-min discovery call
               </Button>
               <Button href="/work" variant="secondary" size="lg">
@@ -58,24 +60,30 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ─── Proof strip ──────────────────────────────────────────────── */}
       <Section tight>
         <div data-animate="scale-in">
           <ProofStrip />
         </div>
       </Section>
 
-      <Section surface>
-        <div data-animate="fade-up">
-          <SectionHeading
-            title="Selected work"
-            lede="Three projects where the headline number does the talking."
-          />
+      {/* ─── Selected work — dark showcase ────────────────────────────── */}
+      <section className={styles.showcase}>
+        <GradientMesh variant="dark" parallax parallaxStrength={50} grain />
+        <div className="container-page" style={{ position: 'relative', zIndex: 2 }}>
+          <div data-animate="fade-up">
+            <SectionHeading
+              title="Selected work"
+              lede="Three projects where the headline number does the talking."
+            />
+          </div>
+          <div>
+            <CaseStudyCardGrid items={featured} />
+          </div>
         </div>
-        <div>
-          <CaseStudyCardGrid items={featured} />
-        </div>
-      </Section>
+      </section>
 
+      {/* ─── Services ─────────────────────────────────────────────────── */}
       <Section>
         <div data-animate="fade-up">
           <SectionHeading
@@ -88,6 +96,7 @@ export default function HomePage() {
         </div>
       </Section>
 
+      {/* ─── Trust badges ─────────────────────────────────────────────── */}
       <Section surface tight>
         <div className={styles.trust} data-animate="fade-up">
           <p className={styles.trust_text}>
@@ -104,6 +113,7 @@ export default function HomePage() {
         </div>
       </Section>
 
+      {/* ─── How it works ─────────────────────────────────────────────── */}
       <Section>
         <div data-animate="fade-up">
           <SectionHeading title="How it works" lede="Three steps. No mystery." />
@@ -127,6 +137,7 @@ export default function HomePage() {
         </div>
       </Section>
 
+      {/* ─── Final CTA ────────────────────────────────────────────────── */}
       <Section>
         <div data-animate="fade-up">
           <FinalCTABand />
