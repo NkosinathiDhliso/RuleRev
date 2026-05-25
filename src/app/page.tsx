@@ -104,7 +104,7 @@ export default function HomePage() {
           <p className={styles.trust_text}>
             CIPC registered &middot; SARS registered &middot; POPIA registered with the Information Regulator.
           </p>
-          <div className={styles.trust_badges}>
+          <div className={styles.trust_badges} data-stagger-children="">
             <span className={styles.badge}>AWS</span>
             <span className={styles.badge}>Microsoft Azure</span>
             <span className={styles.badge}>AZ-305</span>

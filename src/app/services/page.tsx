@@ -7,7 +7,6 @@ import { JsonLd, serviceLD } from '@/lib/jsonld';
 import { SERVICES } from '@/content/services';
 import { SITE, bookCallHref } from '@/lib/site';
 import { whatsappLink } from '@/lib/whatsapp';
-import { formatZAR } from '@/lib/format';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -45,7 +44,6 @@ export default function ServicesPage() {
                 <h2 id={`${s.slug}-title`} className={styles.offer_title}>
                   {s.name}
                 </h2>
-                <p className={styles.offer_meta}>From {formatZAR(s.priceFrom).replace('From ', '')}</p>
               </div>
               <div>
                 <p className={styles.offer_pitch}>{s.pitch}</p>

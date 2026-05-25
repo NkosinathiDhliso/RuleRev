@@ -2,14 +2,13 @@ import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import type { FeaturedCaseStudy, OtherClient } from '@/content/case-studies';
 import type { Service } from '@/content/services';
-import { formatZAR } from '@/lib/format';
 import styles from './Cards.module.css';
 
 export function CaseStudyCardGrid({ items }: { items: FeaturedCaseStudy[] }) {
   return (
     <div className={styles.case_grid}>
       {items.map((cs, i) => (
-        <Link key={cs.slug} href={`/work/${cs.slug}`} className={styles.case_card} data-animate="fade-up" style={{ '--i': i } as React.CSSProperties}>
+        <Link key={cs.slug} href={`/work/${cs.slug}`} className={styles.case_card} data-animate="fade-up" data-tilt="" data-glow="" style={{ '--i': i } as React.CSSProperties}>
           <span className={styles.case_card_eyebrow}>{cs.client}</span>
           <h3 className={styles.case_card_title}>{cs.title}</h3>
           <p className={styles.case_card_outcome}>{cs.oneLine}</p>
@@ -24,12 +23,11 @@ export function ServiceCardGrid({ items }: { items: Service[] }) {
   return (
     <div className={styles.service_grid}>
       {items.map((s, i) => (
-        <article key={s.slug} className={styles.service_card} data-animate="fade-up" style={{ '--i': i } as React.CSSProperties}>
+        <article key={s.slug} className={styles.service_card} data-animate="fade-up" data-tilt="" data-glow="" style={{ '--i': i } as React.CSSProperties}>
           <h3 className={styles.service_card_title}>{s.name}</h3>
           <p className={styles.service_card_outcome}>{s.oneLine}</p>
           <p className={styles.service_card_meta}>
-            From {formatZAR(s.priceFrom).replace('From ', '')}
-            {s.duration ? ` · ${s.duration}` : ''}
+            {s.duration ? s.duration : 'Custom timeline'}
           </p>
           <Link href={`/services#${s.slug}`} className={styles.service_card_link}>
             See what&rsquo;s included →

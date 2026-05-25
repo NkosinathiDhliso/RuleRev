@@ -128,161 +128,49 @@
 
 @layer utilities {
   /* ============================================================
-     Motion system — GSAP-driven.
-     CSS pre-states hide elements; GSAP handles all animation.
-     The CSS keyframes below are a no-JS fallback only.
-     html.motion-reduced (or @media reduce) keeps everything
-     in final state with no animation.
+     Motion system — GSAP-driven (no CSS keyframe fallback).
+     CSS only provides initial hidden states. GSAP handles all
+     animation via ScrollTrigger. No .in-view CSS animations.
      ============================================================ */
 
   html.motion [data-animate='fade-up'],
-  html.motion [data-animate='fade-up-sm'] {
-    opacity: 0;
-    transform: translate3d(0, 60px, 0);
-    filter: blur(6px);
-    will-change: opacity, transform, filter;
-  }
-
-  html.motion [data-animate='fade-up-sm'] {
-    transform: translate3d(0, 30px, 0);
-    filter: blur(4px);
-  }
-
-  html.motion [data-animate='fade'] {
-    opacity: 0;
-    filter: blur(8px);
-    will-change: opacity, filter;
-  }
-
-  html.motion [data-animate='scale-in'] {
-    opacity: 0;
-    transform: scale(0.88);
-    filter: blur(10px);
-    transform-origin: center;
-    will-change: opacity, transform, filter;
-  }
-
-  html.motion [data-animate='slide-left'] {
-    opacity: 0;
-    transform: translate3d(-60px, 0, 0);
-    filter: blur(6px);
-    will-change: opacity, transform, filter;
-  }
-
+  html.motion [data-animate='fade-up-sm'],
+  html.motion [data-animate='fade'],
+  html.motion [data-animate='scale-in'],
+  html.motion [data-animate='slide-left'],
   html.motion [data-animate='slide-right'] {
     opacity: 0;
-    transform: translate3d(60px, 0, 0);
-    filter: blur(6px);
-    will-change: opacity, transform, filter;
   }
 
   html.motion [data-split-words] .rr-word {
     display: inline-block;
     opacity: 0;
-    transform: translate3d(0, 0.7em, 0) rotateX(-20deg);
-    filter: blur(4px);
-    will-change: opacity, transform, filter;
   }
 
-  /* Reveal triggers — CSS fallback (GSAP overrides these) ----- */
-
-  html.motion [data-animate].in-view {
-    animation-delay: var(--d, calc(var(--i, 0) * var(--ds, 120ms)));
-    animation-fill-mode: forwards;
-  }
-
-  html.motion [data-animate='fade-up'].in-view,
-  html.motion [data-animate='fade-up-sm'].in-view {
-    animation-name: rr-fade-up;
-    animation-duration: 1.2s;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  html.motion [data-animate='fade'].in-view {
-    animation-name: rr-fade;
-    animation-duration: 1.0s;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  html.motion [data-animate='scale-in'].in-view {
-    animation-name: rr-scale-in;
-    animation-duration: 1.3s;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  html.motion [data-animate='slide-left'].in-view,
-  html.motion [data-animate='slide-right'].in-view {
-    animation-name: rr-slide-x;
-    animation-duration: 1.2s;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  html.motion [data-split-words].in-view .rr-word {
-    animation: rr-fade-up 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: calc(var(--w, 0) * 70ms + var(--w-base, 0ms));
-  }
-
-  /* Once revealed, drop will-change to free GPU layers */
-  html.motion [data-animate].in-view,
-  html.motion [data-split-words].in-view .rr-word {
-    animation-fill-mode: forwards;
-  }
-
-  @keyframes rr-fade-up {
-    from {
-      opacity: 0;
-      transform: translate3d(0, 60px, 0);
-      filter: blur(6px);
-    }
-    to {
-      opacity: 1;
-      transform: translate3d(0, 0, 0);
-      filter: blur(0px);
-    }
-  }
-
-  @keyframes rr-fade {
-    from { opacity: 0; filter: blur(8px); }
-    to { opacity: 1; filter: blur(0px); }
-  }
-
-  @keyframes rr-scale-in {
-    from {
-      opacity: 0;
-      transform: scale(0.88);
-      filter: blur(10px);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-      filter: blur(0px);
-    }
-  }
-
-  @keyframes rr-slide-x {
-    to {
-      opacity: 1;
-      transform: translate3d(0, 0, 0);
-      filter: blur(0px);
-    }
+  html.motion [data-split-chars] .rr-char {
+    display: inline-block;
+    opacity: 0;
   }
 
   /* Reduced motion: never hide, never animate. */
   @media (prefers-reduced-motion: reduce) {
     html.motion [data-animate],
-    html.motion [data-animate].in-view,
     html.motion [data-split-words] .rr-word,
-    html.motion [data-split-words].in-view .rr-word,
     html.motion [data-split-chars] .rr-char,
     html.motion-reduced [data-animate],
     html.motion-reduced [data-split-words] .rr-word,
     html.motion-reduced [data-split-chars] .rr-char {
-      animation: none !important;
       opacity: 1 !important;
       transform: none !important;
       filter: none !important;
-      will-change: auto !important;
     }
+  }
+
+  /* No-JS fallback: if html.motion never gets added, elements stay visible */
+  html:not(.motion):not(.motion-reduced) [data-animate],
+  html:not(.motion):not(.motion-reduced) [data-split-words] .rr-word,
+  html:not(.motion):not(.motion-reduced) [data-split-chars] .rr-char {
+    opacity: 1;
   }
 
   .container-page {
@@ -368,18 +256,6 @@
   }
   .grad-border:hover::before {
     opacity: 1;
-  }
-
-  /* Char-level split — used by GSAP-enhanced SplitWords */
-  html.motion [data-split-chars] .rr-char {
-    display: inline-block;
-    opacity: 0;
-    transform: translate3d(0, 0.55em, 0);
-    will-change: opacity, transform;
-  }
-  html.motion-reduced [data-split-chars] .rr-char {
-    opacity: 1 !important;
-    transform: none !important;
   }
 
   /* Magnetic CTA hover surface */

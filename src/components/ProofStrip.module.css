@@ -22,11 +22,15 @@
   flex-direction: column;
   gap: 8px;
   background: transparent;
-  transition: background-color 0.18s ease;
+  transition: background-color 0.3s var(--ease-emphasized), transform 0.3s var(--ease-emphasized), box-shadow 0.3s var(--ease-emphasized);
 }
 
 .cell:hover {
   background: var(--color-surface);
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px -8px rgba(109, 94, 245, 0.15);
+  z-index: 1;
+  position: relative;
 }
 
 .cell:nth-child(2n) {

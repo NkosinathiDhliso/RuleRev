@@ -163,6 +163,11 @@
   -webkit-text-fill-color: transparent;
   margin-bottom: 8px;
   display: block;
+  transition: transform 0.4s var(--ease-spring);
+}
+
+.step:hover .step_num {
+  transform: scale(1.15) translateY(-2px);
 }
 
 .step_title {

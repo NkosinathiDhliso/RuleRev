@@ -26,13 +26,37 @@
   border: 1px solid var(--card-border, var(--color-line));
   border-radius: var(--radius-lg);
   background: var(--card-bg, #fff);
-  transition: border-color 0.3s var(--ease-emphasized), transform 0.3s var(--ease-emphasized), box-shadow 0.3s var(--ease-emphasized);
+  transition: border-color 0.4s var(--ease-emphasized), transform 0.4s var(--ease-emphasized), box-shadow 0.4s var(--ease-emphasized);
   text-decoration: none;
   color: inherit;
   height: 100%;
   overflow: hidden;
+  transform-style: preserve-3d;
+  perspective: 800px;
 }
 
+/* Cursor-following glow */
+.case_card::before {
+  content: '';
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(109, 94, 245, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  transform: translate(-50%, -50%);
+  top: var(--mouse-y, 50%);
+  left: var(--mouse-x, 50%);
+  z-index: 0;
+}
+
+.case_card:hover::before {
+  opacity: 1;
+}
+
+/* Gradient border */
 .case_card::after {
   content: '';
   position: absolute;
@@ -40,7 +64,7 @@
   border-radius: inherit;
   background: var(--grad-border);
   opacity: 0;
-  transition: opacity 0.3s var(--ease-emphasized);
+  transition: opacity 0.4s var(--ease-emphasized);
   pointer-events: none;
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
@@ -50,7 +74,7 @@
 
 .case_card:hover {
   border-color: transparent;
-  transform: translateY(-3px);
+  transform: translateY(-4px) rotateX(2deg);
   box-shadow: var(--card-shadow, var(--glow-elev));
 }
 
@@ -87,6 +111,14 @@
   -webkit-text-fill-color: transparent;
   font-size: 13px;
   font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: gap 0.3s var(--ease-emphasized);
+}
+
+.case_card:hover .case_card_arrow {
+  gap: 10px;
 }
 
 .service_grid {
@@ -118,8 +150,30 @@
   border-radius: var(--radius-lg);
   background: #fff;
   height: 100%;
-  transition: border-color 0.3s var(--ease-emphasized), transform 0.3s var(--ease-emphasized), box-shadow 0.3s var(--ease-emphasized);
+  transition: border-color 0.4s var(--ease-emphasized), transform 0.4s var(--ease-emphasized), box-shadow 0.4s var(--ease-emphasized);
   overflow: hidden;
+  transform-style: preserve-3d;
+}
+
+/* Cursor-following glow */
+.service_card::before {
+  content: '';
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 107, 184, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  transform: translate(-50%, -50%);
+  top: var(--mouse-y, 50%);
+  left: var(--mouse-x, 50%);
+  z-index: 0;
+}
+
+.service_card:hover::before {
+  opacity: 1;
 }
 
 .service_card::after {
@@ -139,7 +193,7 @@
 
 .service_card:hover {
   border-color: transparent;
-  transform: translateY(-3px);
+  transform: translateY(-4px) rotateX(2deg);
   box-shadow: var(--glow-elev);
 }
 
@@ -173,6 +227,14 @@
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: gap 0.3s var(--ease-emphasized);
+}
+
+.service_card:hover .service_card_link {
+  gap: 8px;
 }
 
 .other_grid {

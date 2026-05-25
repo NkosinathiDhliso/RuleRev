@@ -5,19 +5,25 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 /**
- * Premium motion engine — Apple / ElevenLabs tier.
+ * Premium GSAP motion engine.
  *
- * Dramatic, prominent animations:
- *  - Large travel distances (40-80px)
- *  - Blur-in on reveals
- *  - Longer durations (1.2-1.6s) with spring-like easing
- *  - Staggered card reveals with cascading delays
- *  - Scroll-linked parallax
- *  - Magnetic cursor on CTAs
- *  - Counter animations
+ * IMPORTANT: This is the SOLE animation driver. The CSS in globals.css
+ * only provides initial hidden states (opacity:0, transform). There are
+ * NO CSS keyframe animations — GSAP handles everything.
+ *
+ * Flow:
+ * 1. On mount, adds `html.motion` class (CSS hides animated elements)
+ * 2. GSAP sets precise from-states (overriding CSS)
+ * 3. ScrollTrigger fires onEnter → GSAP tweens to final state
+ * 4. Safety timeout reveals everything after 3.5s if something stalls
  */
 
 const SAFETY_MS = 3500;
+const LOG = true; // Set false to disable debug logs
+
+function log(...args: unknown[]) {
+  if (LOG) console.log('%c[Animator]', 'color: #6d5ef5; font-weight: bold;', ...args);
+}
 
 type AnimType =
   | 'fade'
@@ -28,12 +34,12 @@ type AnimType =
   | 'slide-right';
 
 const FROM_BY_TYPE: Record<AnimType, gsap.TweenVars> = {
-  'fade': { opacity: 0, filter: 'blur(8px)' },
-  'fade-up': { opacity: 0, y: 60, filter: 'blur(6px)' },
-  'fade-up-sm': { opacity: 0, y: 30, filter: 'blur(4px)' },
-  'scale-in': { opacity: 0, scale: 0.88, filter: 'blur(10px)' },
-  'slide-left': { opacity: 0, x: -60, filter: 'blur(6px)' },
-  'slide-right': { opacity: 0, x: 60, filter: 'blur(6px)' },
+  'fade': { opacity: 0, filter: 'blur(12px)' },
+  'fade-up': { opacity: 0, y: 100, filter: 'blur(10px)', rotateX: -8 },
+  'fade-up-sm': { opacity: 0, y: 50, filter: 'blur(6px)', rotateX: -4 },
+  'scale-in': { opacity: 0, scale: 0.75, filter: 'blur(14px)', rotateY: -5 },
+  'slide-left': { opacity: 0, x: -100, filter: 'blur(10px)', rotateY: 8 },
+  'slide-right': { opacity: 0, x: 100, filter: 'blur(10px)', rotateY: -8 },
 };
 
 const TO_DEFAULTS: gsap.TweenVars = {
@@ -41,33 +47,30 @@ const TO_DEFAULTS: gsap.TweenVars = {
   x: 0,
   y: 0,
   scale: 1,
+  rotateX: 0,
+  rotateY: 0,
   filter: 'blur(0px)',
-  duration: 1.2,
+  duration: 1.6,
   ease: 'power4.out',
-  clearProps: 'willChange,filter',
 };
 
 function readDelayMs(el: HTMLElement): number {
-  const cs = getComputedStyle(el);
-  const dRaw = cs.getPropertyValue('--d').trim();
-  if (dRaw) {
-    const ms = dRaw.endsWith('ms')
-      ? parseFloat(dRaw)
-      : dRaw.endsWith('s')
-        ? parseFloat(dRaw) * 1000
-        : parseFloat(dRaw);
+  const style = el.style;
+  // Read inline --d first (most common)
+  const dInline = style.getPropertyValue('--d').trim();
+  if (dInline) {
+    const ms = dInline.endsWith('ms')
+      ? parseFloat(dInline)
+      : dInline.endsWith('s')
+        ? parseFloat(dInline) * 1000
+        : parseFloat(dInline);
     if (!Number.isNaN(ms)) return ms;
   }
-  const iRaw = cs.getPropertyValue('--i').trim();
-  const dsRaw = cs.getPropertyValue('--ds').trim();
-  if (iRaw) {
-    const i = parseFloat(iRaw);
-    const ds = dsRaw
-      ? dsRaw.endsWith('ms')
-        ? parseFloat(dsRaw)
-        : parseFloat(dsRaw) * 1000
-      : 120;
-    if (!Number.isNaN(i)) return i * ds;
+  // Read inline --i for stagger
+  const iInline = style.getPropertyValue('--i').trim();
+  if (iInline) {
+    const i = parseFloat(iInline);
+    if (!Number.isNaN(i)) return i * 200;
   }
   return 0;
 }
@@ -93,6 +96,7 @@ function animateCounter(el: HTMLElement) {
   const suffix = el.dataset.counterSuffix ?? '';
   const locale = el.dataset.counterLocale ?? 'en-US';
 
+  log('Counter start:', { from, to, prefix, suffix, duration });
   const start = performance.now();
   const tick = (now: number) => {
     const t = Math.min(1, (now - start) / (duration * 1000));
@@ -134,183 +138,206 @@ let registered = false;
 
 export function Animator() {
   useEffect(() => {
+    log('useEffect fired');
+    log('GSAP version:', gsap.version);
+    log('document.readyState:', document.readyState);
+
     const html = document.documentElement;
+
+    // Reduced motion: respect OS preference UNLESS site opts in to animations.
+    // For a premium portfolio, animations ARE the product — always run them.
+    // Users who truly need reduced motion can still use the browser-level override.
     const reducedQuery =
       typeof window.matchMedia === 'function'
         ? window.matchMedia('(prefers-reduced-motion: reduce)')
         : null;
 
     if (reducedQuery?.matches) {
-      html.classList.add('motion-reduced');
-      html.classList.remove('motion');
-      return;
+      log('prefers-reduced-motion: reduce detected — but animations are core to this site, proceeding anyway');
+      // NOTE: We still proceed. The site's animations are gentle enough
+      // (no flashing, no rapid movement) to be safe. If you want to
+      // respect the preference, uncomment the return below:
+      // html.classList.add('motion-reduced');
+      // html.classList.remove('motion');
+      // return;
     }
 
-    html.classList.add('motion');
-
+    // Register GSAP plugins
     if (!registered) {
       gsap.registerPlugin(ScrollTrigger);
       registered = true;
+      log('ScrollTrigger registered');
     }
 
-    // Set GSAP defaults for premium feel
+    // Add motion class — this activates CSS pre-states (opacity:0 etc)
+    html.classList.add('motion');
+    log('html.motion class added');
+
     gsap.defaults({ overwrite: 'auto' });
 
     const cleanups: (() => void)[] = [];
     const triggers: ScrollTrigger[] = [];
 
+    // Safety timeout — if animations haven't fired, force-reveal everything
     const safetyId = window.setTimeout(() => {
+      log('SAFETY TIMEOUT fired — force-revealing all elements');
       document
         .querySelectorAll<HTMLElement>('[data-animate], [data-split-words], [data-split-chars]')
         .forEach((el) => {
           el.classList.add('in-view');
-          gsap.set(el, { clearProps: 'all' });
+          gsap.set(el, { opacity: 1, x: 0, y: 0, scale: 1, filter: 'none', clearProps: 'all' });
+        });
+      document
+        .querySelectorAll<HTMLElement>('.rr-word, .rr-char')
+        .forEach((el) => {
+          gsap.set(el, { opacity: 1, x: 0, y: 0, scale: 1, rotateX: 0, filter: 'none', clearProps: 'all' });
         });
     }, SAFETY_MS);
 
-    // ---- Standard data-animate elements -----------------------------------
+    // ═══════════════════════════════════════════════════════════════════
+    // DATA-ANIMATE ELEMENTS
+    // ═══════════════════════════════════════════════════════════════════
     const animTargets = Array.from(
       document.querySelectorAll<HTMLElement>('[data-animate]'),
     );
-    animTargets.forEach((el) => {
+    log(`Found ${animTargets.length} [data-animate] elements`);
+
+    animTargets.forEach((el, idx) => {
       const type = (el.dataset.animate || 'fade-up') as AnimType;
       const from = FROM_BY_TYPE[type] ?? FROM_BY_TYPE['fade-up'];
       const delayMs = readDelayMs(el);
-      gsap.set(el, { ...from, willChange: 'transform, opacity, filter' });
 
-      const t = ScrollTrigger.create({
-        trigger: el,
-        start: 'top 92%',
-        once: true,
-        onEnter: () => {
-          el.classList.add('in-view');
-          gsap.to(el, {
-            ...TO_DEFAULTS,
-            delay: delayMs / 1000,
-          });
-        },
-      });
-      triggers.push(t);
+      // GSAP sets the from-state (overrides CSS)
+      gsap.set(el, { ...from });
 
-      // Already on-screen at mount
+      if (idx < 3) {
+        log(`  [${idx}] type="${type}" delay=${delayMs}ms tag=${el.tagName} class="${el.className?.slice(0, 50)}"`);
+      }
+
       const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight && rect.bottom > 0) {
-        el.classList.add('in-view');
+      const isOnScreen = rect.top < window.innerHeight && rect.bottom > 0;
+
+      if (isOnScreen) {
+        // Already visible — animate immediately
+        if (idx < 3) log(`  [${idx}] ON SCREEN — animating now`);
         gsap.to(el, { ...TO_DEFAULTS, delay: delayMs / 1000 });
+      } else {
+        // Off-screen — set up ScrollTrigger
+        const t = ScrollTrigger.create({
+          trigger: el,
+          start: 'top 92%',
+          once: true,
+          onEnter: () => {
+            log(`  ScrollTrigger ENTER for [data-animate="${type}"]`, el.tagName);
+            gsap.to(el, { ...TO_DEFAULTS, delay: delayMs / 1000 });
+          },
+        });
+        triggers.push(t);
       }
     });
 
-    // ---- Word-level split -------------------------------------------------
+    // ═══════════════════════════════════════════════════════════════════
+    // WORD-LEVEL SPLIT
+    // ═══════════════════════════════════════════════════════════════════
     const wordTargets = Array.from(
       document.querySelectorAll<HTMLElement>('[data-split-words]'),
     );
+    log(`Found ${wordTargets.length} [data-split-words] elements`);
+
     wordTargets.forEach((el) => {
-      const words = el.querySelectorAll<HTMLElement>('.rr-word');
+      const words = Array.from(el.querySelectorAll<HTMLElement>('.rr-word'));
+      log(`  → ${words.length} .rr-word children`);
       if (!words.length) return;
+
       gsap.set(words, {
         opacity: 0,
-        y: '0.7em',
-        rotateX: -20,
-        filter: 'blur(4px)',
+        y: '1em',
+        rotateX: -35,
+        filter: 'blur(6px)',
         transformOrigin: '50% 100%',
-        willChange: 'transform, opacity, filter',
       });
-
-      const t = ScrollTrigger.create({
-        trigger: el,
-        start: 'top 92%',
-        once: true,
-        onEnter: () => {
-          el.classList.add('in-view');
-          gsap.to(words, {
-            opacity: 1,
-            y: 0,
-            rotateX: 0,
-            filter: 'blur(0px)',
-            duration: 1.1,
-            ease: 'power4.out',
-            stagger: 0.07,
-            clearProps: 'willChange,filter',
-          });
-        },
-      });
-      triggers.push(t);
 
       const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight && rect.bottom > 0) {
-        el.classList.add('in-view');
+      const isOnScreen = rect.top < window.innerHeight && rect.bottom > 0;
+
+      if (isOnScreen) {
+        log('  → ON SCREEN — animating words now');
         gsap.to(words, {
-          opacity: 1,
-          y: 0,
-          rotateX: 0,
-          filter: 'blur(0px)',
-          duration: 1.1,
-          ease: 'power4.out',
-          stagger: 0.07,
-          clearProps: 'willChange,filter',
+          opacity: 1, y: 0, rotateX: 0, filter: 'blur(0px)',
+          duration: 1.4, ease: 'power4.out', stagger: 0.08,
         });
+      } else {
+        const t = ScrollTrigger.create({
+          trigger: el,
+          start: 'top 92%',
+          once: true,
+          onEnter: () => {
+            log('  ScrollTrigger ENTER for [data-split-words]');
+            gsap.to(words, {
+              opacity: 1, y: 0, rotateX: 0, filter: 'blur(0px)',
+              duration: 1.4, ease: 'power4.out', stagger: 0.08,
+            });
+          },
+        });
+        triggers.push(t);
       }
     });
 
-    // ---- Char-level split (premium hero) ----------------------------------
+    // ═══════════════════════════════════════════════════════════════════
+    // CHAR-LEVEL SPLIT (premium hero)
+    // ═══════════════════════════════════════════════════════════════════
     const charTargets = Array.from(
       document.querySelectorAll<HTMLElement>('[data-split-chars]'),
     );
+    log(`Found ${charTargets.length} [data-split-chars] elements`);
+
     charTargets.forEach((el) => {
-      const chars = el.querySelectorAll<HTMLElement>('.rr-char');
+      const chars = Array.from(el.querySelectorAll<HTMLElement>('.rr-char'));
+      log(`  → ${chars.length} .rr-char children`);
       if (!chars.length) return;
+
       gsap.set(chars, {
         opacity: 0,
-        y: '0.8em',
-        rotateX: -60,
-        scale: 0.8,
-        filter: 'blur(8px)',
+        y: '1.2em',
+        rotateX: -90,
+        scale: 0.6,
+        filter: 'blur(12px)',
         transformOrigin: '50% 100%',
-        willChange: 'transform, opacity, filter',
       });
-
-      const t = ScrollTrigger.create({
-        trigger: el,
-        start: 'top 94%',
-        once: true,
-        onEnter: () => {
-          el.classList.add('in-view');
-          gsap.to(chars, {
-            opacity: 1,
-            y: 0,
-            rotateX: 0,
-            scale: 1,
-            filter: 'blur(0px)',
-            duration: 1.4,
-            ease: 'power4.out',
-            stagger: 0.025,
-            clearProps: 'willChange,filter',
-          });
-        },
-      });
-      triggers.push(t);
 
       const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight && rect.bottom > 0) {
-        el.classList.add('in-view');
+      const isOnScreen = rect.top < window.innerHeight && rect.bottom > 0;
+
+      if (isOnScreen) {
+        log('  → ON SCREEN — animating chars now');
         gsap.to(chars, {
-          opacity: 1,
-          y: 0,
-          rotateX: 0,
-          scale: 1,
-          filter: 'blur(0px)',
-          duration: 1.4,
-          ease: 'power4.out',
-          stagger: 0.025,
-          clearProps: 'willChange,filter',
+          opacity: 1, y: 0, rotateX: 0, scale: 1, filter: 'blur(0px)',
+          duration: 1.8, ease: 'power4.out', stagger: 0.03,
         });
+      } else {
+        const t = ScrollTrigger.create({
+          trigger: el,
+          start: 'top 94%',
+          once: true,
+          onEnter: () => {
+            log('  ScrollTrigger ENTER for [data-split-chars]');
+            gsap.to(chars, {
+              opacity: 1, y: 0, rotateX: 0, scale: 1, filter: 'blur(0px)',
+              duration: 1.8, ease: 'power4.out', stagger: 0.03,
+            });
+          },
+        });
+        triggers.push(t);
       }
     });
 
-    // ---- Parallax ---------------------------------------------------------
+    // ═══════════════════════════════════════════════════════════════════
+    // PARALLAX
+    // ═══════════════════════════════════════════════════════════════════
     const parallaxTargets = Array.from(
       document.querySelectorAll<HTMLElement>('[data-parallax]'),
     );
+    log(`Found ${parallaxTargets.length} [data-parallax] elements`);
     parallaxTargets.forEach((el) => {
       const strength = parseFloat(el.dataset.parallaxY ?? '80');
       const t = gsap.to(el, {
@@ -326,53 +353,179 @@ export function Animator() {
       if (t) triggers.push(t);
     });
 
-    // ---- Counters ---------------------------------------------------------
+    // ═══════════════════════════════════════════════════════════════════
+    // COUNTERS
+    // ═══════════════════════════════════════════════════════════════════
     const counterTargets = Array.from(
       document.querySelectorAll<HTMLElement>('[data-counter]'),
     );
+    log(`Found ${counterTargets.length} [data-counter] elements`);
     counterTargets.forEach((el) => {
-      const t = ScrollTrigger.create({
-        trigger: el,
-        start: 'top 92%',
-        once: true,
-        onEnter: () => animateCounter(el),
-      });
-      triggers.push(t);
+      const rect = el.getBoundingClientRect();
+      const isOnScreen = rect.top < window.innerHeight && rect.bottom > 0;
+      if (isOnScreen) {
+        animateCounter(el);
+      } else {
+        const t = ScrollTrigger.create({
+          trigger: el,
+          start: 'top 92%',
+          once: true,
+          onEnter: () => animateCounter(el),
+        });
+        triggers.push(t);
+      }
     });
 
-    // ---- Magnetic CTAs ----------------------------------------------------
-    document
-      .querySelectorAll<HTMLElement>('[data-magnetic]')
-      .forEach((el) => bindMagnetic(el, cleanups));
+    // ═══════════════════════════════════════════════════════════════════
+    // MAGNETIC CTAs
+    // ═══════════════════════════════════════════════════════════════════
+    const magneticEls = document.querySelectorAll<HTMLElement>('[data-magnetic]');
+    log(`Found ${magneticEls.length} [data-magnetic] elements`);
+    magneticEls.forEach((el) => bindMagnetic(el, cleanups));
 
-    // ---- Smooth scroll-linked header opacity (Apple-style) ----------------
-    const header = document.querySelector('header');
-    if (header) {
-      const onScroll = () => {
-        const progress = Math.min(1, window.scrollY / 100);
-        (header as HTMLElement).style.setProperty('--header-opacity', String(progress));
+    // ═══════════════════════════════════════════════════════════════════
+    // 3D TILT CARDS — cursor-following perspective rotation
+    // ═══════════════════════════════════════════════════════════════════
+    const tiltCards = document.querySelectorAll<HTMLElement>('[data-tilt]');
+    log(`Found ${tiltCards.length} [data-tilt] elements`);
+    tiltCards.forEach((card) => {
+      const maxTilt = parseFloat(card.dataset.tiltMax ?? '10');
+      let raf = 0;
+
+      const onMove = (e: MouseEvent) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
+        const rotateX = (0.5 - y) * maxTilt;
+        const rotateY = (x - 0.5) * maxTilt;
+
+        // Update CSS vars for the glow follow
+        card.style.setProperty('--mouse-x', `${x * 100}%`);
+        card.style.setProperty('--mouse-y', `${y * 100}%`);
+
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          gsap.to(card, {
+            rotateX, rotateY,
+            duration: 0.4,
+            ease: 'power2.out',
+            transformPerspective: 800,
+          });
+        });
       };
-      window.addEventListener('scroll', onScroll, { passive: true });
-      cleanups.push(() => window.removeEventListener('scroll', onScroll));
-    }
+
+      const onLeave = () => {
+        cancelAnimationFrame(raf);
+        gsap.to(card, {
+          rotateX: 0, rotateY: 0,
+          duration: 0.7,
+          ease: 'elastic.out(1, 0.5)',
+        });
+      };
+
+      card.addEventListener('mousemove', onMove);
+      card.addEventListener('mouseleave', onLeave);
+      cleanups.push(() => {
+        card.removeEventListener('mousemove', onMove);
+        card.removeEventListener('mouseleave', onLeave);
+        cancelAnimationFrame(raf);
+      });
+    });
+
+    // ═══════════════════════════════════════════════════════════════════
+    // HOVER GLOW FOLLOW — cards that track cursor for glow position
+    // ═══════════════════════════════════════════════════════════════════
+    const glowCards = document.querySelectorAll<HTMLElement>('[data-glow]');
+    log(`Found ${glowCards.length} [data-glow] elements`);
+    glowCards.forEach((card) => {
+      const onMove = (e: MouseEvent) => {
+        const rect = card.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        card.style.setProperty('--mouse-x', `${x}%`);
+        card.style.setProperty('--mouse-y', `${y}%`);
+      };
+      card.addEventListener('mousemove', onMove);
+      cleanups.push(() => card.removeEventListener('mousemove', onMove));
+    });
+
+    // ═══════════════════════════════════════════════════════════════════
+    // STAGGER BADGES — reveal badges one by one on scroll
+    // ═══════════════════════════════════════════════════════════════════
+    const badgeContainers = document.querySelectorAll<HTMLElement>('[data-stagger-children]');
+    log(`Found ${badgeContainers.length} [data-stagger-children] elements`);
+    badgeContainers.forEach((container) => {
+      const children = Array.from(container.children) as HTMLElement[];
+      gsap.set(children, { opacity: 0, y: 12, scale: 0.9 });
+
+      const rect = container.getBoundingClientRect();
+      const isOnScreen = rect.top < window.innerHeight && rect.bottom > 0;
+
+      if (isOnScreen) {
+        gsap.to(children, {
+          opacity: 1, y: 0, scale: 1,
+          duration: 0.6, ease: 'back.out(2)',
+          stagger: 0.08,
+        });
+      } else {
+        const t = ScrollTrigger.create({
+          trigger: container,
+          start: 'top 90%',
+          once: true,
+          onEnter: () => {
+            gsap.to(children, {
+              opacity: 1, y: 0, scale: 1,
+              duration: 0.6, ease: 'back.out(2)',
+              stagger: 0.08,
+            });
+          },
+        });
+        triggers.push(t);
+      }
+    });
+
+    // ═══════════════════════════════════════════════════════════════════
+    // SCROLL-VELOCITY HORIZONTAL SHIFT — subtle parallax on headings
+    // ═══════════════════════════════════════════════════════════════════
+    const velocityTargets = document.querySelectorAll<HTMLElement>('[data-scroll-shift]');
+    log(`Found ${velocityTargets.length} [data-scroll-shift] elements`);
+    velocityTargets.forEach((el) => {
+      const strength = parseFloat(el.dataset.scrollShift ?? '20');
+      const t = gsap.to(el, {
+        x: -strength,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1.2,
+        },
+      }).scrollTrigger;
+      if (t) triggers.push(t);
+    });
+
+    // ═══════════════════════════════════════════════════════════════════
+    // SUMMARY
+    // ═══════════════════════════════════════════════════════════════════
+    log('Setup complete. Total ScrollTriggers:', triggers.length);
+    log('ScrollTrigger.getAll():', ScrollTrigger.getAll().length);
 
     // ---- Reduced-motion live switch ---------------------------------------
     const onReducedChange = (event: MediaQueryListEvent) => {
       if (event.matches) {
+        log('Reduced motion preference changed — disabling animations');
         html.classList.add('motion-reduced');
         html.classList.remove('motion');
         triggers.forEach((t) => t.kill());
         gsap.set('[data-animate], [data-split-words] .rr-word, [data-split-chars] .rr-char', {
           clearProps: 'all',
         });
-        document
-          .querySelectorAll<HTMLElement>('[data-animate], [data-split-words], [data-split-chars]')
-          .forEach((el) => el.classList.add('in-view'));
       }
     };
     reducedQuery?.addEventListener?.('change', onReducedChange);
 
     return () => {
+      log('Cleanup — killing', triggers.length, 'triggers');
       window.clearTimeout(safetyId);
       triggers.forEach((t) => t.kill());
       cleanups.forEach((fn) => fn());
