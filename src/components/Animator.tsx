@@ -18,7 +18,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
  * 4. Safety timeout reveals everything after 3.5s if something stalls
  */
 
-const SAFETY_MS = 3500;
 const LOG = true; // Set false to disable debug logs
 
 function log(...args: unknown[]) {
@@ -178,21 +177,8 @@ export function Animator() {
     const cleanups: (() => void)[] = [];
     const triggers: ScrollTrigger[] = [];
 
-    // Safety timeout — if animations haven't fired, force-reveal everything
-    const safetyId = window.setTimeout(() => {
-      log('SAFETY TIMEOUT fired — force-revealing all elements');
-      document
-        .querySelectorAll<HTMLElement>('[data-animate], [data-split-words], [data-split-chars]')
-        .forEach((el) => {
-          el.classList.add('in-view');
-          gsap.set(el, { opacity: 1, x: 0, y: 0, scale: 1, filter: 'none', clearProps: 'all' });
-        });
-      document
-        .querySelectorAll<HTMLElement>('.rr-word, .rr-char')
-        .forEach((el) => {
-          gsap.set(el, { opacity: 1, x: 0, y: 0, scale: 1, rotateX: 0, filter: 'none', clearProps: 'all' });
-        });
-    }, SAFETY_MS);
+    // No safety timeout — GSAP + ScrollTrigger handles everything reliably.
+    // Elements below the fold stay hidden until scrolled into view.
 
     // ═══════════════════════════════════════════════════════════════════
     // DATA-ANIMATE ELEMENTS
@@ -526,7 +512,6 @@ export function Animator() {
 
     return () => {
       log('Cleanup — killing', triggers.length, 'triggers');
-      window.clearTimeout(safetyId);
       triggers.forEach((t) => t.kill());
       cleanups.forEach((fn) => fn());
       reducedQuery?.removeEventListener?.('change', onReducedChange);
