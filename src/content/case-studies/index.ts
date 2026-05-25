@@ -57,10 +57,10 @@ export const FEATURED_CASE_STUDIES: FeaturedCaseStudy[] = [
   {
     slug: 'thfc',
     client: 'THFC',
-    title: 'THFC - Section 18A donation system with immutable audit log',
-    oneLine: 'Tamper-evident donation logging for SARS-defensible Section 18A certificates.',
+    title: 'THFC - Immutable audit trail for regulatory compliance',
+    oneLine: 'Append-only event logging for tamper-evident, audit-defensible certificates.',
     headlineNumber: '100%',
-    headlineLabel: 'of donations traceable end-to-end for SARS audit',
+    headlineLabel: 'of events traceable end-to-end under audit',
     relatedService: 'compliance-retrofit',
     publishedISO: '2025-08-01',
   },

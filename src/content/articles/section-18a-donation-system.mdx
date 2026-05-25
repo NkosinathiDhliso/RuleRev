@@ -6,7 +6,7 @@ publishedISO: 2026-04-02
 
 A Section 18A certificate is a legal claim, signed by your organisation, that a tax-deductible donation occurred on a specific date for a specific value to a qualifying public benefit organisation. If a SARS audit ever lands on the donor or on you, the claim has to hold up against scrutiny. The certificate itself is the easy part - any template can produce a PDF. The hard part is the system underneath that proves the donation actually happened, in the form the certificate describes, and that nobody altered the record after the fact.
 
-This piece is the architectural spec for that system, written from the codebase I built for [THFC](/work/thfc), generalised so you can apply it to your own donation, CSI or grant-tracking workflow.
+This piece is the architectural spec for that system, written from a codebase I built for a client, generalised so you can apply it to your own donation, CSI or grant-tracking workflow.
 
 ## What SARS actually expects
 
@@ -34,7 +34,7 @@ Three patterns solve this problem. They are not equivalent, and the cheapest one
 
 ## Pattern 1: append-only with hash chaining
 
-The pattern I built for THFC. Every donation event - recipient, weight or value, date, certifying officer, supporting evidence - is written once to an append-only log. Each event includes a hash of the previous event's content, so the events form a chain. Any later modification of an earlier event changes the hash chain from that point forward, and the change is detectable by recomputing the chain.
+The pattern I built for a client. Every donation event - recipient, weight or value, date, certifying officer, supporting evidence - is written once to an append-only log. Each event includes a hash of the previous event's content, so the events form a chain. Any later modification of an earlier event changes the hash chain from that point forward, and the change is detectable by recomputing the chain.
 
 In code, the schema looks roughly like this.
 
