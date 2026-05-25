@@ -1,0 +1,123 @@
+---
+slug: solar-business-software-south-africa
+title: Software for scaling a solar installation business in South Africa (job management, SLAs, client portals)
+publishedISO: 2026-05-25
+---
+
+South Africa's solar PV capacity hit 8.97 GW by late 2024. Up 11.9% year-on-year. Over 200 registered C&I installers nationwide. Residential solar growing at 17.65% CAGR through 2031. The market is real and it is not going away - even with load-shedding reduced, solar is now simply cheaper than grid power for commercial users.
+
+But here is the problem most solar businesses hit between 20 and 100 installations: the operational complexity outgrows spreadsheets. Job scheduling, quoting, SLA management, maintenance contracts, client communication, compliance documentation - it all breaks at scale without a system.
+
+This piece is for solar business owners who have proven the model and now need software to scale without hiring an operations team.
+
+## The operational bottleneck at 20+ installations
+
+At 5-10 installations per month, a founder can manage everything in their head plus a spreadsheet. At 20+, these things start breaking:
+
+- **Quoting takes too long** - each quote is manually assembled from component pricing that changes weekly
+- **Job scheduling conflicts** - double-booked crews, missed site visits, no visibility into crew availability
+- **SLA contracts are untracked** - you sold 50 maintenance contracts but have no system to schedule the quarterly inspections
+- **Client communication is reactive** - customers call asking "when is my installation?" because there is no portal
+- **Compliance documentation is scattered** - COCs, SANS 10142 certificates, municipal applications in different folders
+- **Cash flow is invisible** - you do not know which jobs are profitable until the accountant reconciles months later
+
+The maintenance SLA business is where margins approach 40-45%. But you cannot sell 200 SLA contracts if you have no system to manage them. The software is the constraint on growth.
+
+## What the platform needs to do
+
+A solar business management platform has five core modules:
+
+### 1. Quoting engine
+
+- Component database with live pricing (panels, inverters, batteries, mounting, cabling)
+- Site assessment template (roof type, orientation, shading, distance from DB board)
+- Automated quote generation with margin calculation
+- Client-facing quote with accept/reject and e-signature
+- Quote-to-job conversion in one click
+
+### 2. Job management
+
+- Visual scheduling (calendar view of all crews, all jobs, all sites)
+- Job lifecycle: quoted, accepted, scheduled, in-progress, QA, complete, invoiced
+- Photo documentation at each stage (before, during, after)
+- Crew assignment with skill matching (not every electrician can do battery commissioning)
+- Automated client notifications at each stage change
+
+### 3. SLA and maintenance management
+
+- Contract database (client, system specs, SLA terms, inspection schedule)
+- Automated scheduling of quarterly/biannual inspections
+- Maintenance checklist templates (panel cleaning, inverter health, battery state-of-health)
+- Performance monitoring integration (if the client has a monitoring system, pull production data)
+- Automated alerts when a system underperforms expected output
+
+### 4. Client portal
+
+- Client logs in and sees: their system specs, installation photos, COC documents, next maintenance date, production data (if monitored), invoice history
+- Self-service maintenance request submission
+- Referral programme tracking (solar is heavily word-of-mouth)
+
+### 5. Financial visibility
+
+- Job costing: materials + labour + subcontractor costs vs. quoted price = actual margin per job
+- Pipeline value: total quoted value, conversion rate, expected revenue
+- SLA revenue: monthly recurring revenue from maintenance contracts
+- Overdue invoices and payment tracking
+
+## Build vs. buy
+
+There are off-the-shelf options: Jobber, Tradify, ServiceM8. They work for general trades but miss solar-specific needs:
+
+- No component database with solar pricing
+- No SLA/maintenance scheduling at the level solar requires
+- No municipal application tracking
+- No COC document management
+- No production monitoring integration
+- Not hosted in South Africa (POPIA consideration for client data)
+
+The hybrid approach: use an off-the-shelf tool for basic job scheduling, then build a custom layer on top for quoting, SLA management, and the client portal. Or build purpose-built from the start if you are scaling aggressively.
+
+## Technical architecture for a custom build
+
+- **Next.js** frontend (fast, SEO-friendly client portal, works on mobile for field crews)
+- **PostgreSQL** on Azure South Africa North (data residency, relational data fits perfectly)
+- **Azure Blob Storage** for photos and documents (COCs, quotes, invoices)
+- **Twilio or WhatsApp Business API** for automated client notifications
+- **Xero API** integration for invoicing and financial sync
+- **PWA (Progressive Web App)** for field crews - works offline, syncs when back in coverage
+
+## The ROI calculation
+
+A solar business doing 30 installations/month with 100 active SLA contracts:
+
+**Without a platform:**
+- 1 full-time admin for scheduling and quoting (R25k/month)
+- 1 part-time admin for SLA tracking (R12k/month)
+- Lost revenue from missed SLA inspections (estimated R15k/month in churn)
+- Quoting errors costing margin (estimated R20k/month)
+- **Total cost of not having a system: ~R72k/month**
+
+**With a platform:**
+- Platform hosting and maintenance: R5k/month
+- Admin time reduced by 60%: save R22k/month
+- SLA churn reduced: save R15k/month
+- Quoting accuracy: save R20k/month
+- **Net saving: ~R52k/month = R624k/year**
+
+The platform pays for itself in 2-3 months.
+
+## What I build for solar businesses
+
+The typical engagement is a Founder Launch Pack or custom scope that delivers:
+
+- Quoting engine with your component database and margin rules
+- Job scheduling with crew management and client notifications
+- SLA contract management with automated inspection scheduling
+- Client portal (white-labelled to your brand)
+- Xero integration for invoicing
+- WhatsApp notifications for clients and crews
+- POPIA compliance (client data stays in South Africa)
+
+8-12 weeks depending on scope. Fixed price. You get a system that lets you scale from 30 to 100+ installations per month without proportionally growing your admin team.
+
+If you are running a solar business in South Africa and hitting the operational ceiling, book a discovery call or WhatsApp me. I reply within 1 business day.

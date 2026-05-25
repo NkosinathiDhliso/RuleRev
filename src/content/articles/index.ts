@@ -11,6 +11,36 @@ export type Article = {
 
 export const ARTICLES: Article[] = [
   {
+    slug: 'build-cybersecurity-mssp-platform-south-africa',
+    title: 'How to build a cybersecurity MSSP platform in South Africa (technical architecture for founders)',
+    description:
+      'The technical architecture, infrastructure choices, and 8-week roadmap for building a managed security services platform targeting SA SMEs. POPIA-compliant, Azure-hosted, scalable to 20 clients per analyst.',
+    publishedISO: '2026-05-20',
+    readingMinutes: 12,
+    relatedService: 'founder-launch-pack',
+    status: 'published',
+  },
+  {
+    slug: 'tech-stack-sa-ecommerce-brand-2026',
+    title: 'The tech stack for a South African e-commerce brand in 2026 (from R30k to R3M revenue)',
+    description:
+      'A stage-by-stage technical decision framework for SA e-commerce founders: payment gateways, hosting, WhatsApp Commerce, POPIA compliance, and when to go custom vs Shopify.',
+    publishedISO: '2026-05-22',
+    readingMinutes: 14,
+    relatedService: 'founder-launch-pack',
+    status: 'published',
+  },
+  {
+    slug: 'solar-business-software-south-africa',
+    title: 'Software for scaling a solar installation business in South Africa (job management, SLAs, client portals)',
+    description:
+      'The operational bottleneck solar businesses hit at 20+ installations/month, and the platform architecture that solves it: quoting, job scheduling, SLA management, client portals.',
+    publishedISO: '2026-05-25',
+    readingMinutes: 13,
+    relatedService: 'founder-launch-pack',
+    status: 'published',
+  },
+  {
     slug: 'popia-website-checklist',
     title: 'How to make a website POPIA-compliant: an engineer’s checklist (2026 update)',
     description:

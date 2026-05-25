@@ -1,0 +1,108 @@
+---
+slug: tech-stack-sa-ecommerce-brand-2026
+title: The tech stack for a South African e-commerce brand in 2026 (from R30k to R3M revenue)
+publishedISO: 2026-05-22
+---
+
+South Africa's e-commerce market hit USD 41.86 billion in 2026. Growing at 8.54% CAGR. BNPL adoption is driving 60-70% higher average order values. Data costs are falling post-spectrum auction. WhatsApp Commerce is emerging as a sales channel. The opportunity is real.
+
+But most SA e-commerce founders make the same mistake: they either overspend on enterprise tooling they do not need yet, or they underspend on a Wix site that cannot handle their first Black Friday. This piece is the technical decision framework I use when shipping e-commerce builds for South African founders at different revenue stages.
+
+## Stage 1: R0-R30k/month revenue (validation)
+
+At this stage you are validating product-market fit. You need speed, not scale. Every rand spent on infrastructure is a rand not spent on inventory or ads.
+
+**Stack:**
+- **Shopify Basic** (R500/month) - handles payments, inventory, shipping labels
+- **WhatsApp Business** (free) - your primary customer service and reorder channel
+- **Yoco** or **Peach Payments** for local card processing (lower fees than Shopify Payments for SA)
+- **Google Analytics 4** (free) - conversion tracking from day one
+- **Canva** for product photography and social content
+
+**Total monthly cost:** R800-R1,500
+
+**What you do NOT need yet:** Custom development, headless architecture, ERP integration, a mobile app, or a loyalty programme. If someone is quoting you R150k for a custom store at this stage, they are solving the wrong problem.
+
+## Stage 2: R30k-R300k/month revenue (growth)
+
+You have product-market fit. Repeat customers exist. You are spending on Meta and Google Ads. Your constraint is now conversion rate, average order value, and operational efficiency.
+
+**Stack:**
+- **Shopify Plus** or **custom Next.js storefront** (depends on complexity)
+- **Klaviyo** or **Mailchimp** for email/SMS automation (abandoned cart, post-purchase, win-back)
+- **WhatsApp Business API** via Twilio or WATI for automated order updates and reorder prompts
+- **3PL integration** (Pargo, Fastway, or The Courier Guy API) for automated shipping
+- **Hotjar** or **Microsoft Clarity** for conversion rate optimisation
+- **POPIA compliance pack** - privacy policy, cookie consent, data processing agreements with your 3PL
+
+**When to go custom:** If you need subscription/auto-replenishment, complex product configuration, or a loyalty system that Shopify apps cannot handle cleanly, a custom Next.js storefront with Shopify as the backend (headless) gives you full control over the customer experience while keeping Shopify's checkout and inventory management.
+
+**Total monthly cost:** R3,000-R8,000 (tooling) + once-off build cost for custom work
+
+## Stage 3: R300k-R3M/month revenue (scale)
+
+You are a real business. You have staff. Your constraint is now systems integration, inventory accuracy, and customer lifetime value.
+
+**Stack:**
+- **Headless commerce** (Shopify Plus as backend, custom Next.js frontend) or **Medusa.js** (open source, self-hosted on Azure South Africa North)
+- **ERP integration** (Xero, Sage, or SAP Business One) for inventory and accounting sync
+- **Customer Data Platform** (Segment or RudderStack) to unify data across channels
+- **Loyalty and rewards** (custom-built or Smile.io) - this is where LTV compounds
+- **Azure South Africa North** for hosting (data residency, POPIA compliance, low latency)
+- **Terraform** for infrastructure-as-code
+- **Automated POPIA compliance** - consent management, data subject access request workflow, breach notification system
+
+**Total monthly cost:** R15,000-R40,000 (infra + tooling) + development retainer
+
+## The decisions that actually matter
+
+### Payment gateway: Yoco vs Peach vs Stripe
+
+- **Yoco:** Best for physical + online hybrid. Lower fees for SA cards. Limited international.
+- **Peach Payments:** Best for pure online. Supports EFT, Ozow, SnapScan, and cards. Good API.
+- **Stripe:** Best if you sell internationally. Higher SA card fees but global reach.
+
+For a pure SA brand, Peach Payments or Yoco. For export/international, Stripe.
+
+### Hosting: where your data lives matters
+
+POPIA requires you to know where personal information is processed. If your store is on Shopify, data is in Canada/US (Shopify's infrastructure). This is technically compliant if you have appropriate cross-border transfer mechanisms in your privacy policy, but it is a risk factor.
+
+If you self-host on Azure South Africa North or AWS af-south-1, your data stays in Johannesburg. For brands handling sensitive data (health products, financial services), this is the safer choice.
+
+### WhatsApp Commerce: the underexploited channel
+
+85% of South Africans use WhatsApp daily. Yet most e-commerce brands treat it as customer service only. The opportunity:
+
+- **Automated reorder prompts** - "Your last order of X was 28 days ago. Reorder?" with a one-tap buy button
+- **Abandoned cart recovery** - WhatsApp open rates are 98% vs 20% for email
+- **Product launches** - broadcast to opted-in customers with rich media
+- **Order tracking** - automated shipping updates reduce "where is my order" support load by 60-70%
+
+This requires the WhatsApp Business API (not the free app) and a platform that integrates it with your order management system.
+
+## POPIA compliance for e-commerce (the non-negotiable checklist)
+
+1. Privacy policy that names your payment processor, 3PL, and analytics providers
+2. Cookie consent that blocks GA4 and Meta Pixel until accepted
+3. Marketing consent separate from transactional consent (you cannot bundle them)
+4. Data subject access request process (customer asks "what do you have on me?" - you must respond within 30 days)
+5. Breach notification workflow (if your 3PL leaks customer addresses, you have 72 hours to notify the Regulator)
+6. Data processing agreements with every third party that touches customer data
+
+Most SA e-commerce brands are non-compliant on at least 3 of these 6 points. The Information Regulator has not been aggressive yet, but complaints are rising and the first major fine will trigger a wave of panic retrofits.
+
+## What I build for e-commerce founders
+
+The typical engagement is a Founder Launch Pack (3 weeks) that delivers:
+
+- Custom storefront or Shopify configuration optimised for SA
+- Payment integration (Yoco/Peach/Stripe)
+- WhatsApp Business API integration for order updates and reorder automation
+- POPIA compliance pack (privacy policy, cookie consent, DPAs)
+- GA4 + conversion tracking + Meta Pixel (compliant implementation)
+- 3PL shipping integration
+
+Fixed scope. Fixed timeline. You launch in 3 weeks with a store that is compliant, fast, and ready to scale.
+
+If you are building an e-commerce brand in South Africa and need the technical foundation shipped properly, book a discovery call or WhatsApp me. I reply within 1 business day.
