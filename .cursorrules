@@ -1,0 +1,4 @@
+# Project Rules
+
+- **No Em-Dashes:** Do not use em-dashes (`—` or `\u2014`) anywhere in the codebase (markdown, text, code, etc.). Use regular hyphens (`-`) instead.
+- **No Emojis:** Do not use emojis anywhere in the codebase. The user actively dislikes them. Keep all communication and text strictly professional and text-based.

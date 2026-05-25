@@ -1,0 +1,93 @@
+---
+slug: aws-azure-migration-playbook
+title: AWS to Azure migration - a zero-downtime playbook from a real client
+publishedISO: 2026-02-10
+---
+
+Most cloud migration write-ups are written from the vendor's marketing page. They assume you can take a 24- to 48-hour outage on a Saturday night, that your team has nothing to do during the cutover, and that rollback is somebody else's problem. In the real world, none of that is true. This piece is the playbook I used to migrate a South African chartered accounting firm's billable application from AWS to Azure during tax season, with zero perceptible downtime. The full case study is at [RT Dynamic - AWS to Azure migration](/work/rt-dynamic). What follows is the engineering pattern, generalised, so you can run it on your own workload.
+
+## The constraint that drives the design
+
+Every migration design decision flows from one question: what is the cost of an hour of downtime, and how does that compare to the cost of the migration approach?
+
+For RT Dynamic the answer was straightforward. The application was used by accountants for billable work and by clients to access tax documents. An outage during business hours meant lost billable revenue. An outage during a SARS deadline week meant a reputational event and possibly missed filing deadlines. Standard weekend cutover, with its 24- to 48-hour window of "the system is being upgraded, please bear with us", was not on the table.
+
+If your cost-of-downtime number is low - internal tools, batch jobs, a marketing site - a weekend lift-and-shift is the right answer. Stop reading. If the number is high, the parallel-environment pattern below pays for itself the first time you run it.
+
+## The phased parallel-environment pattern
+
+The pattern has five phases. Each phase is reversible. The cutover itself is a DNS change.
+
+### Phase 1: stand up the target stack at production scale
+
+The first phase is to reproduce the AWS environment on Azure, sized to handle 100% of production load. This is not a "small instance for testing" - that is a different exercise. The Azure environment must be production-grade from day one because, for a brief window in phase four, it is going to be production.
+
+For the RT Dynamic build, the AWS stack mapped reasonably cleanly onto Azure equivalents: compute on App Service, database on Azure SQL with geo-redundant backup, blob storage for client documents, Azure Front Door for ingress. The mapping question is the easy part. The harder part is the surrounding environment - identity, secrets, monitoring, alerting, on-call rotation. Those have to be live before phase two starts, because phase two starts generating real audit events on the new stack.
+
+A useful test at the end of phase one: can the new stack serve a synthetic version of the workload, end to end, while completely disconnected from the old stack? If yes, proceed. If no, the migration is not ready.
+
+### Phase 2: continuous data replication
+
+The new stack is empty. It needs to be filled with current data, and it needs to stay filled as the live stack on AWS keeps writing.
+
+For a relational database the practical mechanisms are change-data-capture (CDC) streaming, log shipping, or scheduled snapshot replication. CDC is the cleanest option because it yields a near-real-time replica with low write amplification on the source. AWS Database Migration Service speaks to Azure SQL as a target. So does Debezium with a Kafka or Event Hubs sink, if you prefer to own the pipeline.
+
+For object storage the pattern is simpler: a one-time bulk copy followed by event-driven incremental replication. AWS S3 events to Lambda, Lambda writes to Azure Blob via the SDK. The bulk copy can run for hours; the incremental copy keeps the gap to seconds.
+
+The success criterion for phase two is replication lag. You need to be able to state, with monitoring evidence, that the lag between a write on AWS and that write being available on Azure is small enough to absorb during cutover. For RT Dynamic the target lag was under 30 seconds, sustained.
+
+### Phase 3: integration testing against the new stack
+
+This is the phase most teams skip. The new stack works. It has data. It must be tested as production.
+
+The test matrix is the part of the application your customers actually use. For a billable accounting application that means: log in, list clients, open a client file, upload a document, generate a Section 18A certificate, generate an invoice, log out. The test runs against the Azure environment. The data flowing through it is the production data, replicated. The result of the test must match what the AWS environment produces for the same input.
+
+Run the test suite against Azure on a schedule. If a test breaks, replication is broken or the new stack is misconfigured. Both are blocking issues for cutover. Neither will be discovered during a Saturday-night cutover; both are easy to discover and fix in phase three.
+
+Also test the operational surface: alerting, on-call paging, log search, deploy pipeline, rollback procedure. The Azure environment must operate exactly the way the team expects to operate it post-cutover.
+
+### Phase 4: cutover via DNS
+
+The cutover itself is the smallest phase. The full migration cost is in the three preceding phases, which is why this phase is uneventful.
+
+Cutover sequence:
+
+1. Pause non-critical writes on AWS (queued work, scheduled jobs, batch ingestion). User-driven writes continue.
+2. Wait for replication lag to drain to under 5 seconds.
+3. Briefly enable maintenance mode on AWS - under a minute.
+4. Confirm the last replicated write is present on Azure.
+5. Update the DNS record to point at Azure Front Door. TTL was lowered to 60 seconds 24 hours earlier, so propagation is fast.
+6. Disable maintenance mode. Live traffic now lands on Azure.
+7. Watch error rates and latency. If they hold, the migration is complete from the user's perspective.
+
+For RT Dynamic the entire cutover sequence was under three minutes from step 1 to step 7. No user reported an outage. The application's monitoring did not record one either, because the maintenance-mode window was shorter than any meaningful health-check interval.
+
+### Phase 5: keep the old stack warm for the rollback window
+
+For seven days after cutover the AWS stack stayed running. Replication continued, this time in the opposite direction, so AWS was a warm replica of the live Azure environment.
+
+The rollback path was identical to the cutover path with the DNS record reversed. It was never used. It existed because the cost of seven days of duplicated infrastructure was a rounding error against the cost of a failed migration with no rollback.
+
+After seven days of clean operation the AWS environment was decommissioned in the standard sequence: stop replication, snapshot for archive, terminate compute, delete buckets, close the account.
+
+## The trade-off you are buying
+
+The parallel-environment pattern is more expensive than a weekend cutover during the migration window itself. You are paying for two production stacks and a replication pipeline simultaneously.
+
+For RT Dynamic the maths was unambiguous. The hourly billable rate of the people who would otherwise be locked out vastly exceeded the duplicated infrastructure cost across the entire overlap period. The pattern paid for itself in the first morning of phase four.
+
+For a workload with a low cost-of-downtime number, the maths goes the other way. Weekend cutover is cheaper. Use the right pattern for the workload.
+
+## What goes wrong, and how to spot it early
+
+Three failure modes account for almost every parallel-environment migration that goes badly.
+
+**Replication lag spirals.** The replication mechanism cannot keep up with write volume. The lag grows. By cutover time it is hours. The fix is not at cutover - it is in phase two, by sizing the replication pipeline for peak write rate, not average. Test by replaying a synthetic spike.
+
+**Hidden state on the source.** The application reads from somewhere the migration plan did not capture: a local file system, a Redis instance, a third-party SaaS that signs callbacks back to a fixed URL. After cutover, that read fails. The fix is in phase three, by running every code path against the new stack and watching for unexpected outbound calls.
+
+**Identity drift.** Users log in via SSO. The SSO config on the new stack is slightly different from the old. After cutover, half the users get logged out. The fix is in phase one, by replicating the identity configuration exactly, and in phase three, by running the full login path as part of the test matrix.
+
+If you are planning a migration of this shape, that test matrix is the artefact worth investing in early. It is also the artefact that makes the post-migration period boring, which is what you want.
+
+This pattern is one of the standard recommendations in a [Cloud Architecture Advisory](/services#cloud-advisory) engagement.

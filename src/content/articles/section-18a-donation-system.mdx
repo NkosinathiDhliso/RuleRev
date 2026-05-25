@@ -1,0 +1,105 @@
+---
+slug: section-18a-donation-system
+title: Section 18A donation systems - what SARS actually expects from your codebase
+publishedISO: 2026-04-02
+---
+
+A Section 18A certificate is a legal claim, signed by your organisation, that a tax-deductible donation occurred on a specific date for a specific value to a qualifying public benefit organisation. If a SARS audit ever lands on the donor or on you, the claim has to hold up against scrutiny. The certificate itself is the easy part - any template can produce a PDF. The hard part is the system underneath that proves the donation actually happened, in the form the certificate describes, and that nobody altered the record after the fact.
+
+This piece is the architectural spec for that system, written from the codebase I built for [THFC](/work/thfc), generalised so you can apply it to your own donation, CSI or grant-tracking workflow.
+
+## What SARS actually expects
+
+The Income Tax Act, Section 18A, lets a donor claim a tax deduction of up to 10% of taxable income for donations to approved public benefit organisations. The deduction is claimed against the tax return for the year the donation occurred. The audit trail SARS asks for, if and when they ask, is straightforward in principle:
+
+- The donation happened on the date claimed.
+- The donation went to the entity claimed.
+- The amount or value of the donation matches the certificate.
+- The certifying signatory was authorised to sign on behalf of the receiving entity.
+- The receiving entity was Section 18A-approved on the date of the donation.
+
+The first three are about the donation event. The fourth is about authorisation. The fifth is about regulatory standing. If your codebase cannot produce evidence for all five, against an arbitrary historical donation, the certificate is at risk under audit.
+
+The framing that matters: SARS is not going to ask whether you stored the certificate. They are going to ask whether the system that produced the certificate produced it from a record that has not been altered.
+
+## The non-repudiation problem
+
+That last sentence is the entire engineering challenge. Every other requirement is documentation, configuration or off-the-shelf functionality. The challenge is non-repudiation - the property that a record, once written, cannot be altered or denied by anyone, including the operator of the system.
+
+In a normal business application, non-repudiation is not a requirement. Records are written and updated. A correction overwrites the old value. The history of changes, if it exists at all, lives in an audit log that nobody looks at and nothing prevents from being edited.
+
+In a Section 18A system, that pattern fails the audit. If the record can be altered, the certificate generated from it cannot be defended. The architecture has to make alteration detectable, ideally by external parties, without depending on the goodwill of the operator.
+
+Three patterns solve this problem. They are not equivalent, and the cheapest one that meets your audit requirement is the right one.
+
+## Pattern 1: append-only with hash chaining
+
+The pattern I built for THFC. Every donation event - recipient, weight or value, date, certifying officer, supporting evidence - is written once to an append-only log. Each event includes a hash of the previous event's content, so the events form a chain. Any later modification of an earlier event changes the hash chain from that point forward, and the change is detectable by recomputing the chain.
+
+In code, the schema looks roughly like this.
+
+```sql
+CREATE TABLE donation_events (
+  event_id        UUID PRIMARY KEY,
+  occurred_at     TIMESTAMPTZ NOT NULL,
+  recorded_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
+  recipient_id    UUID NOT NULL REFERENCES recipients(recipient_id),
+  weight_kg       NUMERIC(12, 2) NOT NULL,
+  certifying_officer_id UUID NOT NULL,
+  evidence_uri    TEXT NOT NULL,
+  prev_event_hash BYTEA NOT NULL,
+  event_hash      BYTEA NOT NULL
+);
+
+REVOKE UPDATE, DELETE ON donation_events FROM ALL;
+```
+
+The `event_hash` is `sha256(event_id || occurred_at || recipient_id || weight_kg || certifying_officer_id || evidence_uri || prev_event_hash)`. The `prev_event_hash` is the `event_hash` of the immediately preceding event in the table. The chain is anchored at a known genesis hash recorded in a separate table.
+
+The database `REVOKE UPDATE, DELETE` on the table is the operational guard. The hash chain is the cryptographic guard. Together they mean a SARS auditor can walk the chain from genesis to today, recompute each hash, and either confirm or detect tampering with no further system access.
+
+For most South African PBOs this is enough. The audit defence is local, the storage cost is negligible, and the operational impact is one extra column write per event.
+
+## Pattern 2: external write-once storage
+
+If the audit posture has to defend against an internal actor with database administrator privileges - somebody who can override the `REVOKE` - the chain alone is not enough. The chain is still verifiable, but a determined operator could rewrite the entire chain and re-sign every certificate.
+
+The next step up is to write each event, or a hash of each event, to storage outside the operator's control. AWS S3 with Object Lock in compliance mode, Azure Blob Storage with immutable storage policies, or a third-party WORM (write-once-read-many) service all qualify. The donation system writes the event hash to immutable storage on creation, and the certificate references the immutable storage URI. To rewrite history, the operator would need to also rewrite the immutable storage, which by definition cannot be done.
+
+The cost is low - Object Lock has no extra storage charge. The operational impact is one extra write per event and a slightly more complex backup story.
+
+For PBOs where the donor base includes large corporate donors with their own audit requirements, Pattern 2 is the right level. It is what most large CSI programmes ask for, even if they do not name it that way.
+
+## Pattern 3: third-party notary
+
+The most defensible posture is one where the proof of when an event occurred is held by a party outside both the PBO and the donor. Public blockchains, RFC 3161 timestamping authorities, or accredited timestamping services all do this. The donation system writes the event hash to the notary, the notary returns a signed timestamp, and the certificate references the signed timestamp.
+
+For a typical South African PBO, this is overkill. For a programme that issues millions of rands of Section 18A certificates a year against corporate donors with sophisticated tax positions, it is the only pattern that gives the donor a hard guarantee of when the donation was recorded.
+
+The cost is per-timestamp, currently a few cents per event from a commercial timestamping authority. The operational impact is one outbound network call per event, with a queue for retry on failure.
+
+## Corrections without breaking the chain
+
+The most common objection to append-only storage is real-world correction. Donations are sometimes recorded incorrectly. The weight was off, the recipient was wrong, the date was a typo. The chain forbids editing the original event, which seems to forbid corrections.
+
+The pattern is not edit. The pattern is supersede. A correction is a new event, recorded today, with a reference to the original event being corrected and a reason for the correction. The original event remains in the chain. The certificate generation logic resolves the current state of a donation by walking forward from the original event through any superseding events and using the latest as the source of truth.
+
+This pattern is identical to the one banks use for transaction reversals. Reversals do not edit the original transaction. They add a new transaction that nets out the first one. The audit trail shows both. The customer sees the net.
+
+In the donation context this is also a feature for the donor. If the donor's certificate ever gets corrected, the audit log shows exactly what changed, when, and why. That is a stronger position for the donor under audit than any "we adjusted the record" claim.
+
+## Reporting and certificate generation
+
+With the storage and chaining patterns in place, the certificate is the easy part. A certificate is a deterministic function of the underlying event, the recipient's Section 18A status on the date of the donation, the certifying officer's authorisation, and the PBO's metadata. Generating the certificate from the event log on demand - rather than storing certificates as files - has two advantages.
+
+First, the certificate always reflects the latest superseding state of the donation. If a correction was applied, the latest certificate generation reflects it. Second, the certificate carries a verifiable reference back to the source event. A SARS auditor can ask for the source event, recompute the chain to that point, and confirm that the certificate matches.
+
+The aggregate annual report - the IT3(d) submission to SARS - is the same pattern at scale. It is generated from the event log, references the events, and is reproducible from the data without any state of its own.
+
+## What this looks like as a project
+
+A defensible Section 18A donation system is not a six-month build. The work is concrete: the append-only schema, the hash chain, the corrections-as-events pattern, the certificate generator, and the operational guards on the database. For most PBOs, that is two to four weeks of focused engineering, plus the documentation that supports the audit posture.
+
+The hidden complexity, in every engagement I have run on this pattern, is the migration from the existing paper or spreadsheet record. That migration is a one-time event that needs the same audit defence as the live system - the genesis state of the chain has to be defensible. That part is deal-specific and is usually the longest single line item on the plan.
+
+If you are building a donation system, a CSI tracking system, or any audit-defensible record system, the relevant engagements are [Compliance-Ready Website Retrofit](/services#compliance-retrofit) for the policy and process layer and [Cloud Architecture Advisory](/services#cloud-advisory) for the storage and chaining design.

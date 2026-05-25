@@ -1,0 +1,152 @@
+.intro {
+  padding-block: 64px 32px;
+  border-bottom: 1px solid var(--color-line);
+}
+
+@media (min-width: 768px) {
+  .intro {
+    padding-block: 96px 48px;
+  }
+}
+
+.intro_h1 {
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  max-width: 22ch;
+}
+
+.intro_lede {
+  font-size: 17px;
+  color: var(--color-muted);
+  line-height: 1.7;
+  max-width: 60ch;
+  margin-top: 16px;
+}
+
+.offer {
+  padding-block: 56px;
+  border-bottom: 1px solid var(--color-line);
+  scroll-margin-top: 80px;
+}
+
+@media (min-width: 880px) {
+  .offer {
+    padding-block: 80px;
+  }
+}
+
+.offer_grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+@media (min-width: 880px) {
+  .offer_grid {
+    display: grid;
+    grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
+    gap: 64px;
+    align-items: start;
+  }
+}
+
+.offer_left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (min-width: 880px) {
+  .offer_left {
+    position: sticky;
+    top: 96px;
+  }
+}
+
+.offer_eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted-soft);
+}
+
+.offer_title {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.offer_meta {
+  font-size: 13px;
+  color: var(--color-muted);
+  margin-top: 8px;
+}
+
+.offer_pitch {
+  font-size: 17px;
+  color: var(--color-ink-soft);
+  line-height: 1.7;
+  margin-bottom: 24px;
+  max-width: 60ch;
+}
+
+.included_title {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted-soft);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.included {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.included li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 15px;
+  color: var(--color-ink-soft);
+  line-height: 1.6;
+}
+
+.included li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--color-accent);
+}
+
+.best_for {
+  font-size: 14px;
+  color: var(--color-muted);
+  background: var(--color-surface);
+  border-left: 2px solid var(--color-accent);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.proof {
+  font-size: 14px;
+  color: var(--color-ink-soft);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}

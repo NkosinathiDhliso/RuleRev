@@ -1,0 +1,110 @@
+---
+slug: popia-website-checklist
+title: How to make a website POPIA-compliant - an engineer's checklist (2026 update)
+publishedISO: 2026-01-15
+---
+
+POPIA enforcement has been live in South Africa since 1 July 2021. Almost five years on, most SME websites are still quietly non-compliant in ways that would not survive a complaint to the Information Regulator. This is a working engineer's checklist, written for the person who has to ship the change. It is not a privacy policy template, and it is not legal advice. It is the list of code changes, configuration changes, and documentation changes I run through on every retrofit.
+
+## What POPIA actually asks of a website
+
+The Protection of Personal Information Act has eight conditions for the lawful processing of personal information. The eight conditions are not a marketing checklist. They are the test the Information Regulator applies if a complaint lands on your business.
+
+- **Accountability.** A named Information Officer is responsible. By default that is the head of the business, registered with the Regulator.
+- **Processing limitation.** Collect only what you can justify, only with consent or another lawful basis.
+- **Purpose specification.** Tell the data subject what you are using their data for, in plain language, before you collect it.
+- **Further processing limitation.** Do not repurpose the data later for something the data subject did not agree to.
+- **Information quality.** Keep the data accurate and up to date.
+- **Openness.** Publish a privacy notice. Tell the data subject what you hold and why.
+- **Security safeguards.** Protect the data in transit, at rest, and in your supply chain.
+- **Data subject participation.** The person whose data you hold can ask what you have, correct it, or have it deleted.
+
+For a website, those eight conditions translate into roughly twelve concrete things you must implement. The rest of this piece is that list.
+
+## The engineer's checklist
+
+### 1. Privacy notice drafted to your real data flows
+
+A templated privacy policy from the internet is not a defence. The Regulator's first move on a complaint is to ask what you actually do, then compare it to what your privacy notice says. If those two do not match, you are non-compliant on openness and purpose specification at the same time.
+
+The minimum a website privacy notice has to cover: who you are, the categories of personal information you collect, the purpose for each category, the lawful basis for each purpose, who you share the data with, where the data is stored, how long you keep it, the data subject's rights under POPIA, and the contact details of your Information Officer.
+
+If your site has a contact form, an analytics pixel, a payment integration and an email signup, that is at least four data flows that need to appear in the notice.
+
+### 2. Cookie consent banner that actually blocks before consent
+
+Most South African sites in 2026 have a cookie banner that fires Google Analytics and Meta Pixel on page load, then asks for consent afterwards. That is theatre. It is also non-compliant.
+
+The technical pattern is simple. Non-essential cookies and tracking scripts must not run until the data subject has clicked accept. Essential cookies (session, CSRF, language preference) can run without consent because they are necessary for the service. Everything else - analytics, advertising, A/B testing, heatmaps, embedded third-party widgets - waits.
+
+In practice that means GA4 is loaded conditionally after a consent state of `granted` is set, not on every page load. Reject and Accept must be equally prominent. The user must be able to change their mind later.
+
+### 3. Forms that only collect what you can justify
+
+Every form field has to defend itself. A newsletter signup needs an email. It does not need a phone number. A contact form needs a way to reply. It does not need an ID number. If you cannot articulate the purpose of a field in one sentence, remove it.
+
+This is the cheapest single improvement to most South African business sites. Strip every form down to the minimum that lets you do the job.
+
+### 4. Data subject rights workflow with a 30-day SLA
+
+Section 23 of POPIA gives the data subject the right to ask what you hold about them, and section 24 gives them the right to correct or delete it. You have a reasonable time to respond. The market reads that as 30 days.
+
+You need a documented process for three requests: access, correction, deletion. The process can live in a Notion page. What it cannot do is not exist. When the request lands, you need to know who actions it, what systems they check, and how the response is delivered.
+
+For a small site, that is a checklist with five entries: contact form database, email marketing tool, payment processor records, analytics platform, customer support inbox.
+
+### 5. Encryption in transit, at rest, in backups
+
+TLS 1.2 minimum, TLS 1.3 preferred. HSTS enabled. Mixed-content warnings resolved. Database encryption at rest is the default on every modern managed database - confirm it is on, do not assume.
+
+Backups are where this falls apart. Most SMEs back up the database to an unencrypted bucket and forget about it. The bucket needs the same encryption posture as the live database. The IAM policy on the bucket needs to be restricted to the role that does the backup, not to a person.
+
+### 6. Vendor list with DPAs in place
+
+POPIA holds you responsible for what your operators do with personal information. Your operators are everyone you give data to in order to do the work. That includes hosting, email, analytics, payments, customer support, marketing automation, and any embedded tracker.
+
+You need a list. For each operator, you need: what data is shared, the lawful basis, where the operator processes the data, and a Data Processing Agreement. Most major SaaS vendors publish a DPA. You sign it once. Some do not - those vendors are a problem you have to solve, usually by switching.
+
+### 7. Cross-border transfer position documented
+
+If your hosting, your email or your analytics is in the United States or the European Union - and almost every SME's stack is - that is a cross-border transfer of personal information. Section 72 of POPIA allows it under specific conditions: the receiving country has comparable protection, or the data subject has consented, or the transfer is necessary for the contract.
+
+You do not need a separate document for this. You need one paragraph in your privacy notice that names the operators, the country, and the lawful basis for the transfer.
+
+### 8. Information Officer designated and registered
+
+Every business that processes personal information has an Information Officer. By default it is the head of the business. The Information Officer must be registered with the Information Regulator at `inforegulator.org.za`. Registration is free. It takes about ten minutes.
+
+A registered Information Officer is one of the cheapest credibility signals on a site. It also makes the Regulator's first contact much easier when a complaint lands.
+
+### 9. Breach notification runbook
+
+Section 22 of POPIA requires you to notify the Regulator and affected data subjects of a security compromise as soon as reasonably possible. The market reads that as 72 hours from confirmed breach. You need a written runbook before the breach happens.
+
+Minimum runbook: who is called first (Information Officer), what is the timeline (24 hours to triage, 72 hours to notify), what do we tell the Regulator (compromise details, affected categories, mitigations in place), what do we tell the data subject (what was lost, what they should do).
+
+### 10. Logging that survives an audit
+
+If you cannot show what happened, you cannot defend what happened. The minimum logging posture for a small site: web server access logs retained for 90 days, application audit logs (login, password change, profile change, data export, deletion) retained for 12 months, payment logs retained per the operator's policy.
+
+Logs must be tamper-evident if they are the basis of a compliance claim. For most SMEs that means write-once storage on a managed object store with object lock or versioning enabled.
+
+### 11. Retention schedule
+
+You cannot keep data forever. POPIA's section 14 says you keep personal information only as long as the purpose requires. After that, you delete or de-identify.
+
+In practice that is a schedule per data category: contact form submissions deleted after 12 months unless they become customers, customer records retained for the period required by the Tax Administration Act (5 years from the end of the tax period for invoices), marketing list members removed on unsubscribe.
+
+### 12. Children's data and special personal information
+
+If your site serves under-18s, you need a parent consent flow. If you collect health data, religious belief, biometric data, criminal record, race or trade union membership, you are processing special personal information under section 26, and the bar is higher: explicit consent, or one of the narrow exceptions in section 27.
+
+Most SME sites do not collect special personal information. Confirm that, or address it.
+
+## What this looks like as a project
+
+A POPIA retrofit on a typical small business site is not a months-long programme. The work is concrete. Items 1, 2, 3, 9 and 11 are the visible ones - they touch the live site and policies. Items 4, 6, 7, 8, 10, 12 are documentation and infrastructure. Item 5 is configuration.
+
+The realistic timeline for an SME with one website, one contact form, one email tool, one analytics tool, and one payment processor is one focused week. That is what the [Compliance-Ready Website Retrofit](/services#compliance-retrofit) covers, end to end, fixed price.
+
+If you would rather run the retrofit internally, this checklist is the scope. Work through it in order. Do not skip the vendor list - that is the item that hides the largest amount of risk for the lowest amount of effort.

@@ -1,12 +1,22 @@
 [build]
-  command = "npm ci && npm run build"
-  publish = "dist"
+  command = "npm run build"
+  publish = ".next"
 
 [build.environment]
-  NODE_VERSION = "22"
+  NODE_VERSION = "20"
 
-# SPA fallback so client-side routes work
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+  from = "https://www.rulerev.com/*"
+  to = "https://rulerev.com/:splat"
+  status = 301
+  force = true
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"

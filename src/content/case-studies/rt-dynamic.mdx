@@ -1,0 +1,22 @@
+---
+slug: rt-dynamic
+client: RT Dynamic Business Consulting
+title: RT Dynamic - AWS to Azure migration with zero downtime
+publishedISO: 2025-04-01
+---
+
+## Problem
+
+RT Dynamic is a South African chartered accounting and business consulting firm. Their core application is used daily by accountants for billable work and by clients to access documents. The firm decided to consolidate infrastructure on Azure. The application was business-critical: any meaningful downtime would interrupt billable work and risk missed SARS deadlines, especially mid-tax-season. A standard lift-and-shift over a weekend would have meant 24\u201348 hours of unavailability, which was unacceptable.
+
+## Decision
+
+I designed a phased parallel-environment migration. Stand up the full Azure stack alongside the running AWS environment. Sync data continuously between the two so the new stack is never more than minutes behind. Run integration tests against the Azure environment while AWS continued to serve live traffic. Cut over via DNS once parity was confirmed. The constraint was simple: no individual user should perceive the migration. Rollback was the DNS record.
+
+The trade-off here is well-known: parallel environments cost money during the overlap. The firm’s billable rate per hour for the people who would otherwise be locked out vastly exceeded that cost, so the decision was straightforward once the numbers were on the table.
+
+<div class="tbd">TBD: specific Azure services used (App Service, Azure SQL, etc.), measured cost delta against the AWS baseline, and the end-to-end migration timeframe - to be added once the founder confirms the final figures.</div>
+
+## Result
+
+Zero minutes of downtime during cutover. Full data integrity preserved. The application is now consolidated on Azure with the rest of the firm’s stack, and the operational surface is smaller because billing, identity and the rest of their tooling already live in the same tenant.

@@ -1,0 +1,22 @@
+---
+slug: thfc
+client: THFC
+title: THFC - Section 18A donation system with immutable audit log
+publishedISO: 2025-08-01
+---
+
+## Problem
+
+THFC is a South African bakery that runs a Corporate Social Investment bread-donation programme to facilities such as schools, shelters and community kitchens. South African donors of qualifying public benefit organisations can claim a tax deduction via a Section 18A certificate, provided the donating entity can prove the donation occurred. THFC’s existing process was paper-based and manually reconciled, which meant Section 18A certificates risked being challenged in a SARS audit because the audit trail was not tamper-evident. A single rejected certificate damages donor relationships and the standing of the CSI programme itself.
+
+## Decision
+
+The audit problem here is fundamentally a non-repudiation problem. Every donation event - recipient, weight, date, certifying officer - needs to be recorded so that nobody, including THFC’s own staff, can alter or delete it after the fact. I architected an immutable, append-only logging system around the donation workflow. Each donation event is written once and cryptographically chained to the previous event, so any later tampering breaks the chain. Section 18A certificates are then generated from that log with verifiable references back to the source events.
+
+The trade-off is operational: append-only means no “oops, fix it later.” Corrections happen by issuing a new linked event, not by editing the past. That constraint is the feature - it is what makes the certificate defensible.
+
+<div class="tbd">TBD: specific storage backend, the cryptographic chaining approach used, volume of certificates processed to date, and any SARS audit outcomes - to be added once the founder confirms the final figures.</div>
+
+## Result
+
+Every donation produces a tamper-evident record from the moment it happens. Section 18A certificates issued from the system are defensible in a SARS audit because the audit trail is verifiable end-to-end. Manual reconciliation is eliminated. The system is one of the cleanest examples of compliance-as-architecture I have shipped: the regulator’s requirement is not a checklist on top of the product, it is the product.

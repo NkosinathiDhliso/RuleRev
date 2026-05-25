@@ -1,0 +1,97 @@
+---
+slug: fck-nat-vs-managed-nat
+title: fck-nat vs Managed NAT Gateway - how I cut AWS networking spend by ~80%
+publishedISO: 2026-03-05
+---
+
+AWS Managed NAT Gateway is one of the most quietly expensive line items on the bill of every small SaaS running on AWS. It is the default choice in every architecture diagram. It is also, for most pre-product-market-fit workloads, the single largest piece of infrastructure spend that buys you the least value. On ProProfile I replaced Managed NAT Gateway with `fck-nat` and the AWS networking line on the bill dropped by roughly 80%. This piece is the maths, the trade-off, and the production configuration so you can decide if the same change makes sense on your workload.
+
+## What Managed NAT Gateway actually costs
+
+Managed NAT Gateway is two charges. The first is the per-hour charge, currently around USD 0.045 per hour per gateway in `af-south-1` (Cape Town). One gateway in one Availability Zone costs about USD 33 per month before a single byte of traffic. Two AZs for redundancy is USD 66. Three AZs, which is the AWS-recommended posture for production, is USD 99.
+
+The second charge is per-gigabyte of data processed, currently USD 0.045 per gigabyte. For most small SaaS workloads this is the smaller of the two charges by a wide margin, but it scales linearly with traffic.
+
+The fixed-cost floor is the part that hurts. Three AZs costs USD 99 per month even if your workload sends zero outbound traffic. On a workload that is not yet generating revenue, that floor is meaningful. On a side project or an early-stage SaaS in `af-south-1`, where the regional pricing is slightly higher than the US regions, the fixed floor is the dominant cost.
+
+For a young SaaS in South Africa, USD 99 a month is roughly R1 800 a month, which is roughly R21 600 a year, just to send outbound traffic from private subnets. That is not a price for value. That is the AWS default tax.
+
+## What fck-nat is
+
+`fck-nat` is a community-maintained NAT instance image, originally built by Andrew Guenther, that runs on a single t4g.nano-class EC2 host. It does the same job as Managed NAT Gateway: it gives instances in private subnets outbound internet access without giving them public IPs.
+
+The whole thing is one EC2 instance per AZ, running a custom Amazon Linux 2 image preconfigured with the iptables rules and IP forwarding required to act as a NAT. There is a Terraform module (`terraform-aws-modules/fck-nat/aws`) that handles the security groups, route tables and Auto Scaling Group with a desired capacity of one. If the instance dies, the ASG replaces it. The image is small enough that replacement takes about 90 seconds.
+
+The cost on a t4g.nano in `af-south-1` is around USD 0.0042 per hour, which is about USD 3 per month per AZ. Three AZs of fck-nat is around USD 9 per month. The data-processing charge that Managed NAT Gateway levies - USD 0.045 per gigabyte - does not exist on a NAT instance. You pay for the EC2 hour and the standard EC2 data transfer rates, which are an order of magnitude cheaper.
+
+For ProProfile, replacing a single-AZ Managed NAT Gateway with a single-AZ fck-nat dropped the relevant networking line from around USD 35 a month to under USD 6 a month. Across the rolling year that is roughly R5 000 of saved spend on a workload that is not yet generating significant revenue. On the lifetime of a young product, that compounds.
+
+## The trade-off in one paragraph
+
+`fck-nat` is one EC2 instance per AZ. Managed NAT Gateway is an AWS-managed service with no host for you to think about. You give up AWS's hands-off availability story; you keep the entire egress pattern, the route tables, the security group surface, and the architectural diagram. The break-even is brutal: for almost every pre-product-market-fit workload, fck-nat is roughly 80% cheaper than Managed NAT Gateway. The cost of the trade-off is a small operational surface - patching, monitoring, and a slightly higher risk of a two-minute outage if the instance dies between the failure and the ASG replacing it.
+
+## When to use which
+
+The decision is not a religion. It is a workload question. The four variables are traffic volume, blast radius tolerance, team capacity, and total monthly bill.
+
+**Use fck-nat when:**
+
+- The workload's monthly outbound traffic is under about 5 TB. Above that, the per-gigabyte savings shrink relative to the fixed floor of Managed NAT, and the maths starts to flatten out.
+- A two-minute egress outage during instance replacement is acceptable. For a marketing site, a CMS, an internal tool, a B2B SaaS with retry-on-error clients, or an early-stage product, this is almost always true.
+- The team has at least one person comfortable with EC2, security groups and basic Linux. The Terraform module abstracts most of this, but somebody needs to be able to read CloudWatch logs when the instance misbehaves.
+- The total cloud bill is under about USD 2 000 a month. At that scale, fixed-cost reductions are the highest-leverage savings on the bill.
+
+**Use Managed NAT Gateway when:**
+
+- The workload is regulated and the auditor wants AWS-managed services everywhere. This is rare in practice but real.
+- Outbound traffic is over about 10 TB a month and the per-gigabyte charge of Managed NAT is small relative to the team-time cost of running NAT instances.
+- Egress availability has to match the rest of the AWS managed surface - financial systems, healthcare with strict SLA, anything where two minutes of egress outage is the wrong trade.
+- The team has no capacity to look at an EC2 instance ever again.
+
+For everything in between, which is most early-stage SaaS, the maths is on fck-nat's side.
+
+## The configuration I run in production
+
+The Terraform module does most of the work. The configuration looks roughly like this.
+
+```hcl
+module "fck_nat" {
+  source  = "RaJiska/fck-nat/aws"
+  version = "~> 1.3"
+
+  name      = "rulerev-egress"
+  vpc_id    = module.vpc.vpc_id
+  subnet_id = module.vpc.public_subnets[0]
+
+  ha_mode             = false
+  use_ssm             = true
+  use_cloudwatch_agent = true
+
+  update_route_tables = true
+  route_tables_ids = {
+    "private-a" = module.vpc.private_route_table_ids[0]
+  }
+}
+```
+
+A few points worth calling out. `use_ssm = true` lets you reach the instance via Session Manager, so it does not need an SSH key or an open port 22. `use_cloudwatch_agent = true` ships logs and basic metrics to CloudWatch so you can alert on failure. `update_route_tables` is what tells the module to wire the private route tables to point their default route at the fck-nat ENI.
+
+For a pre-revenue workload I run the single-AZ configuration above. For a workload with paying customers I run one fck-nat per AZ, with each AZ's private route table pointing at its own AZ-local instance. That preserves the AWS pattern of keeping AZ failures contained.
+
+## What goes wrong, and how to spot it
+
+Three failure modes account for almost every fck-nat incident I have seen.
+
+**The instance gets terminated and the ASG takes too long to replace it.** Symptoms: outbound requests start timing out, CloudWatch shows an `InService` count of zero. Mitigation: a CloudWatch alarm on the ASG `GroupInServiceInstances` metric with a one-minute period and a notification to whatever channel the on-call person reads.
+
+**Conntrack table fills up.** Symptoms: new outbound connections fail intermittently while existing connections continue to work. Mitigation: bump the conntrack table size in the user-data script. The default on a t4g.nano is generous but can be exhausted by a workload that opens thousands of short-lived outbound connections per second.
+
+**ENI source/destination check is enabled.** Symptoms: the instance is up, but no traffic flows through it. Mitigation: this is what `update_route_tables = true` and the module's ENI configuration are for. If you are not using the module, the source/destination check on the NAT instance's ENI must be disabled. This is the single most common mistake when people roll their own NAT instance.
+
+## When to switch back to Managed NAT
+
+You will know. The signal is one of three things: outbound traffic crosses about 10 TB a month and the data-processing charges on Managed NAT no longer dominate the bill, or your auditor explicitly asks for AWS-managed services on the egress path, or your team has grown to the point where a two-minute monthly egress incident is no longer in the acceptable column.
+
+When that day comes, switching is reversible. Update the route tables to point at a new Managed NAT Gateway, drop the fck-nat ASG to zero, and the change is done. You can run the migration in the opposite direction the same way.
+
+This pattern - pick the cheapest infrastructure that meets the actual workload's needs, instead of the AWS-default infrastructure - is one of the recommendations that comes out of every [Cloud Architecture Advisory](/services#cloud-advisory) engagement. It is rarely the most exciting recommendation. It is often the highest-leverage one.

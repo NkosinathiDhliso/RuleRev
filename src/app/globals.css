@@ -1,0 +1,269 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-bg: #ffffff;
+  --color-ink: #0a0a0a;
+  --color-ink-soft: #1f1f1f;
+  --color-muted: #5b5b5b;
+  --color-muted-soft: #8a8a8a;
+  --color-line: rgba(0, 0, 0, 0.08);
+  --color-line-strong: rgba(0, 0, 0, 0.16);
+  --color-surface: #fafafa;
+  --color-accent: #3b6bb8;
+  --color-accent-ink: #2c548f;
+  --color-accent-soft: #eaf0fa;
+  --color-success: #3a8a4f;
+
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-serif: 'Instrument Serif', ui-serif, Georgia, serif;
+
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+
+  --shadow-focus: 0 0 0 3px rgba(59, 107, 184, 0.35);
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  html,
+  body {
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  [role='button']:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+    border-radius: var(--radius-sm);
+  }
+
+  ::selection {
+    background: var(--color-accent-soft);
+    color: var(--color-accent-ink);
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+@layer utilities {
+  /* ============================================================
+     Motion system
+     - html.motion enables hidden pre-states + reveal triggers.
+     - Animator (client) toggles 'in-view' on each element when
+       it intersects the viewport, with a 2s safety net.
+     - html.motion-reduced (or @media reduce) keeps everything
+       in final state with no animation.
+     ============================================================ */
+
+  html.motion [data-animate='fade-up'],
+  html.motion [data-animate='fade-up-sm'] {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+    will-change: opacity, transform;
+  }
+
+  html.motion [data-animate='fade-up-sm'] {
+    transform: translate3d(0, 12px, 0);
+  }
+
+  html.motion [data-animate='fade'] {
+    opacity: 0;
+    will-change: opacity;
+  }
+
+  html.motion [data-animate='scale-in'] {
+    opacity: 0;
+    transform: scale(0.96);
+    transform-origin: center;
+    will-change: opacity, transform;
+  }
+
+  html.motion [data-animate='slide-left'] {
+    opacity: 0;
+    transform: translate3d(-32px, 0, 0);
+    will-change: opacity, transform;
+  }
+
+  html.motion [data-animate='slide-right'] {
+    opacity: 0;
+    transform: translate3d(32px, 0, 0);
+    will-change: opacity, transform;
+  }
+
+  html.motion [data-split-words] .rr-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translate3d(0, 0.5em, 0);
+    will-change: opacity, transform;
+  }
+
+  /* Reveal triggers ------------------------------------------- */
+
+  html.motion [data-animate].in-view {
+    animation-delay: var(--d, calc(var(--i, 0) * var(--ds, 70ms)));
+    animation-fill-mode: forwards;
+  }
+
+  html.motion [data-animate='fade-up'].in-view,
+  html.motion [data-animate='fade-up-sm'].in-view {
+    animation-name: rr-fade-up;
+    animation-duration: 0.85s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  html.motion [data-animate='fade'].in-view {
+    animation-name: rr-fade;
+    animation-duration: 0.7s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  html.motion [data-animate='scale-in'].in-view {
+    animation-name: rr-scale-in;
+    animation-duration: 0.9s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  html.motion [data-animate='slide-left'].in-view,
+  html.motion [data-animate='slide-right'].in-view {
+    animation-name: rr-slide-x;
+    animation-duration: 0.85s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  html.motion [data-split-words].in-view .rr-word {
+    animation: rr-fade-up 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--w, 0) * 60ms + var(--w-base, 0ms));
+  }
+
+  /* Once revealed, drop will-change to free GPU layers */
+  html.motion [data-animate].in-view,
+  html.motion [data-split-words].in-view .rr-word {
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes rr-fade-up {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 24px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes rr-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes rr-scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes rr-slide-x {
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  /* Reduced motion: never hide, never animate. Belt + braces:
+     even if 'motion' class somehow ends up on <html>, the
+     OS-level preference always wins via this media query. */
+  @media (prefers-reduced-motion: reduce) {
+    html.motion [data-animate],
+    html.motion [data-animate].in-view,
+    html.motion [data-split-words] .rr-word,
+    html.motion [data-split-words].in-view .rr-word,
+    html.motion-reduced [data-animate],
+    html.motion-reduced [data-split-words] .rr-word {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+      will-change: auto !important;
+    }
+  }
+
+  .container-page {
+    width: 100%;
+    max-width: 1120px;
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+
+  @media (min-width: 768px) {
+    .container-page {
+      padding-inline: 40px;
+    }
+  }
+
+  .text-prose {
+    max-width: 60ch;
+    line-height: 1.7;
+    color: var(--color-ink-soft);
+  }
+
+  .hide-scroll::-webkit-scrollbar {
+    display: none;
+  }
+}

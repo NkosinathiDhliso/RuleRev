@@ -1,0 +1,18 @@
+---
+slug: sensa
+client: Sensa
+title: Sensa - multi-agent simulated workplace
+publishedISO: 2025-10-01
+---
+
+## Problem
+
+Hiring is broken at the entry level. Junior candidates with no track record cannot prove they can do the job, and employers cannot afford to take a thirty-day risk on someone whose CV is mostly intent. The market answer has been internships, but internships in South Africa are rationed by who you know. Sensa’s premise is that a candidate should be able to earn a placement by doing the work - in a simulated environment, observed by AI managers, before any single employer takes the risk.
+
+## Decision
+
+I architected Sensa as a multi-agent simulated workplace with a three-stage trust ladder: virtual employment from day one, micro-tasks by day thirty, and human placement between day ninety and day one-eighty. The 1 700+ line PRD is the single source of truth across the system. The backend is Go on Lambda, organised by domain rather than technology - world, shift, task, npc, voice, judgment, record, wallet, integrity - so each domain owns its own data, events and rules. NPCs are tool-calling agents: AI managers observe candidates, hand out tasks, review submissions, and broker engagements with downstream employers. The frontend is React, presented as a desktop OS so the metaphor of “going to work” matches what is actually happening on the candidate’s screen. The integrity domain is its own thing for a reason: in a system that issues placement signals to real employers, every observation has to be tamper-evident.
+
+## Result
+
+The full system is in production-grade architecture today. Thirteen-plus bounded contexts, agentic NPC tool-calling under load, voice and text observation pipelines, a simulated wallet domain, and a placement broker that talks to the human side. Sensa is the answer when a founder asks whether RuleRev can take an unusual product brief and turn it into a working architecture instead of a slide deck.

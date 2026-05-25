@@ -1,0 +1,38 @@
+.block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-accent);
+  color: #fff;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  border-radius: var(--radius-lg);
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.block_lg {
+  font-size: clamp(64px, 10vw, 96px);
+}
+
+.block_md {
+  font-size: clamp(32px, 6vw, 56px);
+}
+
+.thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-ink);
+  color: #fff;
+  font-family: var(--font-serif);
+  letter-spacing: -0.01em;
+  border-radius: var(--radius-md);
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  font-size: clamp(20px, 3vw, 32px);
+  font-weight: 500;
+  padding: 16px;
+  text-align: center;
+}

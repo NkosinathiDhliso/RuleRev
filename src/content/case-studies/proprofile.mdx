@@ -1,0 +1,20 @@
+---
+slug: proprofile
+client: ProProfile
+title: ProProfile - POPIA-compliant video-first identity SaaS
+publishedISO: 2025-09-01
+---
+
+## Problem
+
+The hiring market in South Africa runs on PDFs and gut-feel. Candidates send static CVs into applicant tracking systems that strip the very things employers want to see - voice, tone, presence - and recruiters end up booking a thirty-minute call to learn what a one-minute video would have shown them. The brief was to build a professional identity platform where work history, qualifications and a candidate's own voice live in one place, on one URL, owned by the candidate. POPIA was not a footnote: this is identity data, video data, and verification data, all in one product, hosted on infrastructure that has to defend the rights of the data subject end-to-end.
+
+## Decision
+
+I built ProProfile as a Go-on-Lambda, Terraform-everything SaaS designed for blast-radius isolation. Two-hundred-and-forty-plus serverless functions across thirteen isolated Terraform stacks, each with its own state and IAM boundary, so a bad deploy in one capability cannot take the system down. Authentication is Cognito with ten user-pool portals - one per role - instead of a single pool with role hacks; that keeps an admin compromise from escalating across tenants. Payments are Yoco for South African card support without the FX overhead of a US gateway. The video pipeline is Mux for ingest, transcoding and delivery so I am not managing FFmpeg fleets. CV parsing is AWS Bedrock; structured output, no third-party data egress. Networking uses fck-nat instead of AWS Managed NAT Gateway, which collapses a fixed monthly cost by roughly 80% on this workload without changing the security posture.
+
+POPIA is not a privacy policy and a cookie banner. The eight conditions are wired into the architecture: lawful processing is encoded at the API gateway, purpose specification lives in per-route policy, data subject participation is a first-class API surface (export, correct, delete), and an Information Officer is a real role with real audit access.
+
+## Result
+
+Zero production rollbacks since launch. Thirteen isolated Terraform stacks deploy independently in CI. Roughly 80% cloud networking cost cut against the AWS Managed NAT Gateway baseline. CV parsing runs on managed Bedrock with no candidate data leaving the AWS account. Today ProProfile is a live shipping product at proprofile.co.za and it is what RuleRev points to when an investor asks whether I can ship a serious product, not just a marketing site.
