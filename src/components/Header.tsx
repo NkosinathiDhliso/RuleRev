@@ -87,10 +87,9 @@ export function Header() {
             </Link>
             <button
               type="button"
-              className={styles.menu_button}
+              className={styles.overlay_close}
               aria-label="Close menu"
               onClick={() => setOpen(false)}
-              style={{ background: 'rgba(255,255,255,0.1)' }}
             >
               <X size={18} aria-hidden="true" />
             </button>

@@ -1,16 +1,17 @@
 .hero {
   position: relative;
   isolation: isolate;
-  min-height: 100vh;
+  min-height: auto;
   display: flex;
   align-items: center;
-  padding-top: 56px;
+  padding-top: 80px;
   padding-bottom: 64px;
   overflow: hidden;
 }
 
 @media (min-width: 768px) {
   .hero {
+    min-height: 100vh;
     padding-top: 0;
     padding-bottom: 0;
   }
@@ -199,16 +200,16 @@
   background:
     linear-gradient(180deg, var(--color-ink-deep) 0%, #0d0f15 50%, var(--color-ink-deep) 100%);
   color: #fff;
-  border-radius: 32px;
-  margin-inline: 24px;
-  padding-block: 80px;
+  border-radius: 20px;
+  margin-inline: 16px;
+  padding: 48px 20px;
   overflow: hidden;
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.04) inset,
     0 30px 80px -30px rgba(15, 22, 50, 0.5),
     0 8px 24px -8px rgba(15, 22, 50, 0.3);
 
-  /* Card theming variables — cards inside become semi-transparent glass */
+  /* Card theming variables */
   --card-bg: rgba(255, 255, 255, 0.03);
   --card-border: rgba(255, 255, 255, 0.08);
   --card-title: #fff;
@@ -220,7 +221,7 @@
 @media (min-width: 768px) {
   .showcase {
     margin-inline: 40px;
-    padding-block: 120px;
+    padding: 120px 56px;
     border-radius: 40px;
   }
 }

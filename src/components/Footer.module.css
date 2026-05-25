@@ -56,13 +56,21 @@
 .link {
   font-size: 14px;
   color: var(--color-ink-soft);
-  transition: color 0.2s ease, transform 0.2s var(--ease-emphasized);
+  transition: color 0.2s ease;
   display: inline-block;
 }
 
 .link:hover {
   color: var(--color-accent);
-  transform: translateX(4px);
+}
+
+@media (min-width: 768px) {
+  .link {
+    transition: color 0.2s ease, transform 0.2s var(--ease-emphasized);
+  }
+  .link:hover {
+    transform: translateX(4px);
+  }
 }
 
 .social {
