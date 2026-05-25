@@ -12,6 +12,7 @@ type ConsentValue = 'granted' | 'denied';
 export function ConsentBanner() {
   const [consent, setConsent] = useState<ConsentValue | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -22,10 +23,15 @@ export function ConsentBanner() {
         window.__ruleRevConsent = stored;
       }
     } catch {}
+
+    const onReset = () => setShowBanner(true);
+    window.addEventListener('rulerev:consent-reset', onReset);
+    return () => window.removeEventListener('rulerev:consent-reset', onReset);
   }, []);
 
   const decide = (value: ConsentValue) => {
     setConsent(value);
+    setShowBanner(false);
     try {
       window.localStorage.setItem(STORAGE_KEY, value);
     } catch {}
@@ -39,6 +45,8 @@ export function ConsentBanner() {
   };
 
   if (!mounted) return null;
+
+  const bannerVisible = consent === null || showBanner;
 
   return (
     <>
@@ -61,7 +69,7 @@ export function ConsentBanner() {
         </>
       ) : null}
 
-      {consent === null ? (
+      {bannerVisible ? (
         <div className={styles.banner} role="dialog" aria-label="Cookie consent">
           <p className={styles.text}>
             I use cookies to measure how the site is performing. Nothing tracks you across other sites. You can accept,

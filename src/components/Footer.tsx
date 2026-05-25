@@ -3,6 +3,7 @@ import { Linkedin, Github } from 'lucide-react';
 import { SITE } from '@/lib/site';
 import { FOOTER_PAGES } from '@/lib/nav';
 import { whatsappLink, telLink, emailLink } from '@/lib/whatsapp';
+import { CookiePrefsButton } from './CookiePrefsButton';
 import styles from './Footer.module.css';
 
 export function Footer() {
@@ -71,6 +72,7 @@ export function Footer() {
           <div className={styles.bottom_links}>
             <Link href="/sitemap.xml" title="XML Sitemap for search engines">Sitemap</Link>
             <Link href="/writing/rss.xml" title="Subscribe via RSS reader">RSS</Link>
+            <CookiePrefsButton />
             <a href={SITE.external.proprofile} target="_blank" rel="noopener">
               Building ProProfile
             </a>
