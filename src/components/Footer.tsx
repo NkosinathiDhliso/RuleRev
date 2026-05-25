@@ -69,8 +69,8 @@ export function Footer() {
             {SITE.legal.informationOfficer}.
           </p>
           <div className={styles.bottom_links}>
-            <Link href="/sitemap.xml">Sitemap</Link>
-            <Link href="/writing/rss.xml">RSS</Link>
+            <Link href="/sitemap.xml" title="XML Sitemap for search engines">Sitemap</Link>
+            <Link href="/writing/rss.xml" title="Subscribe via RSS reader">RSS</Link>
             <a href={SITE.external.proprofile} target="_blank" rel="noopener">
               Building ProProfile
             </a>
