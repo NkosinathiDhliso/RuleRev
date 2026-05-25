@@ -192,7 +192,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(7, 8, 11, 0.97);
+  background: rgba(255, 255, 255, 0.97);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   z-index: 60;
@@ -221,14 +221,14 @@
   height: 36px;
   border-radius: var(--radius-pill);
   border: none;
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--color-ink);
   cursor: pointer;
   transition: background 0.2s ease;
 }
 
 .overlay_close:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .overlay_brand {
@@ -236,7 +236,7 @@
   font-weight: 500;
   font-size: 17px;
   letter-spacing: -0.02em;
-  color: #fff;
+  color: var(--color-ink);
 }
 
 .overlay_links {
@@ -251,19 +251,19 @@
   font-size: 28px;
   font-weight: 500;
   letter-spacing: -0.02em;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-muted);
   padding-block: 12px;
   transition: color 0.2s ease, transform 0.2s var(--ease-emphasized);
 }
 
 .overlay_link:hover,
 .overlay_link:active {
-  color: #fff;
+  color: var(--color-ink);
   transform: translateX(8px);
 }
 
 .overlay_link_active {
-  color: #fff;
+  color: var(--color-ink);
 }
 
 .overlay_cta {
