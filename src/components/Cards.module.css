@@ -74,7 +74,7 @@
 
 .case_card:hover {
   border-color: transparent;
-  transform: translateY(-4px) rotateX(2deg);
+  transform: translateY(-2px);
   box-shadow: var(--card-shadow, var(--glow-elev));
 }
 
@@ -193,7 +193,7 @@
 
 .service_card:hover {
   border-color: transparent;
-  transform: translateY(-4px) rotateX(2deg);
+  transform: translateY(-2px);
   box-shadow: var(--glow-elev);
 }
 
