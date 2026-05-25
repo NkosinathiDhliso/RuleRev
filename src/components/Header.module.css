@@ -185,6 +185,11 @@
   z-index: 60;
   display: flex;
   flex-direction: column;
+  pointer-events: auto;
+}
+
+.overlay * {
+  pointer-events: auto;
 }
 
 .overlay_top {
