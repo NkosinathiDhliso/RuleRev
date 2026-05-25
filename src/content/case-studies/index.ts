@@ -30,7 +30,7 @@ export const FEATURED_CASE_STUDIES: FeaturedCaseStudy[] = [
     headlineNumber: '1 700+',
     headlineLabel: 'lines of PRD shipped to production architecture',
     relatedService: 'founder-launch-pack',
-    liveUrl: 'https://sensaai.co.za',
+    liveUrl: 'https://app.sensaai.co.za/',
     publishedISO: '2025-10-01',
   },
   {

@@ -28,7 +28,7 @@ export const SITE = {
   },
   external: {
     proprofile: 'https://proprofile.co.za',
-    sensa: 'https://sensaai.co.za',
+    sensa: 'https://app.sensaai.co.za/',
     areacode: 'https://areacode.co.za',
   },
 } as const;
