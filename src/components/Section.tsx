@@ -17,7 +17,7 @@ export function Section({ children, surface, tight, id, ariaLabelledBy, as = 'se
     .join(' ');
   return (
     <Tag className={cls} id={id} aria-labelledby={ariaLabelledBy}>
-      <div className="container-page">{children}</div>
+      <div className="container-page" style={{ width: '100%' }}>{children}</div>
     </Tag>
   );
 }

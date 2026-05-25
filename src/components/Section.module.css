@@ -1,4 +1,7 @@
 .section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
   padding-block: 64px;
 }
 
@@ -9,6 +12,7 @@
 }
 
 .section_tight {
+  min-height: auto;
   padding-block: 48px;
 }
 

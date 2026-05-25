@@ -1,6 +1,9 @@
 .hero {
   position: relative;
   isolation: isolate;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
   padding-top: 56px;
   padding-bottom: 64px;
   overflow: hidden;
@@ -8,8 +11,8 @@
 
 @media (min-width: 768px) {
   .hero {
-    padding-top: 112px;
-    padding-bottom: 112px;
+    padding-top: 0;
+    padding-bottom: 0;
   }
 }
 
@@ -180,6 +183,9 @@
   isolation: isolate;
   background: var(--color-ink-deep);
   color: #fff;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
   padding-block: 72px;
   overflow: hidden;
 }
