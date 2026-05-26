@@ -6,10 +6,9 @@ type Props = {
   className?: string;
   baseDelay?: number;
   id?: string;
-  ['data-hero-h1']?: string;
 };
 
-export function SplitWords({ text, as: As = 'span', className, baseDelay = 0, id, ...rest }: Props) {
+export function SplitWords({ text, as: As = 'span', className, baseDelay = 0, id }: Props) {
   const tokens = text.split(/(\s+)/);
   let wordIndex = 0;
   const children: ReactNode[] = tokens.map((token, i) => {
@@ -25,7 +24,7 @@ export function SplitWords({ text, as: As = 'span', className, baseDelay = 0, id
     );
   });
   return (
-    <As id={id} className={className} data-split-words {...rest}>
+    <As id={id} className={className} data-split-words>
       {children}
     </As>
   );
