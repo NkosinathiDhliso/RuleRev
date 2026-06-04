@@ -1,0 +1,207 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 65vh;
+  min-height: 500px;
+  max-height: 800px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--glow-soft);
+}
+
+.messages_area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  scroll-behavior: smooth;
+}
+
+.messages_area::-webkit-scrollbar {
+  width: 6px;
+}
+.messages_area::-webkit-scrollbar-track {
+  background: transparent;
+}
+.messages_area::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: var(--radius-pill);
+}
+
+.msg_user_wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.msg_user {
+  max-width: 80%;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  padding: 14px 18px;
+  border-radius: 18px;
+  border-bottom-right-radius: 4px;
+  font-size: 15px;
+  line-height: 1.6;
+  animation: slide-up 0.3s var(--ease-emphasized) forwards;
+}
+
+.msg_assistant_wrapper {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.msg_assistant {
+  max-width: 85%;
+  background: #fff;
+  color: var(--color-ink-soft);
+  padding: 16px 20px;
+  border-radius: 18px;
+  border-bottom-left-radius: 4px;
+  font-size: 15px;
+  line-height: 1.65;
+  border: 1px solid var(--color-line);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  animation: slide-up 0.3s var(--ease-emphasized) forwards;
+}
+
+.msg_assistant p {
+  margin: 0 0 10px 0;
+}
+.msg_assistant p:last-child {
+  margin-bottom: 0;
+}
+
+/* Typing indicator */
+.typing_indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 2px;
+}
+
+.typing_indicator span {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-muted);
+  opacity: 0.4;
+  animation: typing 1.4s infinite ease-in-out both;
+}
+
+.typing_indicator span:nth-child(1) { animation-delay: -0.32s; }
+.typing_indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typing {
+  0%, 80%, 100% { transform: scale(0.8); opacity: 0.4; }
+  40% { transform: scale(1.2); opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Input Area */
+.input_area {
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px);
+  border-top: 1px solid var(--color-line);
+}
+
+.form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-pill);
+  padding: 6px 6px 6px 20px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form:focus-within {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
+}
+
+.input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  color: var(--color-ink);
+  outline: none;
+  padding: 8px 0;
+}
+
+.input::placeholder {
+  color: var(--color-muted-soft);
+}
+
+.submit_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--grad-text);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease-spring), opacity 0.2s ease;
+}
+
+.submit_btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: scale(0.95);
+}
+
+.submit_btn:not(:disabled):hover {
+  transform: scale(1.05);
+}
+
+.submit_btn:not(:disabled):active {
+  transform: scale(0.95);
+}
+
+.watermark {
+  text-align: center;
+  font-size: 11px;
+  color: var(--color-muted-soft);
+  margin-top: 12px;
+  letter-spacing: 0.02em;
+}
+
+.cta_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 20px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  align-items: flex-start;
+}
+
+.cta_text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.cta_actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}

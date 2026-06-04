@@ -15,6 +15,7 @@ export const metadata: Metadata = {
 };
 
 const CREDENTIALS = [
+  { title: 'Anthropic Partner', meta: 'Official Claude integration partner' },
   { title: 'AZ-305', meta: 'Microsoft Azure Solutions Architect Expert' },
   { title: 'AZ-400', meta: 'Microsoft Azure DevOps Engineer Expert' },
   { title: 'AZ-900', meta: 'Microsoft Azure Fundamentals' },
@@ -39,7 +40,7 @@ const BUILDING = [
   },
   {
     name: 'Sensa',
-    desc: 'Multi-agent simulated workplace where candidates earn placement through real work.',
+    desc: 'Claude-powered multi-agent AI workplace where candidates earn placement through real work.',
     href: SITE.external.sensa,
   },
   {
@@ -71,11 +72,12 @@ export default function AboutPage() {
                   platforms shipped under my own roof.
                 </p>
                 <p>
-                  ProProfile is a POPIA-compliant, video-first identity SaaS. Sensa is a multi-agent simulated workplace
-                  where candidates earn a placement by doing the work. I&rsquo;m currently shipping AreaCode for an
-                  external founder under the Founder Launch Pack. Azure Solutions Architect Expert (AZ-305) and Azure
-                  DevOps Engineer Expert (AZ-400) certified. Information Officer registered with the Information
-                  Regulator under POPIA.
+                  ProProfile is a POPIA-compliant, video-first identity SaaS. Sensa is a multi-agent AI workplace
+                  powered by Claude, where candidates earn a placement by doing the work. I&rsquo;m currently
+                  shipping AreaCode for an external founder under the Founder Launch Pack. As an official Anthropic
+                  partner, I integrate Claude into production systems where compliance and security are non-negotiable.
+                  Azure Solutions Architect Expert (AZ-305) and Azure DevOps Engineer Expert (AZ-400) certified.
+                  Information Officer registered with the Information Regulator under POPIA.
                 </p>
                 <p>
                   What drives the work: South African founders deserve the same calibre of technical partner that founders

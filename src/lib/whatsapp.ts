@@ -8,6 +8,7 @@ export type WhatsAppContext =
   | 'cloud_advisory'
   | 'contact'
   | 'floating'
+  | 'scope_project'
   | { caseStudy: string }
   | { notFoundUrl: string }
   | { custom: string };
@@ -20,6 +21,7 @@ const PRESETS: Record<string, string> = {
   compliance_retrofit: 'Hi Nathi, I need a POPIA compliance retrofit for my site.',
   cloud_advisory: "Hi Nathi, I'd like a cloud architecture review.",
   contact: "Hi Nathi, I'd like to get in touch.",
+  scope_project: "Hi Nathi, I used the AI project scoper on your site and I'd like to discuss further.",
 };
 
 export function whatsappLink(context: WhatsAppContext): string {

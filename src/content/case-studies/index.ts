@@ -25,8 +25,8 @@ export const FEATURED_CASE_STUDIES: FeaturedCaseStudy[] = [
   {
     slug: 'sensa',
     client: 'Sensa',
-    title: 'Sensa - multi-agent simulated workplace',
-    oneLine: 'AI-managed virtual workplace where candidates earn placement through real work.',
+    title: 'Sensa - Claude-powered multi-agent AI workplace',
+    oneLine: 'Multi-agent AI workplace built on Claude where candidates earn placement through real work.',
     headlineNumber: '1 700+',
     headlineLabel: 'lines of PRD shipped to production architecture',
     relatedService: 'founder-launch-pack',

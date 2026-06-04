@@ -8,6 +8,7 @@ export const NAV_LINKS = [
 export const FOOTER_PAGES = [
   { href: '/work', label: 'Work' },
   { href: '/services', label: 'Services' },
+  { href: '/scope', label: 'Scope a Project' },
   { href: '/writing', label: 'Writing' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },

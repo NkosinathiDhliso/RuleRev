@@ -7,7 +7,7 @@ const DEFAULT_STATS: ProofStat[] = [
   { value: '$2M+', label: 'Enterprise infrastructure delivered — 96 sites across 3 countries.' },
   { value: '0', label: 'Production rollbacks across both shipped SaaS platforms.' },
   { value: '~80%', label: 'Cloud networking cost cut for a single-client deployment.' },
-  { value: '−37%', label: 'Delivery cycle reduction — moved an enterprise programme from 8 weeks to 5.' },
+  { value: '3', label: 'AI-powered products shipped to production with Claude.' },
 ];
 
 export function ProofStrip({ stats = DEFAULT_STATS }: { stats?: ProofStat[] }) {
@@ -26,7 +26,7 @@ export function ProofStrip({ stats = DEFAULT_STATS }: { stats?: ProofStat[] }) {
               <Counter to={80} prefix="~" suffix="%" duration={1.6} className={styles.value_inner} />
             )}
             {i === 3 && (
-              <Counter to={37} prefix="−" suffix="%" duration={1.4} className={styles.value_inner} />
+              <Counter to={3} duration={1.2} className={styles.value_inner} />
             )}
           </div>
           <div className={styles.label}>{s.label}</div>

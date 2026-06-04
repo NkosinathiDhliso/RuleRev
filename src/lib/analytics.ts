@@ -11,7 +11,8 @@ export type CTALocation =
   | 'final_band'
   | 'header'
   | 'contact_page'
-  | 'not_found';
+  | 'not_found'
+  | 'scope';
 
 export type AnalyticsEvent =
   | { name: 'cta_click'; params: { cta_type: 'book_call' | 'whatsapp' | 'phone' | 'email'; page: Pathname; location: CTALocation } }

@@ -67,7 +67,7 @@ export function Footer() {
         <div className={styles.bottom}>
           <p>
             &copy; {new Date().getFullYear()} {SITE.name}. CIPC Reg: {SITE.legal.cipcReg || '-'}. POPIA Information Officer:{' '}
-            {SITE.legal.informationOfficer}.
+            {SITE.legal.informationOfficer}. Anthropic Partner.
           </p>
           <div className={styles.bottom_links}>
             <Link href="/sitemap.xml" title="XML Sitemap for search engines">Sitemap</Link>

@@ -239,3 +239,71 @@
 .showcase p {
   color: rgba(255, 255, 255, 0.7);
 }
+
+/* ─── Anthropic partnership callout ─────────────────────────────────── */
+.partner_card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 18px 22px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(var(--color-bg), var(--color-bg)) padding-box,
+    var(--grad-border) border-box;
+  color: inherit;
+  transition: transform 0.4s var(--ease-emphasized), box-shadow 0.4s var(--ease-emphasized);
+  overflow: hidden;
+}
+
+.partner_card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px -8px rgba(109, 94, 245, 0.18);
+}
+
+.partner_icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--grad-text);
+  color: #fff;
+}
+
+.partner_body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.partner_label {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--color-ink);
+}
+
+.partner_desc {
+  font-size: 13px;
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
+.partner_arrow {
+  flex-shrink: 0;
+  font-size: 18px;
+  color: var(--color-muted-soft);
+  transition: transform 0.3s var(--ease-emphasized), color 0.3s ease;
+}
+
+.partner_card:hover .partner_arrow {
+  transform: translateX(4px);
+  color: var(--grad-violet);
+}

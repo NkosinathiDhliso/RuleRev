@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.100.1",
     "@next/mdx": "^15.0.3",
     "@vercel/og": "^0.6.4",
     "gray-matter": "^4.0.3",

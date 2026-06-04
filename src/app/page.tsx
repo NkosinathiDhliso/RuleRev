@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Section, SectionHeading } from '@/components/Section';
 import { Eyebrow } from '@/components/Eyebrow';
 import { Button } from '@/components/Button';
@@ -51,6 +52,9 @@ export default function HomePage() {
             >
               <Button href={bookCallHref()} variant="primary" size="lg" external data-magnetic="">
                 Book a 30-min discovery call
+              </Button>
+              <Button href="/scope" variant="accent" size="lg">
+                Scope my project with AI
               </Button>
               <Button href="/work" variant="secondary" size="lg">
                 See what I&rsquo;ve shipped
@@ -109,10 +113,25 @@ export default function HomePage() {
             <span className={styles.badge}>Microsoft Azure</span>
             <span className={styles.badge}>AZ-305</span>
             <span className={styles.badge}>AZ-400</span>
-            <span className={styles.badge}>Anthropic</span>
             <span className={styles.badge}>Terraform</span>
           </div>
         </div>
+
+        {/* ─── Anthropic partnership — elevated from badges ────────────── */}
+        <Link href="/scope" className={styles.partner_card} data-animate="fade-up">
+          <div className={styles.partner_icon} aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 46 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M32.73 0H26.23L38.46 32h6.5L32.73 0ZM13.27 0 1.04 32h6.5l2.5-6.6h12.96l2.5 6.6h6.5L19.73 0h-6.46Zm-1.1 20.14L16.5 9.48l4.33 10.66H12.17Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div className={styles.partner_body}>
+            <span className={styles.partner_label}>Official Anthropic Partner</span>
+            <span className={styles.partner_desc}>
+              We build production AI systems with Claude for South African founders.
+            </span>
+          </div>
+          <span className={styles.partner_arrow} aria-hidden="true">&rarr;</span>
+        </Link>
       </Section>
 
       {/* ─── How it works ─────────────────────────────────────────────── */}
