@@ -3,6 +3,7 @@ import styles from './Section.module.css';
 
 type Props = {
   children: ReactNode;
+  className?: string;
   surface?: boolean;
   tight?: boolean;
   id?: string;
@@ -10,9 +11,9 @@ type Props = {
   as?: 'section' | 'div';
 };
 
-export function Section({ children, surface, tight, id, ariaLabelledBy, as = 'section' }: Props) {
+export function Section({ children, className, surface, tight, id, ariaLabelledBy, as = 'section' }: Props) {
   const Tag = as;
-  const cls = [styles.section, tight ? styles.section_tight : '', surface ? styles.bg_surface : '']
+  const cls = [styles.section, tight ? styles.section_tight : '', surface ? styles.bg_surface : '', className]
     .filter(Boolean)
     .join(' ');
   return (

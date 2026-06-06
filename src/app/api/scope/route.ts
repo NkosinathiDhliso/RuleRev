@@ -95,10 +95,10 @@ export async function POST(req: NextRequest) {
         try {
           for await (const chunk of stream) {
             if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
-              controller.enqueue(new TextEncoder().encode(\`data: \${JSON.stringify({ text: chunk.delta.text })}\\n\\n\`));
+              controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ text: chunk.delta.text })}\n\n`));
             }
           }
-          controller.enqueue(new TextEncoder().encode('data: [DONE]\\n\\n'));
+          controller.enqueue(new TextEncoder().encode('data: [DONE]\n\n'));
           controller.close();
         } catch (error) {
           controller.error(error);
