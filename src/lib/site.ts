@@ -70,7 +70,7 @@ export const SITE = {
     sensa: 'https://app.sensaai.co.za/',
     areacode: 'https://areacode.co.za',
   },
-  anthropicModel: process.env.ANTHROPIC_MODEL ?? 'claude-3-5-haiku-20241022',
+  anthropicModel: process.env.ANTHROPIC_MODEL ?? 'claude-haiku-4-5-20251001',
 } as const;
 
 export const CALENDLY_URL = process.env.NEXT_PUBLIC_CALENDLY_URL ?? '';
