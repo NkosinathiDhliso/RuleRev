@@ -70,8 +70,7 @@ export const SITE = {
     sensa: 'https://app.sensaai.co.za/',
     areacode: 'https://areacode.co.za',
   },
-  /** Claude model used for the scope chat. Env-configurable. */
-  anthropicModel: process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-20250514',
+  anthropicModel: process.env.ANTHROPIC_MODEL ?? 'claude-3-5-haiku-20241022',
 } as const;
 
 export const CALENDLY_URL = process.env.NEXT_PUBLIC_CALENDLY_URL ?? '';
