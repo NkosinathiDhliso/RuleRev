@@ -118,19 +118,9 @@
 
 .no_list li {
   position: relative;
-  padding-left: 28px;
   font-size: 16px;
   color: var(--color-ink-soft);
   line-height: 1.6;
-}
-
-.no_list li::before {
-  content: '\2014';
-  position: absolute;
-  left: 0;
-  top: 0;
-  color: var(--color-accent);
-  font-weight: 500;
 }
 
 .building {
