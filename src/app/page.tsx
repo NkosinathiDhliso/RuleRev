@@ -42,7 +42,7 @@ export default function HomePage() {
               data-animate="fade-up-sm"
               style={{ ['--d' as string]: '650ms' }}
             >
-              I help founders and SMEs ship investor-ready products — compliance, infrastructure, and code that won&rsquo;t
+              I help founders and SMEs ship investor-ready products, compliance, infrastructure, and code that won&rsquo;t
               be the reason your next round slips a quarter.
             </p>
             <div

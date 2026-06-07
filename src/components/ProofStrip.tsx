@@ -5,7 +5,7 @@ import styles from './ProofStrip.module.css';
 export type ProofStat = { value: string; label: string };
 
 const DEFAULT_STATS: ProofStat[] = [
-  { value: SITE.metrics.enterpriseValue, label: `Enterprise infrastructure delivered — ${SITE.metrics.sitesDelivered} sites across ${SITE.metrics.countriesServed} countries.` },
+  { value: SITE.metrics.enterpriseValue, label: `Enterprise infrastructure delivered, ${SITE.metrics.sitesDelivered} sites across ${SITE.metrics.countriesServed} countries.` },
   { value: '0', label: `Production rollbacks across ${SITE.metrics.saasCount} shipped SaaS platforms.` },
   { value: `~${SITE.metrics.natCostReduction}%`, label: 'Cloud networking cost cut for a single-client deployment.' },
   { value: String(SITE.metrics.aiProductsShipped), label: 'AI-powered products shipped to production with Claude.' },

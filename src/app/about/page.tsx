@@ -67,7 +67,7 @@ export default function AboutPage() {
                 <p>
                   I&rsquo;m a Technical Product Manager and Solutions Architect based in Midrand, Gauteng. RuleRev is a
                   one-person studio: when you hire me, you get me. I&rsquo;ve spent {yearsOfExperience()}+ years delivering on the
-                  awkward seam between engineering and the business &mdash; a {SITE.metrics.enterpriseValue} infrastructure programme across {SITE.metrics.sitesDelivered} retail
+                  awkward seam between engineering and the business, a {SITE.metrics.enterpriseValue} infrastructure programme across {SITE.metrics.sitesDelivered} retail
                   sites in {SITE.metrics.countriesServed} countries for the Cotton On Group, and now {toWord(SITE.metrics.saasCount)} production SaaS
                   platforms shipped under my own roof.
                 </p>
