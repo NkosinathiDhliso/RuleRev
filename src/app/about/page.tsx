@@ -4,13 +4,13 @@ import { Section } from '@/components/Section';
 import { FinalCTABand } from '@/components/FinalCTABand';
 import { SplitWords } from '@/components/SplitWords';
 import { JsonLd, personLD } from '@/lib/jsonld';
-import { SITE } from '@/lib/site';
+import { SITE, yearsOfExperience, toWord } from '@/lib/site';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: 'About',
   description:
-    'Founder bio: a decade of delivery, two shipped SaaS platforms, AZ-305 and AZ-400 certified, currently shipping AreaCode for an external founder. Based in Midrand, Gauteng.',
+    `Founder bio: ${yearsOfExperience()}+ years of delivery, ${toWord(SITE.metrics.saasCount)} shipped SaaS platforms, AZ-305 and AZ-400 certified. Based in Midrand, Gauteng.`,
   alternates: { canonical: '/about' },
 };
 
@@ -45,7 +45,7 @@ const BUILDING = [
   },
   {
     name: 'AreaCode',
-    desc: 'Real-time venue discovery and rewards app for South Africa. Live Founder Launch Pack engagement.',
+    desc: 'Real-time venue discovery and rewards app for South Africa. Founder Launch Pack engagement.',
     href: SITE.external.areacode,
   },
 ];
@@ -66,15 +66,14 @@ export default function AboutPage() {
               <div className={styles.bio} data-animate="fade-up-sm" style={{ ['--d' as string]: '650ms' }}>
                 <p>
                   I&rsquo;m a Technical Product Manager and Solutions Architect based in Midrand, Gauteng. RuleRev is a
-                  one-person studio: when you hire me, you get me. I&rsquo;ve spent the last decade delivering on the
-                  awkward seam between engineering and the business - a $2M+ infrastructure programme across 96 retail
-                  sites in South Africa, Botswana and Namibia for the Cotton On Group, and now two production SaaS
+                  one-person studio: when you hire me, you get me. I&rsquo;ve spent {yearsOfExperience()}+ years delivering on the
+                  awkward seam between engineering and the business &mdash; a {SITE.metrics.enterpriseValue} infrastructure programme across {SITE.metrics.sitesDelivered} retail
+                  sites in {SITE.metrics.countriesServed} countries for the Cotton On Group, and now {toWord(SITE.metrics.saasCount)} production SaaS
                   platforms shipped under my own roof.
                 </p>
                 <p>
                   ProProfile is a POPIA-compliant, video-first identity SaaS. Sensa is a multi-agent AI workplace
-                  powered by Claude, where candidates earn a placement by doing the work. I&rsquo;m currently
-                  shipping AreaCode for an external founder under the Founder Launch Pack. As an official Anthropic
+                  powered by Claude, where candidates earn a placement by doing the work. As an official Anthropic
                   partner, I integrate Claude into production systems where compliance and security are non-negotiable.
                   Azure Solutions Architect Expert (AZ-305) and Azure DevOps Engineer Expert (AZ-400) certified.
                   Information Officer registered with the Information Regulator under POPIA.

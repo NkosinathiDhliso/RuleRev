@@ -10,7 +10,7 @@ import { SplitChars } from '@/components/SplitChars';
 import { GradientMesh } from '@/components/GradientMesh';
 import { FEATURED_CASE_STUDIES } from '@/content/case-studies';
 import { SERVICES } from '@/content/services';
-import { SITE, bookCallHref } from '@/lib/site';
+import { SITE, bookCallHref, capitalise, toWord } from '@/lib/site';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -79,7 +79,7 @@ export default function HomePage() {
             <div data-animate="fade-up">
               <SectionHeading
                 title="Selected work"
-                lede="Three projects where the headline number does the talking."
+                lede={`${capitalise(toWord(featured.length))} projects where the headline number does the talking.`}
               />
             </div>
             <div>
@@ -94,7 +94,7 @@ export default function HomePage() {
         <div data-animate="fade-up">
           <SectionHeading
             title="What I offer"
-            lede="Three productised engagements. Fixed scope, fixed timeline, named deliverables."
+            lede={`${capitalise(toWord(SERVICES.length))} productised engagements. Fixed scope, fixed timeline, named deliverables.`}
           />
         </div>
         <div>

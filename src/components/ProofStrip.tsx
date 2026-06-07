@@ -1,13 +1,14 @@
 import { Counter } from './Counter';
+import { SITE } from '@/lib/site';
 import styles from './ProofStrip.module.css';
 
 export type ProofStat = { value: string; label: string };
 
 const DEFAULT_STATS: ProofStat[] = [
-  { value: '$2M+', label: 'Enterprise infrastructure delivered — 96 sites across 3 countries.' },
-  { value: '0', label: 'Production rollbacks across both shipped SaaS platforms.' },
-  { value: '~80%', label: 'Cloud networking cost cut for a single-client deployment.' },
-  { value: '3', label: 'AI-powered products shipped to production with Claude.' },
+  { value: SITE.metrics.enterpriseValue, label: `Enterprise infrastructure delivered — ${SITE.metrics.sitesDelivered} sites across ${SITE.metrics.countriesServed} countries.` },
+  { value: '0', label: `Production rollbacks across ${SITE.metrics.saasCount} shipped SaaS platforms.` },
+  { value: `~${SITE.metrics.natCostReduction}%`, label: 'Cloud networking cost cut for a single-client deployment.' },
+  { value: String(SITE.metrics.aiProductsShipped), label: 'AI-powered products shipped to production with Claude.' },
 ];
 
 export function ProofStrip({ stats = DEFAULT_STATS }: { stats?: ProofStat[] }) {
@@ -26,7 +27,7 @@ export function ProofStrip({ stats = DEFAULT_STATS }: { stats?: ProofStat[] }) {
               <Counter to={80} prefix="~" suffix="%" duration={1.6} className={styles.value_inner} />
             )}
             {i === 3 && (
-              <Counter to={3} duration={1.2} className={styles.value_inner} />
+              <Counter to={SITE.metrics.aiProductsShipped} duration={1.2} className={styles.value_inner} />
             )}
           </div>
           <div className={styles.label}>{s.label}</div>

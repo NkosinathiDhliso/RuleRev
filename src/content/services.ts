@@ -20,7 +20,7 @@ export const SERVICES: Service[] = [
       'Investor-ready marketing site, POPIA pack, payments, analytics. Fixed price, 3 weeks.',
     duration: '3 weeks',
     bestFor: 'Pre-seed founders who need a credible web presence yesterday.',
-    proof: "Currently shipping for a founder building AreaCode.",
+    proof: 'Shipped AreaCode for an external founder. See the case study.',
     included: [
       '5-page marketing site (home, about, product/services, blog scaffold, contact)',
       'POPIA compliance pack (privacy policy, cookie policy, T&Cs, cookie consent banner, DPIA template)',

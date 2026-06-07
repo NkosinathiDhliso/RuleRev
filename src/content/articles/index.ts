@@ -3,6 +3,7 @@ export type Article = {
   title: string;
   description: string;
   publishedISO: string;
+  lastReviewedISO?: string;
   readingMinutes: number;
   relatedService?: 'founder-launch-pack' | 'compliance-retrofit' | 'cloud-advisory';
   relatedCaseStudy?: string;
@@ -16,6 +17,7 @@ export const ARTICLES: Article[] = [
     description:
       'The technical architecture, infrastructure choices, and 8-week roadmap for building a managed security services platform targeting SA SMEs. POPIA-compliant, Azure-hosted, scalable to 20 clients per analyst.',
     publishedISO: '2026-05-20',
+    lastReviewedISO: '2026-05-20',
     readingMinutes: 12,
     relatedService: 'founder-launch-pack',
     status: 'published',
@@ -26,6 +28,7 @@ export const ARTICLES: Article[] = [
     description:
       'A stage-by-stage technical decision framework for SA e-commerce founders: payment gateways, hosting, WhatsApp Commerce, POPIA compliance, and when to go custom vs Shopify.',
     publishedISO: '2026-05-22',
+    lastReviewedISO: '2026-05-22',
     readingMinutes: 14,
     relatedService: 'founder-launch-pack',
     status: 'published',
@@ -36,6 +39,7 @@ export const ARTICLES: Article[] = [
     description:
       'The operational bottleneck solar businesses hit at 20+ installations/month, and the platform architecture that solves it: quoting, job scheduling, SLA management, client portals.',
     publishedISO: '2026-05-25',
+    lastReviewedISO: '2026-05-25',
     readingMinutes: 13,
     relatedService: 'founder-launch-pack',
     status: 'published',
@@ -46,6 +50,7 @@ export const ARTICLES: Article[] = [
     description:
       'A working engineer’s checklist for POPIA-compliant websites in South Africa: privacy policy, consent, cookies, data flows, retention, breach response.',
     publishedISO: '2026-01-15',
+    lastReviewedISO: '2026-01-15',
     readingMinutes: 9,
     relatedService: 'compliance-retrofit',
     status: 'published',
@@ -67,6 +72,7 @@ export const ARTICLES: Article[] = [
     description:
       'A practical comparison of fck-nat vs AWS Managed NAT Gateway, with the production trade-offs and the cost numbers from a live deployment.',
     publishedISO: '2026-03-05',
+    lastReviewedISO: '2026-03-05',
     readingMinutes: 8,
     relatedService: 'cloud-advisory',
     relatedCaseStudy: 'proprofile',

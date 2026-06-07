@@ -8,9 +8,9 @@ AWS Managed NAT Gateway is one of the most quietly expensive line items on the b
 
 ## What Managed NAT Gateway actually costs
 
-Managed NAT Gateway is two charges. The first is the per-hour charge, currently around USD 0.045 per hour per gateway in `af-south-1` (Cape Town). One gateway in one Availability Zone costs about USD 33 per month before a single byte of traffic. Two AZs for redundancy is USD 66. Three AZs, which is the AWS-recommended posture for production, is USD 99.
+Managed NAT Gateway is two charges. The first is the per-hour charge, around USD 0.045 per hour per gateway in `af-south-1` (Cape Town) as of early 2026. One gateway in one Availability Zone costs about USD 33 per month before a single byte of traffic. Two AZs for redundancy is USD 66. Three AZs, which is the AWS-recommended posture for production, is USD 99.
 
-The second charge is per-gigabyte of data processed, currently USD 0.045 per gigabyte. For most small SaaS workloads this is the smaller of the two charges by a wide margin, but it scales linearly with traffic.
+The second charge is per-gigabyte of data processed, USD 0.045 per gigabyte as of early 2026. For most small SaaS workloads this is the smaller of the two charges by a wide margin, but it scales linearly with traffic.
 
 The fixed-cost floor is the part that hurts. Three AZs costs USD 99 per month even if your workload sends zero outbound traffic. On a workload that is not yet generating revenue, that floor is meaningful. On a side project or an early-stage SaaS in `af-south-1`, where the regional pricing is slightly higher than the US regions, the fixed floor is the dominant cost.
 

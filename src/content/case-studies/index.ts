@@ -77,7 +77,7 @@ export const OTHER_CLIENTS: OtherClient[] = [
   {
     name: 'AreaCode',
     description:
-      'Real-time venue discovery and rewards app for South Africa. Shows which Johannesburg, Cape Town, and Durban venues are quiet, active, buzzing, or popping right now; users check in to earn rewards. Live Founder Launch Pack engagement.',
+      'Real-time venue discovery and rewards app for South Africa. Shows which Johannesburg, Cape Town, and Durban venues are quiet, active, buzzing, or popping right now; users check in to earn rewards. Founder Launch Pack engagement.',
     liveUrl: 'https://areacode.co.za',
   },
   {

@@ -175,7 +175,7 @@ export function ScopeChat() {
           </button>
         </form>
         <div className={styles.watermark}>
-          Powered by Claude 3.5 Sonnet
+          Powered by Claude
         </div>
       </div>
     </div>

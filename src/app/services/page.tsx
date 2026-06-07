@@ -5,14 +5,14 @@ import { FinalCTABand } from '@/components/FinalCTABand';
 import { SplitWords } from '@/components/SplitWords';
 import { JsonLd, serviceLD } from '@/lib/jsonld';
 import { SERVICES } from '@/content/services';
-import { SITE, bookCallHref } from '@/lib/site';
+import { SITE, bookCallHref, capitalise, toWord } from '@/lib/site';
 import { whatsappLink } from '@/lib/whatsapp';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: 'Services',
   description:
-    'Three productised offers: Founder Launch Pack, Compliance-Ready Website Retrofit, and Cloud Architecture Advisory. Fixed price, fixed timeline.',
+    `${capitalise(toWord(SERVICES.length))} productised offers: ${SERVICES.map(s => s.name).join(', ')}. Fixed price, fixed timeline.`,
   alternates: { canonical: '/services' },
 };
 
@@ -21,7 +21,7 @@ export default function ServicesPage() {
     <>
       <section className={styles.intro}>
         <div className="container-page">
-          <SplitWords as="h1" className={styles.intro_h1} text="Three productised offers. Self-qualify." baseDelay={0} />
+          <SplitWords as="h1" className={styles.intro_h1} text={`${capitalise(toWord(SERVICES.length))} productised offers. Self-qualify.`} baseDelay={0} />
           <p className={styles.intro_lede} data-animate="fade-up-sm" style={{ ['--d' as string]: '650ms' }}>
             Each offer has fixed scope, a fixed timeline, and named deliverables. If you don&rsquo;t see your situation in one
             of them, the discovery call is still free.

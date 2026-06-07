@@ -1,5 +1,7 @@
 import { NextRequest } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
+import { SERVICES } from '@/content/services';
+import { SITE } from '@/lib/site';
 
 // Initialize the Anthropic client. 
 // Requires ANTHROPIC_API_KEY environment variable.
@@ -30,13 +32,16 @@ function checkRateLimit(ip: string): boolean {
   return true;
 }
 
-const SYSTEM_PROMPT = `You are RuleRev's AI project advisor. RuleRev is a technical product partner for South African founders. 
-Your goal is to have a concise, professional, and friendly conversation with a founder to understand their needs, recommend one of RuleRev's three services, and help them scope their project.
+function buildSystemPrompt(): string {
+  const serviceList = SERVICES.map(
+    (s, i) => `${i + 1}. ${s.name} (${s.duration}): ${s.oneLine} Best for ${s.bestFor.replace(/\.$/, '')}.`,
+  ).join('\n');
 
-The three services RuleRev offers are:
-1. Founder Launch Pack (3 weeks): Investor-ready marketing site, POPIA compliance pack, payments, and analytics. Best for pre-seed founders who need a credible web presence fast.
-2. Compliance-Ready Website Retrofit (1 week): POPIA audit and retrofit. Best for SA SMEs quietly non-compliant since POPIA enforcement.
-3. Cloud Architecture Advisory (Day-rate or fixed scope): AWS or Azure architecture review and cost optimisation. Best for teams overpaying for cloud or unsure about resilience.
+  return `You are RuleRev's AI project advisor. RuleRev is a technical product partner for South African founders. 
+Your goal is to have a concise, professional, and friendly conversation with a founder to understand their needs, recommend one of RuleRev's ${SERVICES.length} services, and help them scope their project.
+
+The ${SERVICES.length} services RuleRev offers are:
+${serviceList}
 
 Your instructions:
 - Be conversational. Ask ONE question at a time.
@@ -44,13 +49,14 @@ Your instructions:
 - If needed, ask about their business stage, timeline, or main concern (compliance, infrastructure, or speed-to-market).
 - Keep your responses very brief (2-4 sentences max per message).
 - Do not overwhelm them with options right away. Guide them.
-- Once you have enough context (usually after 2-3 exchanges), recommend the MOST RELEVANT service out of the three.
+- Once you have enough context (usually after 2-3 exchanges), recommend the MOST RELEVANT service.
 - After recommending a service, provide a brief 2-3 bullet point scope summary of what RuleRev would do for them.
 - Conclude by asking if they would like to book a 30-minute discovery call with Nathi (the founder of RuleRev).
 - IMPORTANT: Use British English spelling (optimisation, organisation, etc.) and be aware of the South African context (e.g. POPIA, ZAR).
 - Tone: Direct, warm, expert, no fluff.
 - You are representing an official Anthropic Partner, so demonstrate high-quality reasoning.
 `;
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -82,9 +88,9 @@ export async function POST(req: NextRequest) {
 
     // Call Anthropic API with streaming
     const stream = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
+      model: SITE.anthropicModel,
       max_tokens: 1024,
-      system: SYSTEM_PROMPT,
+      system: buildSystemPrompt(),
       messages: messages,
       stream: true,
     });
