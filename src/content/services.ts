@@ -1,5 +1,5 @@
 export type Service = {
-  slug: 'founder-launch-pack' | 'compliance-retrofit' | 'cloud-advisory';
+  slug: 'founder-launch-pack' | 'compliance-retrofit' | 'cloud-advisory' | 'ai-enablement-training';
   name: string;
   oneLine: string;
   pitch: string;
@@ -8,7 +8,7 @@ export type Service = {
   proof?: string;
   included: string[];
   priceFrom: number | null;
-  whatsappContext: 'founder_launch_pack' | 'compliance_retrofit' | 'cloud_advisory';
+  whatsappContext: 'founder_launch_pack' | 'compliance_retrofit' | 'cloud_advisory' | 'ai_training';
 };
 
 export const SERVICES: Service[] = [
@@ -68,5 +68,26 @@ export const SERVICES: Service[] = [
     ],
     priceFrom: null,
     whatsappContext: 'cloud_advisory',
+  },
+  {
+    slug: 'ai-enablement-training',
+    name: 'AI Enablement & Training',
+    oneLine: 'Team training on AI agents, tool design, MCP servers, and orchestration.',
+    pitch:
+      'Hands-on AI training for enterprise teams: an executive briefing, a practical track for non-technical staff, and developer build labs covering agents, tool design, MCP servers, and orchestration. Taught by an official Anthropic partner who runs multi-agent Claude in production.',
+    duration: 'Half-day to 2 weeks',
+    bestFor:
+      'Enterprises and mid-size teams that want employees, technical or not, using and building AI safely and well.',
+    proof:
+      'Official Anthropic partner. The curriculum is drawn from Sensa, a Claude-powered multi-agent platform running in production.',
+    included: [
+      'Executive briefing: AI capability, risk, and a realistic adoption roadmap (half-day)',
+      'End-user track: practical AI for non-technical departments, from prompting to workflow redesign',
+      'Developer track: agents, tool design, MCP servers, orchestration, and evals, ending in a working internal agent',
+      'POPIA-aware AI governance: data handling rules your teams can actually follow',
+      'All training materials become yours after the engagement',
+    ],
+    priceFrom: null,
+    whatsappContext: 'ai_training',
   },
 ];

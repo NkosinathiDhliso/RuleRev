@@ -6,7 +6,6 @@ import { Button } from '@/components/Button';
 import { ProofStrip } from '@/components/ProofStrip';
 import { CaseStudyCardGrid, ServiceCardGrid } from '@/components/Cards';
 import { FinalCTABand } from '@/components/FinalCTABand';
-import { SplitChars } from '@/components/SplitChars';
 import { GradientMesh } from '@/components/GradientMesh';
 import { FEATURED_CASE_STUDIES } from '@/content/case-studies';
 import { SERVICES } from '@/content/services';
@@ -26,31 +25,19 @@ export default function HomePage() {
     <>
       {/* ─── Hero ─────────────────────────────────────────────────────── */}
       <section className={styles.hero}>
-        <GradientMesh parallax parallaxStrength={40} grain />
+        <GradientMesh grain />
         <div className="container-page">
           <div className={styles.hero_inner}>
-            <div data-animate="fade-up-sm" style={{ ['--d' as string]: '0ms' }}>
-              <Eyebrow>{SITE.scarcity.pillText}</Eyebrow>
-            </div>
-            <SplitChars
-              as="h1"
-              className={styles.h1}
-              text="Technical product partner for South African founders."
-            />
-            <p
-              className={styles.subhead}
-              data-animate="fade-up-sm"
-              style={{ ['--d' as string]: '650ms' }}
-            >
+            <Eyebrow>{SITE.scarcity.pillText}</Eyebrow>
+            <h1 className={styles.h1}>
+              Technical product partner for South African founders.
+            </h1>
+            <p className={styles.subhead}>
               I help founders and SMEs ship investor-ready products, compliance, infrastructure, and code that won&rsquo;t
               be the reason your next round slips a quarter.
             </p>
-            <div
-              className={styles.hero_actions}
-              data-animate="fade-up-sm"
-              style={{ ['--d' as string]: '800ms' }}
-            >
-              <Button href={bookCallHref()} variant="primary" size="lg" external data-magnetic="">
+            <div className={styles.hero_actions}>
+              <Button href={bookCallHref()} variant="primary" size="lg" external>
                 Book a 30-min discovery call
               </Button>
               <Button href="/scope" variant="accent" size="lg">
@@ -66,7 +53,7 @@ export default function HomePage() {
 
       {/* ─── Proof strip ──────────────────────────────────────────────── */}
       <Section tight>
-        <div data-animate="scale-in">
+        <div data-animate="fade">
           <ProofStrip />
         </div>
       </Section>
@@ -74,7 +61,7 @@ export default function HomePage() {
       {/* ─── Selected work — dark spotlight panel ─────────────────────── */}
       <div className={styles.showcase_wrap}>
         <section className={styles.showcase}>
-          <GradientMesh variant="dark" parallax parallaxStrength={50} grain />
+          <GradientMesh variant="dark" parallax parallaxStrength={20} grain />
           <div className="container-page" style={{ position: 'relative', zIndex: 2 }}>
             <div data-animate="fade-up">
               <SectionHeading
@@ -118,7 +105,7 @@ export default function HomePage() {
         </div>
 
         {/* ─── Anthropic partnership — elevated from badges ────────────── */}
-        <Link href="/scope" className={styles.partner_card} data-animate="fade-up">
+        <Link href="/training" className={styles.partner_card} data-animate="fade-up">
           <div className={styles.partner_icon} aria-hidden="true">
             <svg width="24" height="24" viewBox="0 0 46 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M32.73 0H26.23L38.46 32h6.5L32.73 0ZM13.27 0 1.04 32h6.5l2.5-6.6h12.96l2.5 6.6h6.5L19.73 0h-6.46Zm-1.1 20.14L16.5 9.48l4.33 10.66H12.17Z" fill="currentColor"/>
@@ -127,7 +114,7 @@ export default function HomePage() {
           <div className={styles.partner_body}>
             <span className={styles.partner_label}>Official Anthropic Partner</span>
             <span className={styles.partner_desc}>
-              We build production AI systems with Claude for South African founders.
+              We build production AI systems with Claude and train enterprise teams to do the same.
             </span>
           </div>
           <span className={styles.partner_arrow} aria-hidden="true">&rarr;</span>

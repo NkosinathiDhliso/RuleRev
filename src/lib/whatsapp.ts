@@ -6,6 +6,7 @@ export type WhatsAppContext =
   | 'founder_launch_pack'
   | 'compliance_retrofit'
   | 'cloud_advisory'
+  | 'ai_training'
   | 'contact'
   | 'floating'
   | 'scope_project'
@@ -20,6 +21,7 @@ const PRESETS: Record<string, string> = {
   founder_launch_pack: "Hi Nathi, I'm interested in the Founder Launch Pack.",
   compliance_retrofit: 'Hi Nathi, I need a POPIA compliance retrofit for my site.',
   cloud_advisory: "Hi Nathi, I'd like a cloud architecture review.",
+  ai_training: "Hi Nathi, I'm interested in AI training for my team.",
   contact: "Hi Nathi, I'd like to get in touch.",
   scope_project: "Hi Nathi, I used the AI project scoper on your site and I'd like to discuss further.",
 };
