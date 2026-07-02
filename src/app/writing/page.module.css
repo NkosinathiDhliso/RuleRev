@@ -17,11 +17,11 @@
 
 .row:hover {
   padding-left: 16px;
-  background: rgba(109, 94, 245, 0.02);
+  background: rgba(59, 107, 184, 0.02);
 }
 
 .row:hover .title {
-  color: var(--grad-violet);
+  color: var(--grad-deep);
 }
 
 .meta {

@@ -190,8 +190,8 @@
   padding: 0 0 0 0;
   /* Soft gradient ambiance bleeds into surrounding white */
   background:
-    radial-gradient(ellipse 90% 50% at 50% 0%, rgba(109, 94, 245, 0.06), transparent 70%),
-    radial-gradient(ellipse 90% 50% at 50% 100%, rgba(26, 182, 201, 0.05), transparent 70%);
+    radial-gradient(ellipse 90% 50% at 50% 0%, rgba(59, 107, 184, 0.06), transparent 70%),
+    radial-gradient(ellipse 90% 50% at 50% 100%, rgba(122, 163, 220, 0.05), transparent 70%);
 }
 
 .showcase {
@@ -215,7 +215,7 @@
   --card-title: #fff;
   --card-text: rgba(255, 255, 255, 0.65);
   --card-eyebrow: rgba(255, 255, 255, 0.5);
-  --card-shadow: 0 0 0 1px rgba(109, 94, 245, 0.3) inset, 0 18px 48px -12px rgba(109, 94, 245, 0.4);
+  --card-shadow: 0 0 0 1px rgba(59, 107, 184, 0.3) inset, 0 18px 48px -12px rgba(59, 107, 184, 0.4);
 }
 
 @media (min-width: 768px) {
@@ -260,7 +260,7 @@
 
 .partner_card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 32px -8px rgba(109, 94, 245, 0.18);
+  box-shadow: 0 12px 32px -8px rgba(59, 107, 184, 0.18);
 }
 
 .partner_icon {
@@ -305,5 +305,5 @@
 
 .partner_card:hover .partner_arrow {
   transform: translateX(4px);
-  color: var(--grad-violet);
+  color: var(--grad-deep);
 }

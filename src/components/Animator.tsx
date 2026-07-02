@@ -13,7 +13,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 const LOG = false;
 
 function log(...args: unknown[]) {
-  if (LOG) console.log('%c[Animator]', 'color: #6d5ef5; font-weight: bold;', ...args);
+  if (LOG) console.log('%c[Animator]', 'color: #3b6bb8; font-weight: bold;', ...args);
 }
 
 type AnimType =
@@ -25,12 +25,12 @@ type AnimType =
   | 'slide-right';
 
 const FROM_BY_TYPE: Record<AnimType, gsap.TweenVars> = {
-  'fade': { opacity: 0, filter: 'blur(6px)' },
-  'fade-up': { opacity: 0, y: 40, filter: 'blur(4px)' },
-  'fade-up-sm': { opacity: 0, y: 24, filter: 'blur(3px)' },
-  'scale-in': { opacity: 0, scale: 0.9, filter: 'blur(6px)' },
-  'slide-left': { opacity: 0, x: -60, filter: 'blur(4px)' },
-  'slide-right': { opacity: 0, x: 60, filter: 'blur(4px)' },
+  'fade': { opacity: 0 },
+  'fade-up': { opacity: 0, y: 16 },
+  'fade-up-sm': { opacity: 0, y: 10 },
+  'scale-in': { opacity: 0, scale: 0.98 },
+  'slide-left': { opacity: 0, x: -24 },
+  'slide-right': { opacity: 0, x: 24 },
 };
 
 const TO_DEFAULTS: gsap.TweenVars = {
@@ -40,9 +40,8 @@ const TO_DEFAULTS: gsap.TweenVars = {
   scale: 1,
   rotateX: 0,
   rotateY: 0,
-  filter: 'blur(0px)',
-  duration: 1,
-  ease: 'power3.out',
+  duration: 0.6,
+  ease: 'power2.out',
 };
 
 function readDelayMs(el: HTMLElement): number {
@@ -390,16 +389,16 @@ export function Animator() {
     const badgeContainers = document.querySelectorAll<HTMLElement>('[data-stagger-children]');
     badgeContainers.forEach((container) => {
       const children = Array.from(container.children) as HTMLElement[];
-      gsap.set(children, { opacity: 0, y: 12, scale: 0.9 });
+      gsap.set(children, { opacity: 0, y: 8 });
 
       const rect = container.getBoundingClientRect();
       const isOnScreen = rect.top < window.innerHeight && rect.bottom > 0;
 
       if (isOnScreen) {
         gsap.to(children, {
-          opacity: 1, y: 0, scale: 1,
-          duration: 0.6, ease: 'back.out(2)',
-          stagger: 0.08,
+          opacity: 1, y: 0,
+          duration: 0.5, ease: 'power2.out',
+          stagger: 0.05,
         });
       } else {
         const t = ScrollTrigger.create({
@@ -408,9 +407,9 @@ export function Animator() {
           once: true,
           onEnter: () => {
             gsap.to(children, {
-              opacity: 1, y: 0, scale: 1,
-              duration: 0.6, ease: 'back.out(2)',
-              stagger: 0.08,
+              opacity: 1, y: 0,
+              duration: 0.5, ease: 'power2.out',
+              stagger: 0.05,
             });
           },
         });

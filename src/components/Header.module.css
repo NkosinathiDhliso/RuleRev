@@ -135,11 +135,11 @@
 .cta_btn {
   font-size: 13.5px;
   font-weight: 500;
-  color: var(--grad-violet);
+  color: var(--grad-deep);
   padding: 8px 16px;
   border-radius: var(--radius-pill);
-  background: rgba(109, 94, 245, 0.08);
-  border: 1px solid rgba(109, 94, 245, 0.15);
+  background: rgba(59, 107, 184, 0.08);
+  border: 1px solid rgba(59, 107, 184, 0.15);
   cursor: pointer;
   transition: background 0.4s var(--ease-emphasized), color 0.4s var(--ease-emphasized), border-color 0.4s var(--ease-emphasized), filter 0.2s ease, box-shadow 0.4s var(--ease-emphasized);
   text-decoration: none;
@@ -151,16 +151,16 @@
 
 @media (min-width: 880px) {
   .pill:hover .cta_btn {
-    background: linear-gradient(135deg, var(--grad-violet), var(--grad-azure));
+    background: linear-gradient(135deg, var(--grad-deep), var(--grad-mid));
     color: #fff;
     border-color: transparent;
-    box-shadow: 0 2px 8px -2px rgba(109, 94, 245, 0.4);
+    box-shadow: 0 2px 8px -2px rgba(59, 107, 184, 0.4);
   }
 }
 
 .cta_btn:hover {
   filter: brightness(1.15);
-  box-shadow: 0 4px 16px -2px rgba(109, 94, 245, 0.6) !important;
+  box-shadow: 0 4px 16px -2px rgba(59, 107, 184, 0.6) !important;
 }
 
 /* ─── Mobile menu button ──────────────────────────────────────────── */

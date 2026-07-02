@@ -91,10 +91,10 @@
 }
 
 .social a:hover {
-  border-color: rgba(109, 94, 245, 0.3);
-  color: var(--grad-violet);
+  border-color: rgba(59, 107, 184, 0.3);
+  color: var(--grad-deep);
   transform: translateY(-3px) scale(1.08);
-  box-shadow: 0 4px 12px rgba(109, 94, 245, 0.2);
+  box-shadow: 0 4px 12px rgba(59, 107, 184, 0.2);
 }
 
 .bottom {

@@ -28,7 +28,7 @@
 .cell:hover {
   background: var(--color-surface);
   transform: scale(1.02);
-  box-shadow: 0 8px 24px -8px rgba(109, 94, 245, 0.15);
+  box-shadow: 0 8px 24px -8px rgba(59, 107, 184, 0.15);
   z-index: 1;
   position: relative;
 }

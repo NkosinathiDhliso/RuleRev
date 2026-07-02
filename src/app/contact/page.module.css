@@ -79,15 +79,15 @@
 
 .cta_card:hover .cta_icon {
   transform: scale(1.15) rotate(-5deg);
-  box-shadow: 0 4px 12px rgba(109, 94, 245, 0.25);
+  box-shadow: 0 4px 12px rgba(59, 107, 184, 0.25);
 }
 
 .cta_icon {
   width: 36px;
   height: 36px;
   border-radius: var(--radius-sm);
-  background: rgba(109, 94, 245, 0.08);
-  color: var(--grad-violet);
+  background: rgba(59, 107, 184, 0.08);
+  color: var(--grad-deep);
   display: inline-flex;
   align-items: center;
   justify-content: center;
