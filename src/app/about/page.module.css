@@ -88,7 +88,7 @@
 .cred:hover {
   border-color: transparent;
   transform: translateY(-3px) scale(1.02);
-  box-shadow: var(--glow-soft);
+  box-shadow: none;
 }
 
 .cred:hover::after {
@@ -131,7 +131,7 @@
 
 @media (min-width: 600px) {
   .building {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: 1.1fr 0.9fr 1.2fr;
   }
 }
 
@@ -165,7 +165,7 @@
 .building_card:hover {
   border-color: transparent;
   transform: translateY(-4px) scale(1.02);
-  box-shadow: var(--glow-elev);
+  box-shadow: none;
 }
 
 .building_card:hover::after {

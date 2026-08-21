@@ -1,11 +1,27 @@
 /**
- * Measures WCAG contrast for the artifact's --ink-3 token against both
- * background tokens it is used on, and finds the nearest darker value that
- * reaches AA (4.5:1) for normal-size text on the worse of the two.
+ * Measures WCAG contrast for the Omni-Risk colour tokens.
  *
- * Diagnostic only. Nothing is changed: --ink-3 is a design token and the brief
- * forbids changing design tokens.
+ * Reads the tokens out of the published HTML rather than hardcoding hex values,
+ * because a check with the palette baked into it silently goes stale the moment
+ * the palette changes (which is exactly what happened to the first version).
+ *
+ * Gate: every foreground token must clear 4.5:1 against every ground it is used
+ * on. Exits non-zero on failure.
  */
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+const REPO = path.resolve(HERE, '..', '..', '..');
+const HTML = path.join(REPO, 'public', 'omni-risk-readiness', 'index.html');
+
+const html = readFileSync(HTML, 'utf8');
+const token = (name) => {
+  const m = html.match(new RegExp(`--${name}\\s*:\\s*(#[0-9a-fA-F]{6})`));
+  return m ? m[1].toUpperCase() : null;
+};
+
 const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
 const lin = (c) => {
   const s = c / 255;
@@ -19,58 +35,46 @@ const ratio = (a, b) => {
   const [l1, l2] = [lum(a), lum(b)].sort((x, y) => y - x);
   return (l1 + 0.05) / (l2 + 0.05);
 };
-
-const PAPER = '#E6EBE3';
-const CARD = '#F6F8F4';
-const INK3 = '#75816F';
-const INK2 = '#4A564D';
-const ACCENT = '#1F3D5C';
-
 const r2 = (n) => n.toFixed(2);
 
-console.log('backgrounds the token sits on:');
-console.log(`  --paper ${PAPER}   --card ${CARD}\n`);
+const grounds = ['paper', 'card', 'card-2'].map((n) => ({ name: n, hex: token(n) })).filter((g) => g.hex);
 
-console.log('current and in-palette alternatives (AA normal text needs 4.5:1):');
-for (const [name, c] of [
-  ['--ink-3 (current)', INK3],
-  ['--ink-2', INK2],
-  ['--accent', ACCENT],
-]) {
-  const onPaper = ratio(c, PAPER);
-  const onCard = ratio(c, CARD);
-  const worst = Math.min(onPaper, onCard);
+// Foregrounds, each against the grounds it can appear on.
+const foregrounds = [
+  { name: 'ink', on: grounds },
+  { name: 'ink-2', on: grounds },
+  { name: 'ink-3', on: grounds },
+  { name: 'accent', on: grounds },
+  { name: 'system', on: [{ name: 'system-bg', hex: token('system-bg') }, ...grounds] },
+  { name: 'manual', on: [{ name: 'manual-bg', hex: token('manual-bg') }, ...grounds] },
+  { name: 'gap', on: [{ name: 'gap-bg', hex: token('gap-bg') }, ...grounds] },
+  { name: 'na', on: [{ name: 'na-bg', hex: token('na-bg') }, ...grounds] },
+];
+
+const AA = 4.5;
+const failures = [];
+
+console.log('grounds: ' + grounds.map((g) => `--${g.name} ${g.hex}`).join('   '));
+console.log(`\nAA for normal-size text is ${AA}:1\n`);
+
+for (const fg of foregrounds) {
+  const fgHex = token(fg.name);
+  if (!fgHex) continue;
+  const results = fg.on
+    .filter((g) => g.hex)
+    .map((g) => ({ g: g.name, v: ratio(fgHex, g.hex) }));
+  const worst = Math.min(...results.map((x) => x.v));
+  const pass = worst >= AA;
+  if (!pass) failures.push(`--${fg.name} ${fgHex} worst ${r2(worst)}:1`);
   console.log(
-    `  ${name.padEnd(20)} ${c}  on --paper ${r2(onPaper)}:1  on --card ${r2(onCard)}:1  worst ${r2(worst)}:1  ${
-      worst >= 4.5 ? 'PASS' : 'FAIL'
-    }`
+    `  --${fg.name.padEnd(8)} ${fgHex}  ` +
+      results.map((x) => `${x.g} ${r2(x.v)}:1`).join('  ') +
+      `   worst ${r2(worst)}:1  ${pass ? 'PASS' : 'FAIL'}`
   );
 }
 
-// Walk the current hue darker until AA is met on the worse background.
-const [r0, g0, b0] = hex(INK3);
-let suggestion = null;
-for (let step = 0; step <= 60; step++) {
-  const c =
-    '#' +
-    [r0 - step, g0 - step, b0 - step]
-      .map((v) => Math.max(0, v).toString(16).padStart(2, '0'))
-      .join('');
-  if (Math.min(ratio(c, PAPER), ratio(c, CARD)) >= 4.5) {
-    suggestion = { c, step, onPaper: ratio(c, PAPER), onCard: ratio(c, CARD) };
-    break;
-  }
+if (failures.length) {
+  console.error('\nCONTRAST CHECK FAILED:\n - ' + failures.join('\n - '));
+  process.exit(1);
 }
-
-console.log('\nnearest darker value on the same hue that reaches AA:');
-if (suggestion) {
-  console.log(
-    `  ${suggestion.c}  (each channel -${suggestion.step})  on --paper ${r2(suggestion.onPaper)}:1  on --card ${r2(
-      suggestion.onCard
-    )}:1`
-  );
-} else {
-  console.log('  none within 60 steps');
-}
-
-console.log('\nNOTE: not applied. --ink-3 is a design token and Phase 4 forbids changing tokens.');
+console.log('\nCONTRAST CHECK PASSED: every token clears AA on every ground it is used on.');

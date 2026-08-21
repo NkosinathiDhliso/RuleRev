@@ -1,23 +1,19 @@
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  border: 1px solid rgba(59, 107, 184, 0.2);
-  border-radius: var(--radius-pill);
+/* A rule-topped label, not a chip.
+   The pill-with-a-glowing-dot shape above a headline is one of the most
+   recognisable current AI-design tells, and the dot never carried information.
+   The label text does, so that is what survives. */
+.label {
+  display: inline-block;
+  border-top: 2px solid var(--color-accent);
+  padding-top: 10px;
+  font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 0;
   color: var(--color-ink-soft);
-  background: rgba(59, 107, 184, 0.04);
-  box-shadow: 0 0 0 1px rgba(59, 107, 184, 0.06), 0 2px 8px -2px rgba(59, 107, 184, 0.12);
 }
 
+/* Retired. Kept as a no-op so callers passing withDot render nothing. */
 .dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--grad-deep), var(--grad-light));
-  display: inline-block;
-  box-shadow: 0 0 6px rgba(59, 107, 184, 0.5);
+  display: none;
 }

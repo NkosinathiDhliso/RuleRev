@@ -290,18 +290,17 @@ await page.waitForTimeout(350);
 const zoom200 = await page.evaluate(() => document.documentElement.scrollWidth);
 check(zoom200 <= 721, 'no horizontal overflow at 200% zoom (720px CSS viewport)', `${zoom200}px`);
 
-// Advisory, not a gate. The acceptance criteria specify 375px, which passes.
-// WCAG 1.4.10 reflow asks for 320px, which the artifact cannot reach: its own
-// `.opt { white-space: nowrap }` gives the answer-control row a min-content
-// width of 317px, so the page has a hard floor around 374px. Closing that needs
-// a design change to the artifact (letting the option labels wrap, or shortening
-// them), which is outside the permitted scope.
+// Now a gated check rather than an advisory. This used to fail at 374px because
+// `.opt { white-space: nowrap }` gave the answer-control row a 317px min-content
+// width. Letting the labels wrap (part of the mono/caps reduction) closed it, so
+// WCAG 1.4.10 reflow is now enforced instead of merely reported.
 await page.setViewportSize({ width: 320, height: 900 });
 await page.waitForTimeout(350);
 const reflow320 = await page.evaluate(() => document.documentElement.scrollWidth);
-advisory.push(
-  `WCAG 1.4.10 reflow at 320px: scrollWidth ${reflow320}px (overflows by ${reflow320 - 320}px). ` +
-    `Cause: .opt white-space:nowrap -> .opts min-content 317px. Not required by the acceptance criteria.`
+check(
+  reflow320 <= 321,
+  'no horizontal overflow at 320px (WCAG 1.4.10 reflow)',
+  `${reflow320}px`
 );
 await page.setViewportSize({ width: 1440, height: 1000 });
 

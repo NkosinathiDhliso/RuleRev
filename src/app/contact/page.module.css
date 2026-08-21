@@ -10,7 +10,7 @@
 
 .h1 {
   font-size: clamp(28px, 4vw, 36px);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -0.015em;
   margin-bottom: 16px;
   max-width: 24ch;
@@ -32,7 +32,7 @@
 
 @media (min-width: 600px) {
   .cta_grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: 1.1fr 0.9fr 1.2fr;
     gap: 20px;
   }
 }
@@ -70,7 +70,7 @@
 .cta_card:hover {
   border-color: transparent;
   transform: translateY(-4px);
-  box-shadow: var(--glow-elev);
+  box-shadow: none;
 }
 
 .cta_card:hover::after {
@@ -79,7 +79,7 @@
 
 .cta_card:hover .cta_icon {
   transform: scale(1.15) rotate(-5deg);
-  box-shadow: 0 4px 12px rgba(59, 107, 184, 0.25);
+  box-shadow: none;
 }
 
 .cta_icon {
@@ -96,7 +96,7 @@
 
 .cta_title {
   font-size: 17px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .cta_meta {
@@ -123,7 +123,7 @@
 .meta_h3 {
   font-size: 12px;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
+  text-transform: none;
   color: var(--color-muted-soft);
   margin-bottom: 8px;
 }

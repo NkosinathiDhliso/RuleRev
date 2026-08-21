@@ -36,7 +36,7 @@ export function Header() {
   return (
     <>
       <header className={styles.header}>
-        <nav className={styles.pill} aria-label="Primary">
+        <nav className={styles.bar} aria-label="Primary">
           <Link href="/" className={styles.brand} aria-label={`${SITE.name} home`}>
             {SITE.name}
           </Link>

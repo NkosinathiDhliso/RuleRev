@@ -10,7 +10,7 @@
   border: 1px solid var(--color-line-strong);
   border-radius: var(--radius-lg);
   padding: 14px 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.02) inset;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   gap: 12px;

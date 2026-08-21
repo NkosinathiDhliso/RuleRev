@@ -13,7 +13,7 @@
 
 @media (min-width: 960px) {
   .case_grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: 1.1fr 0.9fr 1.2fr;
   }
 }
 
@@ -75,7 +75,7 @@
 .case_card:hover {
   border-color: transparent;
   transform: translateY(-2px);
-  box-shadow: var(--card-shadow, var(--glow-elev));
+  box-shadow: none;
 }
 
 .case_card:hover::after {
@@ -85,7 +85,7 @@
 .case_card_eyebrow {
   font-size: 12px;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
+  text-transform: none;
   color: var(--card-eyebrow, var(--color-muted-soft));
 }
 
@@ -136,7 +136,7 @@
 
 @media (min-width: 960px) {
   .service_grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: 1.1fr 0.9fr 1.2fr;
   }
 }
 
@@ -194,7 +194,7 @@
 .service_card:hover {
   border-color: transparent;
   transform: translateY(-2px);
-  box-shadow: var(--glow-elev);
+  box-shadow: none;
 }
 
 .service_card:hover::after {
@@ -263,7 +263,7 @@
 .other_card:hover {
   border-color: var(--color-line-strong);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: none;
 }
 
 .other_name {
@@ -292,11 +292,11 @@
 .coming_soon {
   font-size: 11px;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
+  text-transform: none;
   background: var(--color-surface);
   color: var(--color-muted);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-pill);
+  border-radius: 0;
   padding: 2px 8px;
 }
 

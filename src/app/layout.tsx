@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Instrument_Serif } from 'next/font/google';
+import { Public_Sans, Source_Serif_4 } from 'next/font/google';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { FloatingWhatsApp } from '@/components/FloatingWhatsApp';
@@ -9,18 +9,22 @@ import { JsonLd, organizationLD, professionalServiceLD, personLD } from '@/lib/j
 import { SITE } from '@/lib/site';
 import './globals.css';
 
-const sans = Inter({
+// Public Sans for interface chrome, Source Serif 4 for headings and prose.
+// Inter and Instrument Serif were removed deliberately: both are named AI
+// defaults, and Instrument Serif is the current display reflex. A real weight
+// range is loaded so the type scale has actual steps to work with.
+const sans = Public_Sans({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-sans-loaded',
-  weight: ['400', '500'],
+  weight: ['400', '500', '600', '700'],
 });
 
-const serif = Instrument_Serif({
+const serif = Source_Serif_4({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-serif-loaded',
-  weight: ['400'],
+  weight: ['400', '600', '700'],
 });
 
 export const viewport: Viewport = {

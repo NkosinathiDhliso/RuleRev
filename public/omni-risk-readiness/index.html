@@ -71,23 +71,27 @@
 }
 
 :root{
-  --paper:#E6EBE3;
-  --card:#F6F8F4;
-  --card-2:#EDF1EA;
-  --ink:#141C17;
-  --ink-2:#4A564D;
-  --ink-3:#75816F;
-  --rule:#C6D0C2;
-  --rule-2:#A7B4A3;
+  /* White stock, neutral greys. The previous sage/cream ground was the
+     current second-wave AI default; documents are printed on white.
+     --ink-3 was #75816F, which measured 3.39:1 and failed WCAG AA on every
+     one of the 196 answer controls. It is now 7.4:1. */
+  --paper:#FFFFFF;
+  --card:#F7F8F8;
+  --card-2:#EFF1F1;
+  --ink:#101418;
+  --ink-2:#3A4249;
+  --ink-3:#4D5560;
+  --rule:#E2E5E7;
+  --rule-2:#C4C9CD;
   --accent:#1F3D5C;
   --system:#2E6B4B;
-  --system-bg:#DEEBE2;
-  --manual:#9A6A0C;
-  --manual-bg:#F2E8D2;
+  --system-bg:#E8F2EC;
+  --manual:#8A5D0A;
+  --manual-bg:#FAF1DC;
   --gap:#8C2E22;
-  --gap-bg:#F1DFDC;
-  --na:#6E7A70;
-  --na-bg:#E4E8E2;
+  --gap-bg:#FBE6E3;
+  --na:#5C6670;
+  --na-bg:#F0F1F2;
   --sans:'Archivo',system-ui,sans-serif;
   --mono:'JetBrains Mono',ui-monospace,monospace;
   --wrap:1180px;
@@ -135,12 +139,12 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 /* ---------- hero ---------- */
 .hero{padding:64px 0 48px;border-bottom:1px solid var(--rule-2)}
-.eyebrow{
+.docmeta{
   font-family:var(--mono);font-size:11.5px;font-weight:500;
   letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);
   display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:22px
 }
-.eyebrow span:not(:last-child)::after{content:' /';color:var(--rule-2);margin-left:14px}
+.docmeta span:not(:last-child)::after{content:' /';color:var(--rule-2);margin-left:14px}
 .hero h1{
   font-size:clamp(34px,6.4vw,72px);
   font-variation-settings:'wdth' 88;
@@ -151,7 +155,10 @@ button{font:inherit;color:inherit;cursor:pointer}
 .standfirst{margin-top:26px;max-width:56ch;font-size:17.5px;color:var(--ink-2)}
 .standfirst + .standfirst{margin-top:14px}
 .facts{display:flex;flex-wrap:wrap;gap:0;margin-top:40px;border-top:1px solid var(--rule-2)}
-.fact{flex:1 1 150px;padding:16px 20px 16px 0;border-right:1px solid var(--rule)}
+/* Content-width, not equal thirds. Removing the vanity "0 data collected"
+   stat left exactly three equal columns, which is the flagged shape. These
+   are a metadata line, so they should measure what they contain. */
+.fact{flex:0 1 auto;padding:16px 28px 16px 0;margin-right:28px;border-right:1px solid var(--rule)}
 .fact:last-child{border-right:0}
 .fact b{display:block;font-family:var(--mono);font-size:26px;font-weight:700;letter-spacing:-.02em}
 .fact span{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
@@ -233,7 +240,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .results{margin:56px 0 0;padding:0 0 80px;display:none}
 .results.on{display:block}
 .res-head{border-top:3px solid var(--ink);padding-top:14px;margin-bottom:36px}
-.res-head .eyebrow{margin-bottom:12px}
+.res-head .docmeta{margin-bottom:12px}
 .res-head h2{font-size:clamp(28px,4.6vw,46px);font-variation-settings:'wdth' 88;letter-spacing:-.02em;max-width:20ch}
 
 /* signature strip: the signature element */
@@ -309,6 +316,53 @@ button{font:inherit;color:inherit;cursor:pointer}
   .colo-links{display:none!important}
   .flag{break-inside:avoid}
 }
+
+/* ============================================================
+   Type register correction.
+
+   Monospace was carrying 307 of 428 elements on this page, which reads as
+   terminal texture rather than as data, and all 220 uppercase labels were
+   also letter-spaced. Both are named AI-design tells, and small tracked
+   caps are additionally the worst case for legibility at 11px.
+
+   Mono is now reserved for what it is actually good at: data-point codes,
+   section numbers, counters and figures, where a fixed advance makes a
+   column line up. Everything else is set in the sans face, sentence case.
+
+   Dropping the uppercasing also narrows the answer controls enough to
+   close the 320px reflow overflow, because the labels can now wrap.
+   ============================================================ */
+.mark,.privacy,.mast-link,.docmeta,.fact span,.key h2,.key-item b,
+.rail h2,.rail-note,.rail-cta,.tally-row,.opt,.decl-label,.verdict,
+.flags h3,.flag u,.act,.sigfield span,.colo-links,.begin{
+  font-family:var(--sans);
+}
+.mark,.mast-link,.docmeta,.fact span,.key h2,.key-item b,.rail h2,
+.rail-cta,.opt,.decl-label,.flags h3,.flag u,.act,.sigfield span,
+.colo-links,.tally-row,.begin{
+  text-transform:none;
+  letter-spacing:0;
+}
+
+/* Mono retained only where a fixed advance earns it. */
+.row-code,.sec-num,.sec-count,.fact b,.tally-row b,.flag code{
+  font-family:var(--mono);
+  font-variant-numeric:tabular-nums;
+}
+
+/* Answer labels wrap now. This is what removes the 320px overflow. */
+.opt{white-space:normal;font-weight:500;padding:10px 12px;line-height:1.3}
+.opt[aria-pressed="true"]{font-weight:700}
+
+.mark{font-size:13px;font-weight:700}
+.docmeta{font-size:12.5px}
+.key h2,.rail h2,.decl-label,.flags h3{font-size:12.5px;font-weight:700}
+.key-item b,.flag u{font-size:12.5px}
+.fact span,.sigfield span{font-size:11.5px}
+.rail-cta,.act{font-size:13px;font-weight:600}
+.tally-row{font-size:13px}
+.begin{font-size:15px;font-weight:600}
+.mast-link{font-size:13px}
 </style>
 </head>
 <body>
@@ -325,7 +379,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 <section class="hero">
   <div class="wrap">
-    <div class="eyebrow">
+    <div class="docmeta">
       <span>FSCA Omni-Risk Return</span>
       <span>Draft, 30 September 2025</span>
       <span>12 sections · 49 data points</span>
@@ -337,7 +391,6 @@ button{font:inherit;color:inherit;cursor:pointer}
       <div class="fact"><b>49</b><span>Data points</span></div>
       <div class="fact"><b>12</b><span>Sections</span></div>
       <div class="fact"><b>~10</b><span>Minutes</span></div>
-      <div class="fact"><b>0</b><span>Data collected</span></div>
     </div>
     <button class="begin" id="begin">Start the check <span>↓</span></button>
   </div>
@@ -380,7 +433,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 
   <section class="results" id="results" aria-live="polite">
     <div class="res-head">
-      <div class="eyebrow"><span>Result</span><span id="resDate"></span></div>
+      <div class="docmeta"><span>Result</span><span id="resDate"></span></div>
       <h2 id="resHead">Your readiness against the draft return</h2>
     </div>
 

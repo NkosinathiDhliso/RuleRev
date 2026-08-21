@@ -9,7 +9,7 @@
   flex-direction: column;
   gap: 20px;
   overflow: hidden;
-  box-shadow: var(--glow-azure);
+  box-shadow: none;
 }
 
 .band::before {

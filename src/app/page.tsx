@@ -1,12 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Section, SectionHeading } from '@/components/Section';
-import { Eyebrow } from '@/components/Eyebrow';
 import { Button } from '@/components/Button';
 import { ProofStrip } from '@/components/ProofStrip';
-import { CaseStudyCardGrid, ServiceCardGrid } from '@/components/Cards';
+import { ServiceCardGrid } from '@/components/Cards';
 import { FinalCTABand } from '@/components/FinalCTABand';
-import { GradientMesh } from '@/components/GradientMesh';
 import { FEATURED_CASE_STUDIES } from '@/content/case-studies';
 import { SERVICES } from '@/content/services';
 import { SITE, bookCallHref, capitalise, toWord } from '@/lib/site';
@@ -15,36 +13,61 @@ import styles from './page.module.css';
 export const metadata: Metadata = {
   title: `${SITE.name} - ${SITE.positioning}`,
   description:
-    'I help South African founders and SMEs ship investor-ready products - POPIA compliance, cloud architecture, and shipped code that doesn\'t become the reason your next round slips a quarter.',
+    'I help South African founders and SMEs ship investor-ready products: POPIA compliance, cloud architecture, and shipped code that does not become the reason your next round slips a quarter.',
   alternates: { canonical: '/' },
 };
 
+const STEPS = [
+  {
+    title: 'Discovery call',
+    body: '30 minutes, free. We work out whether this is a fit before anyone writes a proposal.',
+  },
+  {
+    title: 'Scoped proposal',
+    body: 'Fixed price, fixed timeline, named deliverables. You decide with the numbers in front of you.',
+  },
+  {
+    title: 'Ship',
+    body: 'Weekly demos against the scope. You see progress every week rather than at handover.',
+  },
+];
+
+const CREDENTIALS = [
+  'CIPC registered',
+  'SARS registered',
+  'POPIA registered with the Information Regulator',
+  'Official Anthropic partner',
+];
+
+const CAPABILITIES = ['AWS', 'Microsoft Azure', 'AZ-305', 'AZ-400', 'Terraform'];
+
 export default function HomePage() {
-  const featured = FEATURED_CASE_STUDIES.slice(0, 3);
+  // No slice. The section shows what exists; a reflexive cut to three is the tell.
+  const work = FEATURED_CASE_STUDIES;
+
   return (
     <>
       {/* ─── Hero ─────────────────────────────────────────────────────── */}
       <section className={styles.hero}>
-        <GradientMesh grain />
         <div className="container-page">
           <div className={styles.hero_inner}>
-            <Eyebrow>{SITE.scarcity.pillText}</Eyebrow>
-            <h1 className={styles.h1}>
-              Technical product partner for South African founders.
-            </h1>
+            {/* Availability is real information, so it stays. The pill-and-dot
+                chip treatment does not: that shape is the tell, not the fact. */}
+            <p className={styles.availability}>{SITE.scarcity.pillText}</p>
+            <h1 className={styles.h1}>Technical product partner for South African founders.</h1>
             <p className={styles.subhead}>
-              I help founders and SMEs ship investor-ready products, compliance, infrastructure, and code that won&rsquo;t
-              be the reason your next round slips a quarter.
+              I help founders and SMEs ship investor-ready products: compliance, infrastructure, and code that
+              will not be the reason your next round slips a quarter.
             </p>
             <div className={styles.hero_actions}>
               <Button href={bookCallHref()} variant="primary" size="lg" external>
                 Book a 30-min discovery call
               </Button>
-              <Button href="/scope" variant="accent" size="lg">
-                Scope my project with AI
+              <Button href="/scope" variant="secondary" size="lg">
+                Scope my project
               </Button>
               <Button href="/work" variant="secondary" size="lg">
-                See what I&rsquo;ve shipped
+                See what I have shipped
               </Button>
             </div>
           </div>
@@ -58,23 +81,33 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* ─── Selected work: dark spotlight panel ─────────────────────── */}
-      <div className={styles.showcase_wrap}>
-        <section className={styles.showcase}>
-          <GradientMesh variant="dark" parallax parallaxStrength={20} grain />
-          <div className="container-page" style={{ position: 'relative', zIndex: 2 }}>
-            <div data-animate="fade-up">
-              <SectionHeading
-                title="Selected work"
-                lede={`${capitalise(toWord(featured.length))} projects where the headline number does the talking.`}
-              />
-            </div>
-            <div>
-              <CaseStudyCardGrid items={featured} />
-            </div>
-          </div>
-        </section>
-      </div>
+      {/* ─── Selected work ────────────────────────────────────────────────
+          A ruled schedule rather than a card grid. Rows carry the headline
+          figure in tabular numerals so the column actually aligns, which is how
+          the reference documents present this kind of list. */}
+      <Section>
+        <div data-animate="fade-up">
+          <SectionHeading
+            title="Selected work"
+            lede={`${capitalise(toWord(work.length))} projects, with the outcome stated as a number.`}
+          />
+        </div>
+        <ol className={styles.worklist}>
+          {work.map((cs) => (
+            <li key={cs.slug} className={styles.work_item}>
+              <Link href={`/work/${cs.slug}`} className={styles.work_row}>
+                <span className={`${styles.work_num} tnum`}>{cs.headlineNumber}</span>
+                <span className={styles.work_body}>
+                  <span className={styles.work_client}>{cs.client}</span>
+                  <span className={styles.work_title}>{cs.title}</span>
+                  <span className={styles.work_line}>{cs.oneLine}</span>
+                </span>
+                <span className={styles.work_label}>{cs.headlineLabel}</span>
+              </Link>
+            </li>
+          ))}
+        </ol>
+      </Section>
 
       {/* ─── Services ─────────────────────────────────────────────────── */}
       <Section>
@@ -89,59 +122,55 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* ─── Trust badges ─────────────────────────────────────────────── */}
-      <Section surface tight>
-        <div className={styles.trust} data-animate="fade-up">
-          <p className={styles.trust_text}>
-            CIPC registered &middot; SARS registered &middot; POPIA registered with the Information Regulator.
-          </p>
-          <div className={styles.trust_badges} data-stagger-children="">
-            <span className={styles.badge}>AWS</span>
-            <span className={styles.badge}>Microsoft Azure</span>
-            <span className={styles.badge}>AZ-305</span>
-            <span className={styles.badge}>AZ-400</span>
-            <span className={styles.badge}>Terraform</span>
-          </div>
-        </div>
-
-        {/* ─── Anthropic partnership: elevated from badges ────────────── */}
-        <Link href="/training" className={styles.partner_card} data-animate="fade-up">
-          <div className={styles.partner_icon} aria-hidden="true">
-            <svg width="24" height="24" viewBox="0 0 46 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M32.73 0H26.23L38.46 32h6.5L32.73 0ZM13.27 0 1.04 32h6.5l2.5-6.6h12.96l2.5 6.6h6.5L19.73 0h-6.46Zm-1.1 20.14L16.5 9.48l4.33 10.66H12.17Z" fill="currentColor"/>
-            </svg>
-          </div>
-          <div className={styles.partner_body}>
-            <span className={styles.partner_label}>Official Anthropic Partner</span>
-            <span className={styles.partner_desc}>
-              We build production AI systems with Claude and train enterprise teams to do the same.
-            </span>
-          </div>
-          <span className={styles.partner_arrow} aria-hidden="true">&rarr;</span>
-        </Link>
-      </Section>
-
-      {/* ─── How it works ─────────────────────────────────────────────── */}
+      {/* ─── How it works ─────────────────────────────────────────────────
+          Numbered rows, following the numbered-section convention of the
+          reference documents. Three steps because there are three, not because
+          three cards is the default shape. */}
       <Section>
         <div data-animate="fade-up">
-          <SectionHeading title="How it works" lede="Three steps. No mystery." />
+          <SectionHeading title="How it works" lede="Three steps, and no stage where you are guessing." />
         </div>
-        <div className={styles.steps}>
-          <article className={styles.step} data-animate="fade-up" style={{ '--i': 0 } as React.CSSProperties}>
-            <span className={styles.step_num}>01</span>
-            <h3 className={styles.step_title}>Discovery call</h3>
-            <p className={styles.step_body}>30 minutes, free. We figure out if we&rsquo;re a fit.</p>
-          </article>
-          <article className={styles.step} data-animate="fade-up" style={{ '--i': 1 } as React.CSSProperties}>
-            <span className={styles.step_num}>02</span>
-            <h3 className={styles.step_title}>Scoped proposal</h3>
-            <p className={styles.step_body}>Fixed price, fixed timeline, named deliverables. You decide.</p>
-          </article>
-          <article className={styles.step} data-animate="fade-up" style={{ '--i': 2 } as React.CSSProperties}>
-            <span className={styles.step_num}>03</span>
-            <h3 className={styles.step_title}>Ship</h3>
-            <p className={styles.step_body}>Weekly demos. You see progress. No surprises.</p>
-          </article>
+        <ol className={styles.steplist}>
+          {STEPS.map((s, i) => (
+            <li key={s.title} className={styles.step_row}>
+              <span className={`${styles.step_num} tnum`}>{String(i + 1).padStart(2, '0')}</span>
+              <span className={styles.step_body}>
+                <span className={styles.step_title}>{s.title}</span>
+                <span className={styles.step_text}>{s.body}</span>
+              </span>
+            </li>
+          ))}
+        </ol>
+      </Section>
+
+      {/* ─── Standing and capability ──────────────────────────────────── */}
+      <Section surface tight>
+        <div className={styles.standing}>
+          <div className={styles.standing_col}>
+            <h2 className={styles.standing_h}>Standing</h2>
+            <ul className={styles.credlist}>
+              {CREDENTIALS.map((c) => (
+                <li key={c}>{c}</li>
+              ))}
+            </ul>
+          </div>
+          <div className={styles.standing_col}>
+            <h2 className={styles.standing_h}>Platforms and certification</h2>
+            <ul className={styles.credlist}>
+              {CAPABILITIES.map((c) => (
+                <li key={c}>{c}</li>
+              ))}
+            </ul>
+          </div>
+          <div className={styles.standing_col}>
+            <h2 className={styles.standing_h}>AI enablement</h2>
+            <p className={styles.standing_text}>
+              We build production AI systems with Claude and train enterprise teams to do the same.
+            </p>
+            <Link href="/training" className={styles.standing_link}>
+              Training and enablement
+            </Link>
+          </div>
         </div>
       </Section>
 
