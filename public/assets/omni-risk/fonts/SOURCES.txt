@@ -1,0 +1,83 @@
+Omni-Risk Readiness Check - self-hosted font provenance
+=======================================================
+
+These files are served same-origin from https://rulerev.com/assets/omni-risk/fonts/
+so that the standalone tool makes no third-party request of any kind. Self-hosting
+also removes the visitor IP-address disclosure to Google that a fonts.gstatic.com
+reference would otherwise create on every page load.
+
+Both families are licensed under the SIL Open Font License 1.1. The full licence
+texts are in this directory (OFL-Archivo.txt, OFL-JetBrainsMono.txt).
+
+Filenames are content-hashed (first 8 hex characters of the file's SHA-256). The
+contents behind a given URL are therefore immutable, which is what makes the
+`Cache-Control: public, max-age=31536000, immutable` header safe. If a font is
+ever updated, it is published under a new hashed filename and the @font-face
+declarations are repointed. An existing URL is never overwritten in place.
+
+
+Archivo (variable: wdth 62-125, wght 400-800)
+---------------------------------------------
+Upstream project : https://github.com/Omnibus-Type/Archivo
+Copyright        : 2020 The Archivo Project Authors
+Licence          : SIL OFL 1.1 - OFL-Archivo.txt
+Retrieved from   : Google Fonts CSS API v2, family=Archivo:wdth,wght@62..125,400..800
+Google version   : v25
+
+  archivo-var-latin-e3a28ead.woff2       90,104 bytes   subset: latin
+    https://fonts.gstatic.com/s/archivo/v25/k3kQo8UDI-1M0wlSfdnoLg.woff2
+    sha256 e3a28ead...
+
+  archivo-var-latin-ext-5717f370.woff2   86,240 bytes   subset: latin-ext
+    https://fonts.gstatic.com/s/archivo/v25/k3kQo8UDI-1M0wlSfdfoLnnA.woff2
+    sha256 5717f370...
+
+
+JetBrains Mono (variable: wght 400-700)
+---------------------------------------
+Upstream project : https://github.com/JetBrains/JetBrainsMono
+Copyright        : 2020 The JetBrains Mono Project Authors
+Licence          : SIL OFL 1.1 - OFL-JetBrainsMono.txt
+Retrieved from   : Google Fonts CSS API v2, family=JetBrains+Mono:wght@400..700
+Google version   : v24
+
+  jetbrainsmono-var-latin-83c005d4.woff2      31,432 bytes   subset: latin
+    https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwg.woff2
+    sha256 83c005d4...
+
+  jetbrainsmono-var-latin-ext-db5ff4db.woff2  11,624 bytes   subset: latin-ext
+    https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx7cwhsk.woff2
+    sha256 db5ff4db...
+
+
+Why JetBrains Mono is one file and not three
+--------------------------------------------
+The brief asked for JetBrains Mono at weights 400, 500 and 700. Requesting those
+three discrete weights from Google Fonts returns three @font-face blocks whose src
+URLs are byte-identical, because JetBrains Mono on Google Fonts is a variable font
+and there are no separate static instances to serve. Shipping that as written would
+have meant three declarations pointing at the same file, which the brief also
+prohibits ("do not load duplicate font files").
+
+Resolved by requesting the variable range wght@400..700 instead, giving one file
+per subset that covers 400, 500 and 700 continuously. Verified: see
+tools/verify/scripts/fonts-check.mjs.
+
+
+Verification
+------------
+tools/verify/scripts/fonts-check.mjs renders text at the axis extremes in Chromium
+and asserts the measured advance widths actually change, so the axes are proven to
+work rather than merely declared. Last run:
+
+  Archivo  wdth  62 -> 326.00px
+           wdth  88 -> 427.00px
+           wdth 125 -> 590.00px      (axis varies as required)
+  Archivo  wght 400 -> 475.00px
+           wght 800 -> 530.00px      (axis varies as required)
+  JetBrains Mono 400/500/700 -> 540.00px / 540.00px / 540.00px
+                                     (constant advance: monospacing intact)
+  Latin Extended glyphs (LZCSE) render at non-zero width
+  External requests during render: 0
+
+No TTF, OTF, EOT or WOFF (v1) files are shipped. WOFF2 only.

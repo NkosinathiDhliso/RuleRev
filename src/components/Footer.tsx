@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Linkedin, Github } from 'lucide-react';
 import { SITE } from '@/lib/site';
-import { FOOTER_PAGES } from '@/lib/nav';
+import { FOOTER_PAGES, FOOTER_STATIC_PAGES } from '@/lib/nav';
 import { whatsappLink, telLink, emailLink } from '@/lib/whatsapp';
 import { CookiePrefsButton } from './CookiePrefsButton';
 import styles from './Footer.module.css';
@@ -34,6 +34,13 @@ export function Footer() {
                   <Link href={p.href} className={styles.link}>
                     {p.label}
                   </Link>
+                </li>
+              ))}
+              {FOOTER_STATIC_PAGES.map((p) => (
+                <li key={p.href}>
+                  <a href={p.href} className={styles.link}>
+                    {p.label}
+                  </a>
                 </li>
               ))}
             </ul>

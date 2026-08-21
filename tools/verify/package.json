@@ -1,0 +1,18 @@
+{
+  "name": "rulerev-verify",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Isolated verification + asset-generation toolchain for the Omni-Risk standalone page. Deliberately NOT part of the root package.json so that `npm ci` at the repo root and Netlify production builds are completely unaffected by these heavyweight dev-only dependencies.",
+  "type": "module",
+  "scripts": {
+    "preview-image": "node scripts/make-preview.mjs",
+    "shots": "node scripts/screenshots.mjs",
+    "privacy": "node scripts/privacy-audit.mjs"
+  },
+  "dependencies": {
+    "chrome-launcher": "1.2.1",
+    "lighthouse": "13.4.1",
+    "netlify-cli": "27.1.2",
+    "playwright": "1.62.1"
+  }
+}
