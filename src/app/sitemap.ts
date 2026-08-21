@@ -14,6 +14,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/writing`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${base}/about`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${base}/contact`, lastModified: now, changeFrequency: 'yearly', priority: 0.6 },
+    // Standalone static document in public/, not an App Router route.
+    { url: `${base}/omni-risk-readiness`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
   ];
   const cases: MetadataRoute.Sitemap = FEATURED_CASE_STUDIES.map((cs) => ({
     url: `${base}/work/${cs.slug}`,

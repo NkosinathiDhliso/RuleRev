@@ -14,6 +14,36 @@
   status = 301
   force = true
 
+# ---------------------------------------------------------------------------
+# Omni-Risk Readiness Check — standalone static document.
+#
+# Served straight out of public/ so it never enters the Next.js rendering
+# pipeline: no root layout, no globals.css, no Tailwind preflight, no
+# next/font, and no ConsentBanner (which is where GA lives). force = true so
+# these win over the catch-all the Next.js runtime generates.
+#
+# The 200 rewrite is what turns the directory into a clean URL. Netlify does
+# not re-enter the redirect engine for a rewrite target, so the index.html
+# 301 below does not create a loop.
+# ---------------------------------------------------------------------------
+[[redirects]]
+  from = "/omni-risk-readiness"
+  to = "/omni-risk-readiness/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/omni-risk-readiness/"
+  to = "/omni-risk-readiness"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/omni-risk-readiness/index.html"
+  to = "/omni-risk-readiness"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
@@ -24,3 +54,70 @@
     Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
     Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://analytics.google.com; frame-ancestors 'none'"
+
+# ---------------------------------------------------------------------------
+# Omni-Risk Readiness Check — route-scoped headers.
+#
+# The full header set is restated rather than inherited from the /* block
+# above, because Netlify's documented behaviour for overlapping header paths
+# is non-committal about whether rules merge or the most specific one simply
+# replaces the others. Restating makes the response correct under either
+# semantic instead of depending on which one is in force.
+#
+# CSP notes:
+#   script-src  a SHA-256 hash of the single inline <script>, not
+#               'unsafe-inline'. tools/verify/scripts/csp-check.mjs recomputes
+#               the hash from the file and fails if it drifts from this value.
+#   style-src   'unsafe-inline' is genuinely required: the document carries 4
+#               inline style="" attributes, and CSP hashes do not cover style
+#               attributes (that needs 'unsafe-hashes', which is weaker than
+#               just allowing inline styles). No hash alternative exists here.
+#   img-src     'self' rather than 'none' so the browser's automatic
+#               /favicon.ico probe does not log a violation. The document
+#               itself contains zero <img> elements.
+#   no data:, blob:, worker-src, media-src or frame-src — the artifact was
+#   audited and uses none of them.
+# ---------------------------------------------------------------------------
+[[headers]]
+  for = "/omni-risk-readiness"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    Content-Security-Policy = "default-src 'none'; script-src 'sha256-LumNrPFMScdBsaM15EkfMAV6DG4XmU1GOjhpMAiBFmM='; style-src 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'none'; form-action 'none'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "0"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Kept byte-identical to the rule above, deliberately.
+#
+# Verified against a production-equivalent server: Netlify matches header rules
+# against the REWRITTEN path, not the original request path. Because
+# /omni-risk-readiness is a 200 rewrite to /omni-risk-readiness/index.html, both
+# URLs are matched by this rule. An X-Robots-Tag: noindex scoped here to
+# suppress the duplicate was tried and reverted: it leaked onto the canonical URL
+# and would have deindexed the tool. Path-scoped headers cannot distinguish a
+# clean URL from its own rewrite target.
+#
+# Duplicate-URL control therefore rests on the 301 above plus the
+# <link rel="canonical"> in the document, not on headers.
+[[headers]]
+  for = "/omni-risk-readiness/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    Content-Security-Policy = "default-src 'none'; script-src 'sha256-LumNrPFMScdBsaM15EkfMAV6DG4XmU1GOjhpMAiBFmM='; style-src 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'none'; form-action 'none'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "0"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Content-hashed fonts and the versioned preview image. Safe to cache
+# forever because the filenames contain a hash of the contents — an asset is
+# never overwritten in place, a new filename is published instead.
+[[headers]]
+  for = "/assets/omni-risk/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

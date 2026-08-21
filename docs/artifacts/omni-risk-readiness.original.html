@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Omni-Risk Return — Data Readiness Self-Assessment</title>
+<meta name="description" content="Work through all 49 data points in the FSCA's draft Omni-Risk Return and find out which ones your systems can actually produce.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   BRANDING — change these three things to white-label.
+   1. --accent below
+   2. the .mark text in the header
+   3. the contents of <footer class="colophon">
+   ============================================================ */
+:root{
+  --paper:#E6EBE3;
+  --card:#F6F8F4;
+  --card-2:#EDF1EA;
+  --ink:#141C17;
+  --ink-2:#4A564D;
+  --ink-3:#75816F;
+  --rule:#C6D0C2;
+  --rule-2:#A7B4A3;
+  --accent:#1F3D5C;
+  --system:#2E6B4B;
+  --system-bg:#DEEBE2;
+  --manual:#9A6A0C;
+  --manual-bg:#F2E8D2;
+  --gap:#8C2E22;
+  --gap-bg:#F1DFDC;
+  --na:#6E7A70;
+  --na-bg:#E4E8E2;
+  --sans:'Archivo',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --wrap:1180px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.55;
+  font-variation-settings:'wdth' 100;
+}
+h1,h2,h3{margin:0;font-weight:700;line-height:1.08}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+
+/* ---------- masthead ---------- */
+.masthead{border-bottom:1px solid var(--rule-2);background:var(--card)}
+.masthead-in{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:16px 24px;max-width:var(--wrap);margin:0 auto}
+.mark{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.privacy{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink-3)}
+
+/* ---------- hero ---------- */
+.hero{padding:64px 0 48px;border-bottom:1px solid var(--rule-2)}
+.eyebrow{
+  font-family:var(--mono);font-size:11.5px;font-weight:500;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);
+  display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:22px
+}
+.eyebrow span:not(:last-child)::after{content:' /';color:var(--rule-2);margin-left:14px}
+.hero h1{
+  font-size:clamp(34px,6.4vw,72px);
+  font-variation-settings:'wdth' 88;
+  letter-spacing:-.022em;
+  max-width:15ch;
+}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.standfirst{margin-top:26px;max-width:56ch;font-size:17.5px;color:var(--ink-2)}
+.standfirst + .standfirst{margin-top:14px}
+.facts{display:flex;flex-wrap:wrap;gap:0;margin-top:40px;border-top:1px solid var(--rule-2)}
+.fact{flex:1 1 150px;padding:16px 20px 16px 0;border-right:1px solid var(--rule)}
+.fact:last-child{border-right:0}
+.fact b{display:block;font-family:var(--mono);font-size:26px;font-weight:700;letter-spacing:-.02em}
+.fact span{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.begin{
+  margin-top:36px;display:inline-flex;align-items:center;gap:12px;
+  background:var(--accent);color:#fff;border:0;padding:15px 26px;
+  font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+}
+.begin:hover{background:#16304a}
+.begin span{opacity:.6}
+
+/* ---------- key ---------- */
+.key{padding:34px 0 8px}
+.key h2{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);margin-bottom:16px}
+.key-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1px;background:var(--rule)}
+.key-item{background:var(--card);padding:16px 18px}
+.key-item b{display:block;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+.key-item p{font-size:13.5px;line-height:1.45;color:var(--ink-2)}
+.k-system b{color:var(--system)} .k-manual b{color:var(--manual)}
+.k-gap b{color:var(--gap)} .k-na b{color:var(--na)}
+
+/* ---------- layout ---------- */
+.body-grid{display:grid;grid-template-columns:250px 1fr;gap:44px;padding:44px 0 0;align-items:start}
+
+/* ---------- rail ---------- */
+.rail{position:sticky;top:20px}
+.rail h2{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+.bar{display:flex;height:12px;background:var(--card-2);border:1px solid var(--rule-2);overflow:hidden}
+.bar i{display:block;height:100%;transition:width .28s ease}
+.bar .b-system{background:var(--system)} .bar .b-manual{background:var(--manual)}
+.bar .b-gap{background:var(--gap)} .bar .b-na{background:var(--na);opacity:.45}
+.tally{margin-top:16px;border-top:1px solid var(--rule)}
+.tally-row{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:12px;letter-spacing:.04em}
+.tally-row b{font-size:16px;font-weight:700}
+.t-system b{color:var(--system)} .t-manual b{color:var(--manual)}
+.t-gap b{color:var(--gap)} .t-na b{color:var(--na)}
+.rail-note{margin-top:14px;font-family:var(--mono);font-size:11px;line-height:1.5;color:var(--ink-3)}
+.rail-cta{margin-top:18px;width:100%;background:transparent;border:1.5px solid var(--accent);color:var(--accent);padding:12px;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.rail-cta:hover{background:var(--accent);color:#fff}
+
+/* ---------- sections ---------- */
+.sec{margin-bottom:40px;scroll-margin-top:20px}
+.sec-head{display:flex;align-items:baseline;gap:14px;padding-bottom:10px;border-bottom:2px solid var(--ink)}
+.sec-num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.04em}
+.sec-head h3{font-size:clamp(19px,2.4vw,25px);font-variation-settings:'wdth' 92;letter-spacing:-.012em;flex:1}
+.sec-count{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink-3);white-space:nowrap}
+.sec-count.done{color:var(--system)}
+.row{
+  display:grid;grid-template-columns:1fr auto;gap:12px 24px;align-items:center;
+  padding:16px 16px 16px 14px;border-bottom:1px solid var(--rule);
+  border-left:3px solid transparent;background:var(--card);
+  transition:background .18s ease,border-color .18s ease;
+}
+.row:hover{background:var(--card-2)}
+.row.s-system{border-left-color:var(--system);background:var(--system-bg)}
+.row.s-manual{border-left-color:var(--manual);background:var(--manual-bg)}
+.row.s-gap{border-left-color:var(--gap);background:var(--gap-bg)}
+.row.s-na{border-left-color:var(--na);background:var(--na-bg);opacity:.72}
+.row-txt{min-width:0}
+.row-code{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--ink-3)}
+.row-title{font-weight:700;font-size:15px;margin:2px 0 3px}
+.row-ask{font-size:14.5px;line-height:1.45;color:var(--ink-2)}
+.opts{display:flex;gap:0;border:1px solid var(--rule-2);background:var(--card)}
+.opt{
+  background:transparent;border:0;border-right:1px solid var(--rule-2);
+  padding:9px 13px;font-family:var(--mono);font-size:11px;font-weight:500;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap;
+}
+.opt:last-child{border-right:0}
+.opt:hover{background:var(--card-2);color:var(--ink)}
+.opt[aria-pressed="true"]{color:#fff;font-weight:700}
+.opt[data-v="system"][aria-pressed="true"]{background:var(--system)}
+.opt[data-v="manual"][aria-pressed="true"]{background:var(--manual)}
+.opt[data-v="gap"][aria-pressed="true"]{background:var(--gap)}
+.opt[data-v="na"][aria-pressed="true"]{background:var(--na)}
+.opt:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+
+/* ---------- results ---------- */
+.results{margin:56px 0 0;padding:0 0 80px;display:none}
+.results.on{display:block}
+.res-head{border-top:3px solid var(--ink);padding-top:14px;margin-bottom:36px}
+.res-head .eyebrow{margin-bottom:12px}
+.res-head h2{font-size:clamp(28px,4.6vw,46px);font-variation-settings:'wdth' 88;letter-spacing:-.02em;max-width:20ch}
+
+/* signature strip — the signature element */
+.decl{background:var(--card);border:1px solid var(--rule-2);padding:clamp(24px,4vw,44px);margin-bottom:36px}
+.decl-label{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);margin-bottom:18px}
+.decl-text{font-size:clamp(17px,2.3vw,21px);line-height:1.5;max-width:62ch;font-variation-settings:'wdth' 96}
+.decl-sub{margin-top:16px;font-size:14px;color:var(--ink-2);max-width:62ch}
+.sigline{display:flex;gap:36px;flex-wrap:wrap;margin-top:34px;padding-top:26px;border-top:1px solid var(--rule)}
+.sigfield{flex:1 1 220px}
+.sigfield i{display:block;border-bottom:1.5px solid var(--rule-2);height:34px}
+.sigfield span{display:block;margin-top:7px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.verdict{font-family:var(--mono);font-size:13px;line-height:1.6;letter-spacing:.02em;padding:16px 18px;border-left:3px solid var(--accent);background:var(--card-2);margin-bottom:34px}
+.flags{margin-bottom:34px}
+.flags h3{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:2px}
+.flags .lede{font-size:14px;color:var(--ink-2);margin-bottom:14px}
+.flag{display:grid;grid-template-columns:58px 1fr auto;gap:16px;align-items:baseline;padding:11px 14px;border-bottom:1px solid var(--rule);background:var(--card)}
+.flag code{font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--ink-3)}
+.flag b{font-weight:700;font-size:14.5px}
+.flag em{display:block;font-style:normal;font-size:13.5px;color:var(--ink-2);margin-top:2px}
+.flag u{text-decoration:none;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;white-space:nowrap}
+.flag u.f-manual{background:var(--manual-bg);color:var(--manual)}
+.flag u.f-gap{background:var(--gap-bg);color:var(--gap)}
+.empty{padding:16px;background:var(--card);border-left:3px solid var(--system);font-size:14.5px;color:var(--ink-2)}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:40px}
+.act{background:var(--accent);color:#fff;border:0;padding:14px 24px;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
+.act:hover{background:#16304a}
+.act.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.act.ghost:hover{background:var(--accent);color:#fff}
+.nextstep{border-top:1px solid var(--rule-2);padding-top:24px;max-width:64ch}
+.nextstep h3{font-size:19px;margin-bottom:10px}
+.nextstep p{font-size:15px;color:var(--ink-2);margin-bottom:10px}
+
+/* ---------- colophon ---------- */
+.colophon{border-top:1px solid var(--rule-2);background:var(--card);padding:30px 0;font-size:13.5px;color:var(--ink-2)}
+.colophon .wrap{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between}
+.colophon p{max-width:62ch}
+.colophon a{color:var(--accent)}
+
+/* ---------- responsive ---------- */
+@media (max-width:920px){
+  .body-grid{grid-template-columns:1fr;gap:0}
+  .rail{
+    position:sticky;top:0;z-index:20;background:var(--paper);
+    padding:12px 0;margin:0 0 26px;border-bottom:1px solid var(--rule-2)
+  }
+  .rail h2,.rail-note{display:none}
+  .tally{display:flex;gap:0;margin-top:10px;border-top:0}
+  .tally-row{flex:1;flex-direction:column;align-items:flex-start;gap:1px;padding:0;border-bottom:0;font-size:10px}
+  .rail-cta{margin-top:12px}
+  .row{grid-template-columns:1fr}
+  .opts{width:100%}
+  .opt{flex:1;padding:11px 4px;text-align:center}
+  .flag{grid-template-columns:1fr;gap:4px}
+  .flag u{justify-self:start;margin-top:4px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+
+/* ---------- print ---------- */
+@media print{
+  .masthead,.hero,.key,.body-grid,.actions,.begin{display:none!important}
+  body{background:#fff;font-size:11.5pt}
+  .results{display:block!important;margin:0;padding:0}
+  .decl,.flag,.verdict,.empty{background:#fff!important;border-color:#999!important}
+  .res-head{border-top-width:2px}
+  .colophon{border-top:1px solid #999;background:#fff}
+  .flag{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-in">
+    <div class="mark">Omni-Risk Readiness Check</div>
+    <div class="privacy">Runs in your browser · nothing is sent anywhere</div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span>FSCA Omni-Risk Return</span>
+      <span>Draft, 30 September 2025</span>
+      <span>12 sections · 49 data points</span>
+    </div>
+    <h1>Someone at your firm will sign to say this data is <em>accurate and complete.</em></h1>
+    <p class="standfirst">The Omni-Risk Return is not a policy question. It asks for counts, values, ages, turnaround times and ratios — and every submission needs a declaration signed by a member of the governing body or executive management confirming the data holds up.</p>
+    <p class="standfirst">This runs through all 49 data points in the draft return and asks one thing of each: can you produce it from a system today, or does somebody rebuild it by hand?</p>
+    <div class="facts">
+      <div class="fact"><b>49</b><span>Data points</span></div>
+      <div class="fact"><b>12</b><span>Sections</span></div>
+      <div class="fact"><b>~10</b><span>Minutes</span></div>
+      <div class="fact"><b>0</b><span>Data collected</span></div>
+    </div>
+    <button class="begin" id="begin">Start the check <span>↓</span></button>
+  </div>
+</section>
+
+<section class="key">
+  <div class="wrap">
+    <h2>Four answers per data point</h2>
+    <div class="key-grid">
+      <div class="key-item k-system"><b>From a system</b><p>A named system produces this on demand, the same way every time, with a record of where it came from.</p></div>
+      <div class="key-item k-manual"><b>By hand</b><p>It exists, but someone pulls it together from spreadsheets, mailboxes or several systems each time it's asked for.</p></div>
+      <div class="key-item k-gap"><b>Can't produce it</b><p>The data isn't captured, isn't captured in a usable form, or sits with a third party you can't get it from.</p></div>
+      <div class="key-item k-na"><b>Doesn't apply</b><p>Not relevant to your licence category or business model. The return flags where subsections apply only to certain institutions.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="body-grid">
+    <aside class="rail">
+      <h2>Where you stand</h2>
+      <div class="bar" role="img" aria-label="Readiness breakdown">
+        <i class="b-system" id="barSystem" style="width:0"></i>
+        <i class="b-manual" id="barManual" style="width:0"></i>
+        <i class="b-gap" id="barGap" style="width:0"></i>
+        <i class="b-na" id="barNa" style="width:0"></i>
+      </div>
+      <div class="tally">
+        <div class="tally-row t-system"><span>From a system</span><b id="cSystem">0</b></div>
+        <div class="tally-row t-manual"><span>By hand</span><b id="cManual">0</b></div>
+        <div class="tally-row t-gap"><span>Can't produce</span><b id="cGap">0</b></div>
+        <div class="tally-row t-na"><span>N/A</span><b id="cNa">0</b></div>
+      </div>
+      <p class="rail-note" id="railNote">0 of 49 answered</p>
+      <button class="rail-cta" id="showRes">See the declaration</button>
+    </aside>
+
+    <main id="sections"></main>
+  </div>
+
+  <section class="results" id="results" aria-live="polite">
+    <div class="res-head">
+      <div class="eyebrow"><span>Result</span><span id="resDate"></span></div>
+      <h2 id="resHead">Your readiness against the draft return</h2>
+    </div>
+
+    <div class="verdict" id="verdict"></div>
+
+    <div class="decl">
+      <div class="decl-label">The declaration you would be signing</div>
+      <p class="decl-text" id="declText"></p>
+      <p class="decl-sub">The draft guidance requires this declaration to be completed by a member of the governing body or executive management, and treats a submission without it as incomplete.</p>
+      <div class="sigline">
+        <div class="sigfield"><i></i><span>Name</span></div>
+        <div class="sigfield"><i></i><span>Position</span></div>
+        <div class="sigfield"><i></i><span>Date</span></div>
+      </div>
+    </div>
+
+    <div class="flags" id="flags"></div>
+
+    <div class="actions">
+      <button class="act" id="printBtn">Save or print this result</button>
+      <button class="act ghost" id="resetBtn">Start over</button>
+    </div>
+
+    <div class="nextstep">
+      <h3>What to do with this</h3>
+      <p>Every amber and red line above is a manual dependency sitting behind a signature. The useful next step is to put a name against each one — which system it should come from, who owns it, and what it would take to close.</p>
+      <p>That register is also the answer to the question the return will eventually force: not "do we have a policy for this," but "can we produce the number."</p>
+    </div>
+  </section>
+</div>
+
+<footer class="colophon">
+  <div class="wrap">
+    <p><strong>About this tool.</strong> Built from the FSCA's draft Omni-Risk Return and its Explanatory Guide, published 30 September 2025. The return is still in consultation and the data points may change before go-live — this reflects the draft as published. Nothing you enter is stored, transmitted or logged; close the tab and it's gone.</p>
+    <p>Not affiliated with or endorsed by the FSCA.</p>
+  </div>
+</footer>
+
+<script>
+const SECTIONS = [
+ {n:"01", t:"Group structure, ownership and shared services", items:[
+  {c:"1.1", t:"Group structure", a:"Your parent entity, its jurisdiction, and every entity above you — as data, not a slide."},
+  {c:"1.2", t:"Inter-group transactions and shared services", a:"The value of intra-group financial flows, and which functions you rely on a group entity to perform."},
+  {c:"1.3", t:"Beneficial owner nationality", a:"Nationality of every beneficial owner, checkable against the current FATF high-risk list."}
+ ]},
+ {n:"02", t:"Geographical presence", items:[
+  {c:"2.1", t:"Jurisdictions", a:"Every country you operate in — including where remote staff and representatives actually sit."},
+  {c:"2.2", t:"Physical locations", a:"A count of premises in South Africa and abroad, accurate at the reporting date."}
+ ]},
+ {n:"03", t:"Governance", items:[
+  {c:"3.1", t:"Composition of the governing body", a:"Board composition by independence, race, gender and skill set — as a dataset, not a board pack."},
+  {c:"3.2", t:"Performance and incentive framework", a:"Fixed-to-variable remuneration ratios, and whether incentives are tied to quantitative or qualitative measures."},
+  {c:"3.3", t:"Risk tolerance for non-compliance", a:"A count of non-compliance incidents in the period, measured against board-approved tolerance levels."},
+  {c:"3.4", t:"Remediation of incidents", a:"Time from identification to closure for each non-compliance incident."},
+  {c:"3.5", t:"Insurance and guarantee claims", a:"Claims made in the period split by type — professional liability, cyber, other — with cover limits."}
+ ]},
+ {n:"04", t:"Customer base and politically exposed persons", items:[
+  {c:"4.1", t:"Customers by legal entity type", a:"Customer counts split by entity type: company, trust, non-profit, retirement fund."},
+  {c:"4.2", t:"Natural persons", a:"Individual customers segmented by income or affluence band, and flagged for PEP status."},
+  {c:"4.3", t:"Total customers", a:"One total customer number you would defend under questioning, reconciled across every system."},
+  {c:"4.4", t:"Exposure to listed jurisdictions", a:"Customers and ultimate beneficial owners linked to grey- or blacklisted countries."}
+ ]},
+ {n:"05", t:"Handling of customer assets", items:[
+  {c:"5.1", t:"Assets held or managed", a:"Total value of customer assets held or under management at the reporting date."},
+  {c:"5.2", t:"Collection of money and payments", a:"How customer funds are collected — direct versus third party — and whether foreign entities are involved."},
+  {c:"5.3", t:"Allocation of assets received", a:"Time from receipt of customer funds to allocation, measured per transaction."},
+  {c:"5.4", t:"Border and metro transactions", a:"Transaction flows identifiable by border and metropolitan origin."},
+  {c:"5.5", t:"Geopolitical money transfers", a:"Inbound and outbound flows to and from high-risk jurisdictions."},
+  {c:"5.6", t:"Unclaimed assets", a:"Number, value and age of unclaimed assets, bucketed by how long they've sat unclaimed."},
+  {c:"5.7", t:"Transactions by product class", a:"Volumes by product class — including crypto assets, derivatives and forex — plus offshore flows."},
+  {c:"5.8", t:"Arrear retirement fund contributions", a:"Arrear contributions bucketed by length of delay, not just a single total."}
+ ]},
+ {n:"06", t:"Transaction volumes, distribution channels and composition", items:[
+  {c:"6.1", t:"Volume per distribution channel", a:"Transaction volumes split by the channel through which each sale was made."},
+  {c:"6.2", t:"Market infrastructure and rating volumes", a:"Volumes facilitated through market infrastructure, or ratings issued and changed."},
+  {c:"6.3", t:"Distribution composition", a:"A current count of your intermediary force by type and status."}
+ ]},
+ {n:"07", t:"Product and agreement terminations", items:[
+  {c:"7.1", t:"Terminations and trade cancellations", a:"Terminations split by who initiated them, plus cancelled, suspended and failed trades."},
+  {c:"7.2", t:"Fixed-term investment withdrawals", a:"Premature withdrawals from fixed-term products, with timing relative to deposit."}
+ ]},
+ {n:"08", t:"Advertising and communication", items:[
+  {c:"8.1", t:"Advertising channels", a:"Every channel used to advertise in the period, including third-party and influencer arrangements."},
+  {c:"8.2", t:"Advertising expenditure", a:"Marketing spend for the period, separable from general operating costs."},
+  {c:"8.3", t:"Amendments to advertising material", a:"A count of advertising materials withdrawn or corrected after publication."},
+  {c:"8.4", t:"Direct customer communications", a:"Volume and type of non-marketing communications sent to customers."}
+ ]},
+ {n:"09", t:"Complaints management", items:[
+  {c:"9.1", t:"Volume", a:"Complaint volumes for the period, categorised the same way each time."},
+  {c:"9.2", t:"Resolution", a:"Complaints resolved versus unresolved at period end, broken down by category."},
+  {c:"9.3", t:"Resolution turnaround time", a:"Days from receipt to resolution for each individual complaint."},
+  {c:"9.4", t:"Ombud complaints and outcomes", a:"Complaints escalated to an Ombud, and how each one was determined."}
+ ]},
+ {n:"10", t:"IT and data governance and protection of information", items:[
+  {c:"10.1", t:"IT governance findings", a:"Audit findings on IT, flagged for materiality and for whether they are repeat findings."},
+  {c:"10.2", t:"Data accuracy and completeness", a:"Evidence of how current and complete your customer records actually are."},
+  {c:"10.3", t:"Emerging technology usage", a:"An inventory of systems in use — cloud, AI, and any systems not linked to each other."},
+  {c:"10.4", t:"System availability and incidents", a:"Downtime incidents split into planned and unplanned, with duration for each."},
+  {c:"10.5", t:"Customer data breaches", a:"Breaches in the period and the categories of data exposed in each."},
+  {c:"10.6", t:"Impact of data breaches", a:"Number of individuals affected by each breach."}
+ ]},
+ {n:"11", t:"Outsourcing and organisational capacity", items:[
+  {c:"11.1", t:"Vacancies", a:"Open positions against total approved positions at the reporting date."},
+  {c:"11.2", t:"Training", a:"Conduct-related training spend as a proportion of total staff budget."},
+  {c:"11.3", t:"Outsourcing", a:"A register of outsourced functions, each flagged for whether it is critical."}
+ ]},
+ {n:"12", t:"Financial data", items:[
+  {c:"12.1", t:"Revenue and turnover", a:"Turnover split between financial services and other activities — actual and projected."},
+  {c:"12.2", t:"Expenditure", a:"Total annual expenditure for the reporting period."},
+  {c:"12.3", t:"Funding", a:"Gearing ratio, funding structure, and concentration among your largest funders."},
+  {c:"12.4", t:"Inter-group funding", a:"Proportion of your funding sourced from within the group."},
+  {c:"12.5", t:"Group turnover", a:"Group-wide turnover, to sit alongside your own."}
+ ]}
+];
+
+const LABELS = {system:"From a system", manual:"By hand", gap:"Can't produce", na:"N/A"};
+const ORDER = ["system","manual","gap","na"];
+const TOTAL = SECTIONS.reduce((n,s)=>n+s.items.length,0);
+const state = {};
+const $ = id => document.getElementById(id);
+
+function build(){
+  const host = $("sections");
+  SECTIONS.forEach((sec,si)=>{
+    const el = document.createElement("section");
+    el.className = "sec";
+    el.id = "sec"+si;
+
+    const head = document.createElement("div");
+    head.className = "sec-head";
+    head.innerHTML = `<span class="sec-num">${sec.n}</span><h3>${sec.t}</h3><span class="sec-count" data-sec="${si}">0/${sec.items.length}</span>`;
+    el.appendChild(head);
+
+    sec.items.forEach(it=>{
+      const row = document.createElement("div");
+      row.className = "row";
+      row.dataset.code = it.c;
+
+      const txt = document.createElement("div");
+      txt.className = "row-txt";
+      txt.innerHTML = `<div class="row-code">${it.c}</div><div class="row-title">${it.t}</div><p class="row-ask">${it.a}</p>`;
+      row.appendChild(txt);
+
+      const opts = document.createElement("div");
+      opts.className = "opts";
+      opts.setAttribute("role","group");
+      opts.setAttribute("aria-label", it.c+" "+it.t);
+
+      ORDER.forEach(v=>{
+        const b = document.createElement("button");
+        b.className = "opt";
+        b.dataset.v = v;
+        b.type = "button";
+        b.setAttribute("aria-pressed","false");
+        b.textContent = LABELS[v];
+        b.addEventListener("click",()=>set(it.c,v,row,opts,si));
+        opts.appendChild(b);
+      });
+
+      row.appendChild(opts);
+      el.appendChild(row);
+    });
+
+    host.appendChild(el);
+  });
+}
+
+function set(code,val,row,opts,si){
+  state[code] = (state[code]===val) ? undefined : val;
+  if(state[code]===undefined) delete state[code];
+
+  row.className = "row" + (state[code] ? " s-"+state[code] : "");
+  [...opts.children].forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.v===state[code])));
+
+  const sec = SECTIONS[si];
+  const done = sec.items.filter(i=>state[i.c]).length;
+  const badge = document.querySelector`.sec-count[data-sec="${si}"]`);
+  badge.textContent = done+"/"+sec.items.length;
+  badge.classList.toggle("done", done===sec.items.length);
+
+  tally();
+}
+
+function counts(){
+  const c = {system:0,manual:0,gap:0,na:0};
+  Object.values(state).forEach(v=>c[v]++);
+  return c;
+}
+
+function tally(){
+  const c = counts(), answered = c.system+c.manual+c.gap+c.na;
+  ORDER.forEach(k=>{
+    $("c"+k[0].toUpperCase()+k.slice(1)).textContent = c[k];
+    $("bar"+k[0].toUpperCase()+k.slice(1)).style.width = (c[k]/TOTAL*100)+"%";
+  });
+  $("railNote").textContent = answered+" of "+TOTAL+" answered";
+}
+
+function report(){
+  const c = counts();
+  const answered = c.system+c.manual+c.gap+c.na;
+  const inScope = c.system+c.manual+c.gap;
+  const exposed = c.manual+c.gap;
+
+  $("resDate").textContent = new Date().toLocaleDateString("en-ZA",{day:"numeric",month:"long",year:"numeric"});
+
+  let verdict;
+  if(answered === 0){
+    verdict = "Nothing answered yet. Work through the sections above, then come back.";
+  } else if(exposed === 0){
+    verdict = `${answered} of ${TOTAL} answered. Every applicable data point comes out of a system. Worth a second opinion — this is a rarer result than most firms expect.`;
+  } else {
+    const pct = inScope ? Math.round(exposed/inScope*100) : 0;
+    verdict = `${answered} of ${TOTAL} answered · ${inScope} apply to you · ${exposed} of those (${pct}%) depend on someone assembling data by hand or cannot be produced at all.`;
+    if(answered < TOTAL) verdict +=  `${TOTAL-answered} still unanswered — the real number is likely higher.`;
+  }
+  $("verdict").textContent = verdict;
+
+  if(exposed === 0 && answered > 0){
+    $("declText").textContent = "I confirm that the information submitted in this return is accurate and complete.";
+  } else {
+    $("declText").innerHTML = `I confirm that the information submitted in this return is accurate and complete — including the <strong>${exposed}</strong> data point${exposed===1?"":"s"} listed below, which no system currently produces.`;
+  }
+
+  const flagged = [];
+  SECTIONS.forEach(s=>s.items.forEach(i=>{
+    if(state[i.c]==="manual"||state[i.c]==="gap") flagged.push({...i, v:state[i.c]});
+  }));
+
+  const box = $("flags");
+  if(!flagged.length){
+    box.innerHTML = `<h3>Nothing flagged</h3><p class="lede">No manual dependencies recorded.</p><div class="empty">Either your data estate is in unusually good shape, or the assessment is incomplete. Both are worth checking before anyone signs.</div>`;
+  } else {
+    box.innerHTML = `<h3>${flagged.length} data point${flagged.length===1?"":"s"} sitting behind that signature</h3><p class="lede">Each of these needs a source system, an owner, and a route to close it.</p>` +
+      flagged.map(f=`<div class="flag"><code>${f.c}</code><div><b>${f.t}</b><em>${f.a}</em></div><u class="f-${f.v}">${LABELS[f.v]}</u></div>`).join("");
+  }
+
+  $("results").classList.add("on");
+  $("results").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+build();
+tally();
+
+$("begin").addEventListener("click",()=>document.querySelector(".key").scrollIntoView({behavior:"smooth"}));
+$("showRes").addEventListener("click",report);
+$("printBtn").addEventListener("click",()=>window.print());
+$("resetBtn").addEventListener("click",()=>{
+  Object.keys(state).forEach(k=>delete state[k]);
+  document.querySelectorAll(".row").forEach(r=>r.className="row");
+  document.querySelectorAll(".opt").forEach(b=>b.setAttribute("aria-pressed","false"));
+  document.querySelectorAll(".sec-count").forEach((b,i)=>{b.textContent="0/"+SECTIONS[i].items.length;b.classList.remove("done")});
+  $("results").classList.remove("on");
+  tally();
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+</script>
+</body>
+</html>
