@@ -41,10 +41,21 @@ const built = await page.evaluate(() => ({
   lang: document.documentElement.lang,
   canonical: document.querySelector('link[rel=canonical]')?.href ?? null,
   ogImage: document.querySelector('meta[property="og:image"]')?.content ?? null,
+  keyLabels: [...document.querySelectorAll('.key-item b')].map((el) => el.textContent.trim()),
+  tallyLabels: [...document.querySelectorAll('.tally-row span')].map((el) => el.textContent.trim()),
+  optionLabels: [...document.querySelectorAll('.row .opt')].slice(0, 4).map((el) => el.textContent.trim()),
 }));
 check(built.sections === EXPECTED_SECTIONS, 'renders 12 sections', `got ${built.sections}`);
 check(built.rows === EXPECTED_ITEMS, 'renders 49 data-point rows', `got ${built.rows}`);
 check(built.opts === EXPECTED_ITEMS * 4, 'renders 4 answer controls per row', `got ${built.opts}`);
+const expectedAnswerLabels = ['System', 'By hand', 'Cannot', 'N/A'];
+check(
+  JSON.stringify(built.keyLabels) === JSON.stringify(expectedAnswerLabels) &&
+    JSON.stringify(built.tallyLabels) === JSON.stringify(expectedAnswerLabels) &&
+    JSON.stringify(built.optionLabels) === JSON.stringify(expectedAnswerLabels),
+  'key, tally and controls use the approved short labels',
+  `${built.keyLabels.join(' / ')} | ${built.tallyLabels.join(' / ')} | ${built.optionLabels.join(' / ')}`
+);
 check(built.h1 === 1, 'exactly one h1', `got ${built.h1}`);
 check(built.title === 'Omni-Risk Return: Data Readiness Check', 'title is the specified value', built.title);
 check(built.lang === 'en-ZA', 'lang attribute preserved', built.lang);
@@ -121,6 +132,54 @@ for (const [i, cls] of [
   [3, 's-na'],
 ]) {
   await firstOpts.nth(i).click();
+  await page.mouse.move(0, 0);
+  await page.waitForTimeout(220);
+  const visualState = await firstRow.evaluate((el) => {
+    const cs = getComputedStyle(el);
+    return { background: cs.backgroundColor, opacity: cs.opacity, borderWidth: cs.borderLeftWidth };
+  });
+  check(
+    ['rgb(247, 248, 248)', 'rgb(239, 241, 241)'].includes(visualState.background) && visualState.opacity === '1',
+    `${cls} keeps the neutral row ground at full opacity`,
+    JSON.stringify(visualState)
+  );
+  check(
+    visualState.borderWidth === ['1px', '2px', '3px', '1px'][i],
+    `${cls} uses the documented rule weight`,
+    visualState.borderWidth
+  );
+  // WCAG 1.4.11: the pressed indicator is a graphical state marker, so it needs
+  // 3:1 against whatever sits next to it. The light state greys used on the row
+  // hairlines are deliberately NOT reused here, because they measured 1.19:1.
+  const indicator = await firstOpts.nth(i).evaluate((el) => {
+    const cs = getComputedStyle(el);
+    const rgb = (v) => (v.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
+    const lin = (c) => (c / 255 <= 0.03928 ? c / 255 / 12.92 : Math.pow((c / 255 + 0.055) / 1.055, 2.4));
+    const lum = ([r, g, b]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+    const ratio = (a, b) => {
+      const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+      return (hi + 0.05) / (lo + 0.05);
+    };
+    const ground = rgb(getComputedStyle(el.closest('.opts')).backgroundColor);
+    const marker =
+      cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0
+        ? rgb(cs.outlineColor)
+        : rgb(cs.backgroundColor)[0] !== undefined && cs.backgroundColor !== 'rgba(0, 0, 0, 0)'
+          ? rgb(cs.backgroundColor)
+          : rgb(cs.borderBottomColor);
+    return { ratio: ratio(marker, ground), text: ratio(rgb(cs.color), rgb(cs.backgroundColor !== 'rgba(0, 0, 0, 0)' ? cs.backgroundColor : getComputedStyle(el.closest('.opts')).backgroundColor)) };
+  });
+  check(
+    indicator.ratio >= 3,
+    `${cls} pressed indicator meets 3:1 non-text contrast`,
+    `${indicator.ratio.toFixed(2)}:1`
+  );
+  check(
+    indicator.text >= 4.5,
+    `${cls} pressed label meets 4.5:1 text contrast`,
+    `${indicator.text.toFixed(2)}:1`
+  );
+
   const state = await firstRow.evaluate((el) => el.className);
   check(state.includes(cls), `state ${cls} selectable`, state);
   const pressed = await firstOpts.nth(i).getAttribute('aria-pressed');
@@ -143,7 +202,7 @@ check((await counterAfterOne()) === '1/3', 'section counter increments', await c
 await firstOpts.nth(0).click();
 check((await counterAfterOne()) === '0/3', 'section counter decrements on clear', await counterAfterOne());
 
-// ---- complete a section -> green done state ----
+// ---- complete a section -> documented completion state ----
 const sec0 = page.locator('.sec').first();
 const sec0rows = sec0.locator('.row');
 const n0 = await sec0rows.count();
@@ -175,13 +234,40 @@ const results = await page.evaluate(() => ({
   verdict: document.getElementById('verdict').textContent,
   decl: document.getElementById('declText').textContent,
   flags: document.querySelectorAll('.flag').length,
+  flagGroups: document.querySelectorAll('.flag-section').length,
+  flagHeadings: [...document.querySelectorAll('.flag-section h4')].map((h) => h.textContent.trim()),
+  findingsHeading: document.querySelector('.flags h3')?.textContent?.trim(),
   flagBadges: [...document.querySelectorAll('.flag u')].map((u) => u.textContent),
+  reportFields: [...document.querySelectorAll('.report-field input')].map((input) => ({
+    id: input.id,
+    type: input.type,
+    autocomplete: input.autocomplete,
+    height: Math.round(input.getBoundingClientRect().height),
+    labelled: input.closest('label') !== null,
+  })),
   date: document.getElementById('resDate').textContent,
 }));
 check(results.visible, 'See the declaration reveals the results block');
 check(results.flags === 2, 'flagged items listed correctly', `${results.flags} flag rows`);
+check(results.flagGroups === 1, 'flagged items are grouped by assessment section', results.flagHeadings.join(' / '));
+check(results.findingsHeading === 'Readiness findings', 'findings use the board-pack heading', results.findingsHeading);
 check(
-  results.flagBadges.includes('By hand') && results.flagBadges.includes("Can't produce"),
+  results.reportFields.length === 3 &&
+    results.reportFields.every((field) => field.type === 'text' && field.autocomplete === 'off'),
+  'report identification fields are local text inputs with autocomplete disabled',
+  JSON.stringify(results.reportFields.map((f) => f.id))
+);
+check(
+  results.reportFields.every((field) => field.height >= 44),
+  'report identification fields meet the 44px touch target',
+  results.reportFields.map((f) => `${f.id} ${f.height}px`).join(' / ')
+);
+check(
+  results.reportFields.every((field) => field.labelled),
+  'report identification fields have a programmatic label'
+);
+check(
+  results.flagBadges.includes('By hand') && results.flagBadges.includes('Cannot'),
   'flag badges carry a text label, not colour alone',
   results.flagBadges.join(' / ')
 );
@@ -211,6 +297,10 @@ const print = await page.evaluate(() => {
     questionnaire: vis('.body-grid'),
     results: vis('.results'),
     coloLinks: vis('.colo-links'),
+    signatureColumns: getComputedStyle(document.querySelector('.sigline')).gridTemplateColumns.split(' ').length,
+    identificationColumns: getComputedStyle(document.querySelector('.report-ident')).gridTemplateColumns.split(' ').length,
+    ligatures: getComputedStyle(document.querySelector('.results')).fontVariantLigatures,
+    pagedCss: [...document.styleSheets].flatMap((sheet) => [...sheet.cssRules]).map((rule) => rule.cssText).join(' '),
   };
 });
 await page.emulateMedia({ media: 'screen' });
@@ -219,6 +309,13 @@ check(print.hero === false, 'print hides the hero');
 check(print.questionnaire === false, 'print hides the questionnaire');
 check(print.results === true, 'print shows the results');
 check(print.coloLinks === false, 'print hides the nav link row');
+check(print.signatureColumns === 3, 'print keeps the signature strip in three columns', `${print.signatureColumns} columns`);
+check(print.identificationColumns === 3, 'print keeps report identification in three columns', `${print.identificationColumns} columns`);
+check(print.ligatures === 'none', 'print disables ligatures', print.ligatures);
+check(
+  print.pagedCss.includes('counter(page)') && print.pagedCss.includes('counter(pages)') && print.pagedCss.includes('@top-left'),
+  'print defines running document furniture and page numbering'
+);
 
 // ---- keyboard operability + visible focus ----
 await page.keyboard.press('Tab');
@@ -296,11 +393,25 @@ check(zoom200 <= 721, 'no horizontal overflow at 200% zoom (720px CSS viewport)'
 // WCAG 1.4.10 reflow is now enforced instead of merely reported.
 await page.setViewportSize({ width: 320, height: 900 });
 await page.waitForTimeout(350);
-const reflow320 = await page.evaluate(() => document.documentElement.scrollWidth);
+const reflow320 = await page.evaluate(() => ({
+  scrollWidth: document.documentElement.scrollWidth,
+  tallyWidths: [...document.querySelectorAll('.tally-row')].map((row) => row.getBoundingClientRect().width),
+  optionHeights: [...document.querySelectorAll('.opt')].slice(0, 4).map((opt) => opt.getBoundingClientRect().height),
+}));
 check(
-  reflow320 <= 321,
+  reflow320.scrollWidth <= 321,
   'no horizontal overflow at 320px (WCAG 1.4.10 reflow)',
-  `${reflow320}px`
+  `${reflow320.scrollWidth}px`
+);
+check(
+  Math.max(...reflow320.tallyWidths) - Math.min(...reflow320.tallyWidths) <= 1,
+  'mobile tally uses four equal columns at 320px',
+  reflow320.tallyWidths.map((w) => w.toFixed(1)).join(' / ')
+);
+check(
+  reflow320.optionHeights.every((height) => height >= 44),
+  'answer controls retain 44px touch targets at 320px',
+  reflow320.optionHeights.map((h) => h.toFixed(1)).join(' / ')
 );
 await page.setViewportSize({ width: 1440, height: 1000 });
 

@@ -50,11 +50,16 @@ Documents are printed on white. That is the whole justification.
 One dominant, one accent. Near-black ink on white is dominant. `#1F3D5C` deep navy is the accent.
 
 - The accent is used **structurally**: section rules, section numbers, links, primary actions.
-- The accent is never a gradient, never a glow, never a fill behind text.
+- The accent is never a gradient, glow or decorative panel fill. A filled primary action and the
+  filled Cannot control are the two functional exceptions; both use white text at verified AA contrast.
 - No three-tone ramp. A ramp at even weight is the "timid palette" tell.
-- Semantic colour is reserved for state and is the only place colour carries meaning beyond the
-  accent: `#2E6B4B` system, `#8A5D0A` manual, `#8C2E22` gap, `#5C6670` not-applicable. Manual and
-  not-applicable were darkened from `#9A6A0C` and `#6E7A70` to clear AA on their own tinted grounds.
+- Assessment state is monochrome. It is encoded by a text label, rule weight and control treatment,
+  not by a traffic-light palette or a full-row tint. System uses a `#C4C9CD` hairline and muted text;
+  manual uses a `#7A8B9C` 2px rule and a navy outlined control; cannot-produce uses the `#1F3D5C`
+  structural accent as a 3px rule and filled control; not-applicable uses a `#E2E5E7` hairline and
+  muted text. Rows remain on the same neutral ground in every state and no state reduces row opacity.
+  This follows the ruled-table hierarchy of the document reference while keeping labels, rather than
+  colour alone, as the primary carrier of meaning.
 - Ink is two tones, not four: `#101418` and `#3A4249`, with `#4D5560` for muted labels. The previous
   four-step grey ramp read as a timid palette and its lightest steps failed contrast.
 - `#1F3D5C` measures 11.17:1 on white. Verified ratios are in `tools/verify/scripts/contrast.mjs`,
@@ -98,8 +103,8 @@ structural weight.
   named tell, and the document reference has no shadows in it at all.
 - No glassmorphism, no frosted layers, no gradient borders, no gradient mesh, no film grain.
 - `border-radius: 0` by default. Radius is opt-in per element with a reason, not a global default.
-- A coloured left-border strip is permitted **only** to encode semantic state. It is prohibited on
-  ordinary content cards, where it is one of the most reliable AI tells.
+- A left-border strip is permitted **only** to encode semantic state. It is prohibited on ordinary
+  content cards, where it is one of the most reliable AI tells.
 
 ### Layout
 

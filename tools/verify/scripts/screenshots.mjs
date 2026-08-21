@@ -84,6 +84,18 @@ async function capture(label, url) {
   const p = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   await p.goto(url, { waitUntil: 'networkidle' });
   await p.evaluate(() => document.fonts.ready);
+  if (label === 'published') {
+    const rows = p.locator('.row');
+    for (let i = 0; i < await rows.count(); i++) {
+      const option = i % 7 === 0 ? 2 : i % 5 === 0 ? 1 : i % 11 === 0 ? 3 : 0;
+      await rows.nth(i).locator('.opt').nth(option).click();
+    }
+    await p.locator('#showRes').click();
+    await p.waitForTimeout(500);
+    await p.locator('#reportInstitution').fill('Sample Financial Services');
+    await p.locator('#reportFsp').fill('12345');
+    await p.locator('#reportPeriod').fill('1 January to 31 March 2026');
+  }
   await p.emulateMedia({ media: 'print' });
   await p.waitForTimeout(300);
   await p.screenshot({ path: path.join(OUT, `${label}-print.png`), fullPage: true });

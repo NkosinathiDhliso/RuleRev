@@ -81,6 +81,30 @@ for (let i = 0; i < total; i++) {
 }
 await page.waitForTimeout(750);
 
+// --- Exercise the report identification fields with realistic entity data. ---
+// These are free-text inputs, so they are the highest-risk surface for the
+// "nothing is submitted or stored" claim. The generic control loop above does
+// not type into text inputs, so they are driven explicitly here.
+const metadata = {
+  reportInstitution: 'Privacy Audit Financial Services',
+  reportFsp: '999999',
+  reportPeriod: '1 January to 31 March 2026',
+};
+let metadataFilled = 0;
+try {
+  await page.locator('.row').first().locator('.opt').nth(1).click({ timeout: 1500 });
+  await page.locator('#showRes').click({ timeout: 1500 });
+  await page.waitForTimeout(400);
+  for (const [id, value] of Object.entries(metadata)) {
+    await page.locator(`#${id}`).fill(value, { timeout: 1500 });
+    metadataFilled++;
+  }
+  await page.keyboard.press('Tab');
+  await page.waitForTimeout(750);
+} catch {
+  /* recorded below as a shortfall rather than silently ignored */
+}
+
 // Print path exercises @media print and any results rendering tied to it.
 await page.emulateMedia({ media: 'print' });
 await page.waitForTimeout(250);
@@ -139,7 +163,12 @@ const report = {
     'referrer-policy': mainHeaders['referrer-policy'],
     'x-content-type-options': mainHeaders['x-content-type-options'],
   },
-  interaction: { controlsFound: total, controlsClicked: clicked },
+  interaction: {
+    controlsFound: total,
+    controlsClicked: clicked,
+    reportFieldsFilled: metadataFilled,
+    reportFieldValuesEntered: Object.values(metadata),
+  },
   network: {
     totalRequests: requests.length,
     requests: requests.map((r) => `${r.method} ${r.url}`),
@@ -170,6 +199,14 @@ if (storage.indexedDBDatabases.length) fail.push(`indexedDB: ${storage.indexedDB
 if (storage.serviceWorkers.length) fail.push(`service worker: ${storage.serviceWorkers.join(', ')}`);
 if (cspViolations.length) fail.push(`CSP violations: ${cspViolations.length}`);
 for (const [k, v] of Object.entries(shell)) if (v) fail.push(`app shell leakage: ${k}`);
+// A pass is only meaningful if the free-text fields were actually populated.
+if (metadataFilled !== Object.keys(metadata).length)
+  fail.push(`report identification fields not exercised: ${metadataFilled}/${Object.keys(metadata).length} filled`);
+// The entered values must not appear in any request URL.
+const leakedValues = Object.values(metadata).filter((v) =>
+  requests.some((r) => decodeURIComponent(r.url).includes(v))
+);
+if (leakedValues.length) fail.push(`entered values appeared in a request URL: ${leakedValues.join(', ')}`);
 
 console.log(JSON.stringify(report, null, 2));
 if (fail.length) {

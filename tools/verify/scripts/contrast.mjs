@@ -39,16 +39,15 @@ const r2 = (n) => n.toFixed(2);
 
 const grounds = ['paper', 'card', 'card-2'].map((n) => ({ name: n, hex: token(n) })).filter((g) => g.hex);
 
-// Foregrounds, each against the grounds it can appear on.
+// Foreground tokens, each against the grounds where it carries readable text.
+// State greys are structural rules only and are intentionally excluded. The
+// filled Cannot control uses white on the accent, which is checked explicitly.
 const foregrounds = [
   { name: 'ink', on: grounds },
   { name: 'ink-2', on: grounds },
   { name: 'ink-3', on: grounds },
   { name: 'accent', on: grounds },
-  { name: 'system', on: [{ name: 'system-bg', hex: token('system-bg') }, ...grounds] },
-  { name: 'manual', on: [{ name: 'manual-bg', hex: token('manual-bg') }, ...grounds] },
-  { name: 'gap', on: [{ name: 'gap-bg', hex: token('gap-bg') }, ...grounds] },
-  { name: 'na', on: [{ name: 'na-bg', hex: token('na-bg') }, ...grounds] },
+  { name: 'white', hex: '#FFFFFF', on: [{ name: 'accent', hex: token('accent') }] },
 ];
 
 const AA = 4.5;
@@ -58,7 +57,7 @@ console.log('grounds: ' + grounds.map((g) => `--${g.name} ${g.hex}`).join('   ')
 console.log(`\nAA for normal-size text is ${AA}:1\n`);
 
 for (const fg of foregrounds) {
-  const fgHex = token(fg.name);
+  const fgHex = fg.hex ?? token(fg.name);
   if (!fgHex) continue;
   const results = fg.on
     .filter((g) => g.hex)
