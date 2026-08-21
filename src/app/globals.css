@@ -14,11 +14,11 @@
   --color-accent-soft: #eaf0fa;
   --color-success: #3a8a4f;
 
-  /* Premium palette — simple values only in @theme */
+  /* Premium palette: simple values only in @theme */
   --color-ink-deep: #07080b;
   --color-ink-elev: #101218;
   --color-ink-elev-2: #161922;
-  /* Monochromatic blue scale — single hue, three tones */
+  /* Monochromatic blue scale: single hue, three tones */
   --grad-deep: #2c548f;
   --grad-mid: #3b6bb8;
   --grad-light: #7aa3dc;
@@ -37,7 +37,7 @@
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Complex multi-value custom properties — outside @theme to avoid parser issues */
+/* Complex multi-value custom properties, kept outside @theme to avoid parser issues */
 :root {
   --mesh-1: radial-gradient(60% 80% at 18% 12%, rgba(44, 84, 143, 0.16) 0%, rgba(44, 84, 143, 0) 60%);
   --mesh-2: radial-gradient(50% 70% at 88% 22%, rgba(59, 107, 184, 0.14) 0%, rgba(59, 107, 184, 0) 65%);
@@ -126,7 +126,7 @@
 
 @layer utilities {
   /* ============================================================
-     Motion system — GSAP-driven (no CSS keyframe fallback).
+     Motion system: GSAP-driven (no CSS keyframe fallback).
      CSS only provides initial hidden states. GSAP handles all
      animation via ScrollTrigger. No .in-view CSS animations.
      ============================================================ */
@@ -195,7 +195,7 @@
   }
 
   /* ============================================================
-     Premium primitives — gradient mesh, gradient text, glow rings
+     Premium primitives: gradient mesh, gradient text, glow rings
      ============================================================ */
   .grad-text {
     background: var(--grad-text);

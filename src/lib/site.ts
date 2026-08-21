@@ -35,7 +35,7 @@ export const SITE = {
     email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? 'nkosinathi.dhliso@gmail.com',
     linkedin: 'https://linkedin.com/in/immanueldhliso',
     github: 'https://github.com/NkosinathiDhliso',
-    /** Year career started — used for dynamic "X years of delivery" text. */
+    /** Year career started, used for dynamic "X years of delivery" text. */
     careerStartYear: 2015,
   },
   contact: {

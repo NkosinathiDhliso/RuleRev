@@ -23,7 +23,7 @@ type Props = {
 
 /**
  * Scroll-triggered count-up. Animation is driven by the global `Animator`
- * engine via `data-counter*` attributes — no per-instance JS required.
+ * engine via `data-counter*` attributes, so no per-instance JS is required.
  */
 export function Counter({
   to,

@@ -6,7 +6,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 /**
- * GSAP motion engine — re-runs on every route change so new page
+ * GSAP motion engine. Re-runs on every route change so new page
  * content is always animated in correctly.
  */
 
@@ -127,7 +127,7 @@ export function Animator() {
   const pathname = usePathname();
 
   useEffect(() => {
-    log('useEffect fired — pathname:', pathname);
+    log('useEffect fired, pathname:', pathname);
 
     const html = document.documentElement;
 
@@ -137,7 +137,7 @@ export function Animator() {
       registered = true;
     }
 
-    // Add motion class — activates CSS pre-states (opacity:0)
+    // Add motion class, which activates CSS pre-states (opacity:0)
     html.classList.add('motion');
     gsap.defaults({ overwrite: 'auto' });
 
@@ -463,7 +463,7 @@ export function Animator() {
 
     return () => {
       cancelAnimationFrame(frameId);
-      log('Cleanup — killing', triggers.length, 'triggers');
+      log('Cleanup: killing', triggers.length, 'triggers');
       triggers.forEach((t) => t.kill());
       cleanups.forEach((fn) => fn());
       // Clear GSAP inline styles so new page starts fresh

@@ -14,7 +14,7 @@ type Props = {
 };
 
 /**
- * A non-interactive layered background — radial gradient mesh + optional grain.
+ * A non-interactive layered background: radial gradient mesh plus optional grain.
  * Drop inside any `position: relative` parent. Sits behind content (z-index: 0/1).
  */
 export function GradientMesh({

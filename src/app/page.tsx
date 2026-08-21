@@ -58,7 +58,7 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* ─── Selected work — dark spotlight panel ─────────────────────── */}
+      {/* ─── Selected work: dark spotlight panel ─────────────────────── */}
       <div className={styles.showcase_wrap}>
         <section className={styles.showcase}>
           <GradientMesh variant="dark" parallax parallaxStrength={20} grain />
@@ -104,7 +104,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* ─── Anthropic partnership — elevated from badges ────────────── */}
+        {/* ─── Anthropic partnership: elevated from badges ────────────── */}
         <Link href="/training" className={styles.partner_card} data-animate="fade-up">
           <div className={styles.partner_icon} aria-hidden="true">
             <svg width="24" height="24" viewBox="0 0 46 32" fill="none" xmlns="http://www.w3.org/2000/svg">

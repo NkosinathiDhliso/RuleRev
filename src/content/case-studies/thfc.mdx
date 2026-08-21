@@ -13,7 +13,7 @@ A South African organisation running a Corporate Social Investment programme nee
 
 The core challenge is non-repudiation: every event in the donation lifecycle needs to be recorded so that no party can alter or delete it after the fact. I architected an immutable, append-only logging system around the workflow. Each event is written once and cryptographically chained to the previous event, so any later tampering breaks the chain. Certificates are generated from that log with verifiable references back to the source events.
 
-The trade-off is operational: append-only means no retroactive edits. Corrections happen by issuing a new linked event, not by modifying the past. That constraint is the feature — it is what makes the certificate defensible under audit.
+The trade-off is operational: append-only means no retroactive edits. Corrections happen by issuing a new linked event, not by modifying the past. That constraint is the feature. It is what makes the certificate defensible under audit.
 
 ## Result
 
