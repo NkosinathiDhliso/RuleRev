@@ -65,7 +65,7 @@ check(
   built.canonical
 );
 check(
-  built.ogImage === 'https://rulerev.com/assets/omni-risk/preview-v1.png',
+  built.ogImage === 'https://rulerev.com/assets/omni-risk/preview-v2.png',
   'og:image is the versioned absolute URL',
   built.ogImage
 );

@@ -1,5 +1,5 @@
 /**
- * Generates public/assets/omni-risk/preview-v1.png
+ * Generates public/assets/omni-risk/preview-v2.png
  *
  * Rendered with Playwright/Chromium rather than satori so that the Archivo
  * variable *width* axis is honoured. satori does not instance the `wdth` axis,
@@ -9,9 +9,15 @@
  * request and uses byte-for-byte the same WOFF2 file the published page serves.
  *
  * Palette and content are fixed by spec:
- *   background #E6EBE3 | ink #141C17 | accent #1F3D5C
- *   headline + one horizontal rule + "12 sections · 49 data points"
+ *   background #FFFFFF | ink #101418 | accent #1F3D5C
+ *   headline + one horizontal rule + "12 sections · 49 subsections"
  *   no imagery, gradients, icons, illustrations or logos.
+ *
+ * v2 replaces v1. The v1 ground was #E6EBE3, a sage green carried over from the
+ * pre-overhaul palette, so the shared card no longer matched the white page it
+ * opened. Tokens here track the published document: see .kiro/steering/design-system.md.
+ * The filename is versioned because the asset is served immutable for a year and
+ * social platforms cache their scrapes, so v1 could not be replaced in place.
  */
 import { chromium } from 'playwright';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
@@ -21,17 +27,17 @@ import path from 'node:path';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '..', '..', '..');
 const FONT_DIR = path.join(REPO, 'public', 'assets', 'omni-risk', 'fonts');
-const OUT = path.join(REPO, 'public', 'assets', 'omni-risk', 'preview-v1.png');
+const OUT = path.join(REPO, 'public', 'assets', 'omni-risk', 'preview-v2.png');
 
 const WIDTH = 1200;
 const HEIGHT = 630;
 
-const BG = '#E6EBE3';
-const INK = '#141C17';
+const BG = '#FFFFFF';
+const INK = '#101418';
 const ACCENT = '#1F3D5C';
 
 const HEADLINE = 'Omni-Risk Return: Data Readiness Check';
-const META = '12 sections \u00B7 49 data points';
+const META = '12 sections \u00B7 49 subsections';
 
 const ARCHIVO = 'archivo-var-latin-e3a28ead.woff2';
 const MONO = 'jetbrainsmono-var-latin-83c005d4.woff2';
@@ -180,4 +186,4 @@ if (!(w === WIDTH && h === HEIGHT && sig === '89504e470d0a1a0a')) {
   console.error('\nFAILED: emitted PNG is not a valid 1200x630 PNG');
   process.exit(1);
 }
-console.log('\nOK: preview-v1.png is a valid 1200x630 PNG, no clipping, no network requests.');
+console.log('\nOK: preview-v2.png is a valid 1200x630 PNG, no clipping, no network requests.');

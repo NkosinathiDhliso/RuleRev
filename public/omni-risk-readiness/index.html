@@ -10,22 +10,22 @@
 <link rel="icon" href="/icon" type="image/png">
 <meta
   name="description"
-  content="All 49 data points in the FSCA's draft Omni-Risk Return. Find out which ones your systems can produce, and which ones somebody rebuilds by hand."
+  content="All 49 subsections in the FSCA's draft Omni-Risk Return. Find out which ones your systems can produce, and which ones somebody rebuilds by hand."
 >
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://rulerev.com/omni-risk-readiness">
 <meta property="og:title" content="Omni-Risk Return: Data Readiness Check">
-<meta property="og:description" content="All 49 data points in the FSCA's draft Omni-Risk Return. Find out which ones your systems can actually produce, and which ones somebody rebuilds by hand.">
-<meta property="og:image" content="https://rulerev.com/assets/omni-risk/preview-v1.png">
+<meta property="og:description" content="All 49 subsections in the FSCA's draft Omni-Risk Return. Find out which ones your systems can actually produce, and which ones somebody rebuilds by hand.">
+<meta property="og:image" content="https://rulerev.com/assets/omni-risk/preview-v2.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:type" content="image/png">
-<meta property="og:image:alt" content="Omni-Risk Return Data Readiness Check: 12 sections and 49 data points">
+<meta property="og:image:alt" content="Omni-Risk Return Data Readiness Check: 12 sections and 49 subsections">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Omni-Risk Return: Data Readiness Check">
-<meta name="twitter:description" content="Check which of the FSCA's 49 Omni-Risk data points your systems can produce and which are rebuilt manually.">
-<meta name="twitter:image" content="https://rulerev.com/assets/omni-risk/preview-v1.png">
-<meta name="twitter:image:alt" content="Omni-Risk Return Data Readiness Check: 12 sections and 49 data points">
+<meta name="twitter:description" content="Check which of the FSCA's 49 Omni-Risk subsections your systems can produce and which are rebuilt manually.">
+<meta name="twitter:image" content="https://rulerev.com/assets/omni-risk/preview-v2.png">
+<meta name="twitter:image:alt" content="Omni-Risk Return Data Readiness Check: 12 sections and 49 subsections">
 <style>
 /* ============================================================
    BRANDING: change these three things to white-label.
@@ -479,13 +479,13 @@ button{font:inherit;color:inherit;cursor:pointer}
     <div class="docmeta">
       <span>FSCA Omni-Risk Return</span>
       <span>Draft, 30 September 2025</span>
-      <span>12 sections · 49 data points</span>
+      <span>12 sections · 49 subsections</span>
     </div>
     <h1>Someone at your firm will sign to say this data is <em>accurate and complete.</em></h1>
     <p class="standfirst">The Omni-Risk Return is not a policy question. It asks for counts, values, ages, turnaround times and ratios. Every submission needs a declaration signed by a member of the governing body or executive management confirming the data holds up.</p>
-    <p class="standfirst">This runs through all 49 data points in the draft return and asks one thing of each: can you produce it from a system today, or does somebody rebuild it by hand?</p>
+    <p class="standfirst">This runs through all 49 subsections in the draft return and asks one thing of each: can you produce it from a system today, or does somebody rebuild it by hand?</p>
     <div class="facts">
-      <div class="fact"><b>49</b><span>Data points</span></div>
+      <div class="fact"><b>49</b><span>Subsections</span></div>
       <div class="fact"><b>12</b><span>Sections</span></div>
       <div class="fact"><b>~10</b><span>Minutes</span></div>
     </div>
@@ -495,7 +495,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 <section class="key">
   <div class="wrap">
-    <h2>Four answers per data point</h2>
+    <h2>Four answers per subsection</h2>
     <div class="key-grid">
       <div class="key-item k-system"><b>System</b><p>A named system produces this on demand, the same way every time, with a record of where it came from.</p></div>
       <div class="key-item k-manual"><b>By hand</b><p>It exists, but someone pulls it together from spreadsheets, mailboxes or several systems each time it's asked for.</p></div>
@@ -572,7 +572,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 <footer class="colophon">
   <div class="wrap">
-    <p><strong>About this tool.</strong> Built from the FSCA's draft Omni-Risk Return and its Explanatory Guide, published 30 September 2025. The return is still in consultation and the data points may change before go-live. This reflects the draft as published. Nothing you enter is stored, transmitted or logged; close the tab and it's gone.</p>
+    <p><strong>About this tool.</strong> Built from the FSCA's draft Omni-Risk Return and its Explanatory Guide, published 30 September 2025. The return is still in consultation and the subsections may change before go-live. This reflects the draft as published. Nothing you enter is stored, transmitted or logged; close the tab and it's gone.</p>
     <p>Not affiliated with or endorsed by the FSCA.</p>
     <p class="colo-links">
       <a href="https://rulerev.com/">RuleRev</a>
@@ -587,7 +587,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 const SECTIONS = [
  {n:"01", t:"Group structure, ownership and shared services", items:[
   {c:"1.1", t:"Group structure", a:"Your parent entity, its jurisdiction, and every entity above you, as data rather than a slide."},
-  {c:"1.2", t:"Inter-group transactions and shared services", a:"The value of intra-group financial flows, and which functions you rely on a group entity to perform."},
+  {c:"1.2", t:"Inter-group financial transactions and shared services", a:"The value of intra-group financial flows, and which functions you rely on a group entity to perform."},
   {c:"1.3", t:"Beneficial owner nationality", a:"Nationality of every beneficial owner, checkable against the current FATF high-risk list."}
  ]},
  {n:"02", t:"Geographical presence", items:[
@@ -595,17 +595,17 @@ const SECTIONS = [
   {c:"2.2", t:"Physical locations", a:"A count of premises in South Africa and abroad, accurate at the reporting date."}
  ]},
  {n:"03", t:"Governance", items:[
-  {c:"3.1", t:"Composition of the governing body", a:"Board composition by independence, race, gender and skill set, as a dataset rather than a board pack."},
+  {c:"3.1", t:"Diversity and composition of governing body", a:"Board composition by independence, race, gender and skill set, as a dataset rather than a board pack."},
   {c:"3.2", t:"Performance and incentive framework", a:"Fixed-to-variable remuneration ratios, and whether incentives are tied to quantitative or qualitative measures."},
   {c:"3.3", t:"Risk tolerance for non-compliance", a:"A count of non-compliance incidents in the period, measured against board-approved tolerance levels."},
   {c:"3.4", t:"Remediation of incidents", a:"Time from identification to closure for each non-compliance incident."},
   {c:"3.5", t:"Insurance and guarantee claims", a:"Claims made in the period split by type (professional liability, cyber, other), with cover limits."}
  ]},
- {n:"04", t:"Customer base and politically exposed persons", items:[
+ {n:"04", t:"Nature of Customer Base and Politically Exposed Persons (PEPs)", items:[
   {c:"4.1", t:"Customers by legal entity type", a:"Customer counts split by entity type: company, trust, non-profit, retirement fund."},
   {c:"4.2", t:"Natural persons", a:"Individual customers segmented by income or affluence band, and flagged for PEP status."},
   {c:"4.3", t:"Total customers", a:"One total customer number you would defend under questioning, reconciled across every system."},
-  {c:"4.4", t:"Exposure to listed jurisdictions", a:"Customers and ultimate beneficial owners linked to grey- or blacklisted countries."}
+  {c:"4.4", t:"Customers/ ultimate beneficial owners (UBOs) from grey/black-listed countries", a:"Customers and ultimate beneficial owners linked to grey- or blacklisted countries."}
  ]},
  {n:"05", t:"Handling of customer assets", items:[
   {c:"5.1", t:"Assets held or managed", a:"Total value of customer assets held or under management at the reporting date."},
@@ -614,12 +614,12 @@ const SECTIONS = [
   {c:"5.4", t:"Border and metro transactions", a:"Transaction flows identifiable by border and metropolitan origin."},
   {c:"5.5", t:"Geopolitical money transfers", a:"Inbound and outbound flows to and from high-risk jurisdictions."},
   {c:"5.6", t:"Unclaimed assets", a:"Number, value and age of unclaimed assets, bucketed by how long they've sat unclaimed."},
-  {c:"5.7", t:"Transactions by product class", a:"Volumes by product class (including crypto assets, derivatives and forex) plus offshore flows."},
+  {c:"5.7", t:"Transactions by product class and offshore transactions", a:"Volumes by product class (including crypto assets, derivatives and forex) plus offshore flows."},
   {c:"5.8", t:"Arrear retirement fund contributions", a:"Arrear contributions bucketed by length of delay, not just a single total."}
  ]},
  {n:"06", t:"Transaction volumes, distribution channels and composition", items:[
   {c:"6.1", t:"Volume per distribution channel", a:"Transaction volumes split by the channel through which each sale was made."},
-  {c:"6.2", t:"Market infrastructure and rating volumes", a:"Volumes facilitated through market infrastructure, or ratings issued and changed."},
+  {c:"6.2", t:"Transaction volumes (Financial market infrastructures/ Credit rating agencies)", a:"Volumes facilitated through market infrastructure, or ratings issued and changed."},
   {c:"6.3", t:"Distribution composition", a:"A current count of your intermediary force by type and status."}
  ]},
  {n:"07", t:"Product and agreement terminations", items:[
@@ -642,11 +642,11 @@ const SECTIONS = [
   {c:"10.1", t:"IT governance findings", a:"Audit findings on IT, flagged for materiality and for whether they are repeat findings."},
   {c:"10.2", t:"Data accuracy and completeness", a:"Evidence of how current and complete your customer records actually are."},
   {c:"10.3", t:"Emerging technology usage", a:"An inventory of systems in use: cloud, AI, and any systems not linked to each other."},
-  {c:"10.4", t:"System availability and incidents", a:"Downtime incidents split into planned and unplanned, with duration for each."},
+  {c:"10.4", t:"System availability and incident impact", a:"Downtime incidents split into planned and unplanned, with duration for each."},
   {c:"10.5", t:"Customer data breaches", a:"Breaches in the period and the categories of data exposed in each."},
   {c:"10.6", t:"Impact of data breaches", a:"Number of individuals affected by each breach."}
  ]},
- {n:"11", t:"Outsourcing and organisational capacity", items:[
+ {n:"11", t:"Outsourcing and Organisational Capacity/ Skills", items:[
   {c:"11.1", t:"Vacancies", a:"Open positions against total approved positions at the reporting date."},
   {c:"11.2", t:"Training", a:"Conduct-related training spend as a proportion of total staff budget."},
   {c:"11.3", t:"Outsourcing", a:"A register of outsourced functions, each flagged for whether it is critical."}
@@ -755,7 +755,7 @@ function report(){
   if(answered === 0){
     verdict = "Nothing answered yet. Work through the sections above, then come back.";
   } else if(exposed === 0){
-    verdict = `${answered} of ${TOTAL} answered. Every applicable data point comes out of a system. Worth a second opinion, because this is a rarer result than most firms expect.`;
+    verdict = `${answered} of ${TOTAL} answered. Every applicable subsection comes out of a system. Worth a second opinion, because this is a rarer result than most firms expect.`;
   } else {
     const pct = inScope ? Math.round(exposed/inScope*100) : 0;
     verdict = `${answered} of ${TOTAL} answered · ${inScope} apply to you · ${exposed} of those (${pct}%) depend on someone assembling data by hand or cannot be produced at all.`;
@@ -768,7 +768,7 @@ function report(){
   } else if(exposed === 0){
     $("declText").textContent = "I confirm that the information submitted in this return is accurate and complete.";
   } else {
-    $("declText").innerHTML = `I confirm that the information submitted in this return is accurate and complete, including the <strong>${exposed}</strong> data point${exposed===1?"":"s"} listed below. None is currently produced end to end by a named system.`;
+    $("declText").innerHTML = `I confirm that the information submitted in this return is accurate and complete, including the <strong>${exposed}</strong> subsection${exposed===1?"":"s"} listed below. None is currently produced end to end by a named system.`;
   }
 
   const flaggedGroups = SECTIONS.map(s=>({
@@ -781,7 +781,7 @@ function report(){
   if(!flaggedGroups.length){
     box.innerHTML = `<h3>Readiness findings</h3><p class="lede">No manual dependencies recorded.</p><div class="empty">Either your data estate is in unusually good shape, or the assessment is incomplete. Both are worth checking before anyone signs.</div>`;
   } else {
-    box.innerHTML = `<h3>Readiness findings</h3><p class="lede">${exposed} data point${exposed===1?"":"s"} sit${exposed===1?"s":""} behind the declaration. Each needs a source system, an owner, and a route to close it.</p>` +
+    box.innerHTML = `<h3>Readiness findings</h3><p class="lede">${exposed} subsection${exposed===1?"":"s"} sit${exposed===1?"s":""} behind the declaration. Each needs a source system, an owner, and a route to close it.</p>` +
       flaggedGroups.map(s=>`<section class="flag-section" aria-labelledby="flag-section-${s.n}"><h4 id="flag-section-${s.n}"><span>${s.n}</span> ${s.t}</h4>` +
         s.items.map(f=>`<div class="flag"><code>${f.c}</code><div><b>${f.t}</b><em>${f.a}</em></div><u class="f-${f.v}">${LABELS[f.v]}</u></div>`).join("") +
       `</section>`).join("");

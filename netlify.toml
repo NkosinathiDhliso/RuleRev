@@ -82,7 +82,7 @@
   for = "/omni-risk-readiness"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
-    Content-Security-Policy = "default-src 'none'; script-src 'sha256-RMRpGweWWltwaLr6SRoL0LR7M4jWrF4I1MpRB05UPoU='; style-src 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'none'; form-action 'none'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
+    Content-Security-Policy = "default-src 'none'; script-src 'sha256-m5Z7zKCb7oBNjEfGD+gvz+HMq7pD//0ecYTkRjp+8Zs='; style-src 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'none'; form-action 'none'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     X-XSS-Protection = "0"
@@ -106,7 +106,7 @@
   for = "/omni-risk-readiness/index.html"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
-    Content-Security-Policy = "default-src 'none'; script-src 'sha256-RMRpGweWWltwaLr6SRoL0LR7M4jWrF4I1MpRB05UPoU='; style-src 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'none'; form-action 'none'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
+    Content-Security-Policy = "default-src 'none'; script-src 'sha256-m5Z7zKCb7oBNjEfGD+gvz+HMq7pD//0ecYTkRjp+8Zs='; style-src 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'none'; form-action 'none'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     X-XSS-Protection = "0"
